@@ -67,7 +67,6 @@ createTrayMenu = function(state) {
     { label: 'Settings' },
     { type: 'separator' },
     { label: 'About' },
-    { type: 'separator' },
     {
       label: 'Exit',
       click() { app.quit(); },
