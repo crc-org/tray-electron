@@ -1,4 +1,4 @@
-const {Menu, Tray} = require('electron').remote;
+const {app, Menu, Tray} = require('electron').remote;
 var ipc = require('electron').ipcRenderer;
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
