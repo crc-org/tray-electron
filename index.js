@@ -61,7 +61,7 @@ createTrayMenu = function(state) {
       click() { commander.delete(); }
     },
     { type: 'separator' },
-    { label: 'Launch Web COnsole' },
+    { label: 'Launch Web Console' },
     { label: 'Copy OC Login Command' },
     { type: 'separator' },
     { label: 'Settings' },
