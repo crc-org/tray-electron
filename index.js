@@ -21,20 +21,26 @@ const start = async function() {
   }
 
   while(true) {
-    statusDiv.innerHTML = await commander.status();
+    var state = await commander.status();
+    statusDiv.innerHTML = state;
+    createTrayMenu(state);
     await delay(1000);
   }
 
 }
 
-start();
-
 // Setup tray
 tray = new Tray(`./assets/ocp-logo.png`)
+tray.setToolTip('CodeReady Containers');
 
-const contextMenu = Menu.buildFromTemplate([
+
+createTrayMenu = function(state) {
+
+  if(state == '') state = `Unknown`;
+
+  const contextMenu = Menu.buildFromTemplate([
     {
-      label: 'Unknown',
+      label: state,
       click() { null }
     },
     { type: 'separator' },
@@ -67,5 +73,8 @@ const contextMenu = Menu.buildFromTemplate([
     }
   ]);
 
-tray.setToolTip('CodeReady Containers')
-tray.setContextMenu(contextMenu)
+  tray.setContextMenu(contextMenu);
+}
+
+createTrayMenu();
+start();
