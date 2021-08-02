@@ -36,12 +36,14 @@ tray.setToolTip('CodeReady Containers');
 
 createTrayMenu = function(state) {
 
-  if(state == '') state = `Unknown`;
+  if(state == '' || state == undefined) state = `Unknown`;
 
   const contextMenu = Menu.buildFromTemplate([
     {
       label: state,
-      click() { null }
+      click() { null },
+      icon: "./assets/status-" + state + ".png",
+      enabled: false
     },
     { type: 'separator' },
     { label: 'Status and logs' },
