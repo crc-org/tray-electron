@@ -3,12 +3,13 @@ const got = require('got');
 module.exports = class DaemonCommander {
 
     constructor() {
+      this.apiPath = 'http://unix://?/pipe/crc-http:/api';
 
     }
 
     async status() {
        const options = {
-          url: `http://unix://?/pipe/crc-http:/api/status`,
+          url: this.apiPath + `/status`,
           method: 'GET'
         };
 
@@ -18,15 +19,40 @@ module.exports = class DaemonCommander {
         return status.CrcStatus;
     }
 
-    start() {
+    async start() {
+       const options = {
+          url: this.apiPath + `/start`,
+          method: 'GET'
+        };
+
+        const {body} = await got(options);
+        var status = JSON.parse(body);
+        
         return "Starting";
     }
 
-    stop() {
+    async stop() {
+       const options = {
+          url: this.apiPath + `/stop`,
+          method: 'GET'
+        };
+
+        const {body} = await got(options);
+        var status = JSON.parse(body);
+    
+
         return "Stopping";
     }
 
-    delete() {
+    async delete() {
+       const options = {
+          url: this.apiPath + `/delete`,
+          method: 'GET'
+        };
+
+        const {body} = await got(options);
+        var status = JSON.parse(body);
+
         return "Deleting";
     }
 }
