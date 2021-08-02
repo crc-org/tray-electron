@@ -7,11 +7,12 @@ app.once('ready', () => {
     height: 600,
     backgroundColor: '#ffffff',
     webPreferences: {
-	nodeIntegration: true,
-	contextIsolation: false,
-	enableWebSQL: false,
-	nativeWindowOpen: true
-    }    
+	    nodeIntegration: true,
+	    contextIsolation: false,
+	    enableWebSQL: false,
+	    nativeWindowOpen: true,
+      enableRemoteModule: true,
+    }
   })
 
   window.setMenuBarVisibility(false);
