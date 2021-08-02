@@ -13,7 +13,6 @@
     "electron": "^13.1.7"
   },
   "dependencies": {
-    "got": "^9.6.0",
-    "phantomjs": "^2.1.7"
+    "got": "^9.6.0"
   }
 }
