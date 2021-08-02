@@ -29,10 +29,25 @@ const start = async function() {
 
 }
 
+mapStateForImage = function(state) {
+  state = state.toLowerCase();
+
+  switch(state) {
+    case 'running':
+    case 'stopped':
+    case 'unknown':
+      return state;
+    case 'starting':
+    case 'stopping':
+      return 'busy';
+    default:
+      return 'unknown';
+  }
+}
+
 // Setup tray
 tray = new Tray(`./assets/ocp-logo.png`)
 tray.setToolTip('CodeReady Containers');
-
 
 createTrayMenu = function(state) {
 
@@ -42,7 +57,7 @@ createTrayMenu = function(state) {
     {
       label: state,
       click() { null },
-      icon: "./assets/status-" + state + ".png",
+      icon: "./assets/status-" + mapStateForImage(state) + ".png",
       enabled: false
     },
     { type: 'separator' },
