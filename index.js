@@ -1,4 +1,4 @@
-const {app, Menu, Tray, BrowserWindow} = require('electron').remote;
+const {app, clipboard, Menu, Tray, BrowserWindow} = require('electron').remote;
 var ipc = require('electron').ipcRenderer;
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
@@ -97,14 +97,23 @@ openStatus = function() {
 }
 
 
-function openWebConsole() {
-  //
+openWebConsole = async function() {
+  var result = await commander.consoleUrl();
+  var url = result.ClusterConfig.WebConsoleURL;
+  require('electron').shell.openExternal(url);
 }
 
-function clipLoginCommand() {
-  //
+clipLoginAdminCommand = async function() {
+  var result = await commander.consoleUrl();
+  var command = "oc.exe login -u kubeadmin -p " + result.ClusterConfig.KubeAdminPass + " " + result.ClusterConfig.ClusterAPI;
+  clipboard.writeText(command);
 }
 
+clipLoginDeveloperCommand = async function() {
+  var result = await commander.consoleUrl();
+  var command = "oc.exe login -u developer -p developer " + result.ClusterConfig.ClusterAPI;
+  clipboard.writeText(command);
+}
 
 mapStateForImage = function(state) {
   state = state.toLowerCase();
@@ -162,7 +171,16 @@ createTrayMenu = function(state) {
     },
     {
       label: 'Copy OC Login Command',
-      click() { clipLoginCommand(); }
+      submenu: [
+        {
+          label: 'Admin',
+          click() { clipLoginAdminCommand(); }
+        },
+        {
+          label: 'Developer',
+          click() { clipLoginDeveloperCommand(); }
+        }
+      ]
     },
     { type: 'separator' },
     {

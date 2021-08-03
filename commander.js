@@ -89,4 +89,37 @@ module.exports = class DaemonCommander {
       });
       return "OK";
    }
+
+   async consoleUrl() {
+      const options = {
+         url: this.apiPath + `/webconsoleurl`,
+         method: 'GET'
+      };
+
+      const {body} = await got(options);
+      return JSON.parse(body);
+   }
+
+   async telemetryPost(values) {
+      const options = {
+         url: this.apiPath + `/telemetry`
+      };
+
+      const {body} = await got.post(options, {
+         json: true,
+		   responseType: 'json',
+         body: values
+      });
+      return "OK";
+   }
+
+   async pullSecret() {
+      const options = {
+         url: this.apiPath + `/pull-secret`,
+         method: 'GET'
+      };
+
+      const {body} = await got(options);
+      return JSON.parse(body);
+   }
 }
