@@ -6,6 +6,29 @@
   </head>
   <body>
 
+    <div id="properties">
+      <div id="general">
+        <li>CPUs <input name="cpus" id="cpus" type="number"></li>
+        <li>Memory <input name="memory" id="memory" type="number"> MB</li>
+        <li>Pull secret <button id="pullsecret">Change</button></li>
+        <li>Disk Size <input id="disksize" type="number"> GB</li>
+        <li><input id="consentTelemetry" type="checkbox"> Report telemetry to Red Hat</li>
+      </div>
+      <div id="proxy">
+
+      </div>
+    </div>
+
+    <div id="advanced">
+
+    </div>
+
+    <ul is="actions" class="list">
+      <li><button id="apply">Apply</button></li>
+      <li><button id="refresh">Refresh</button></li>
+    </ul>
+
+    <script src="settings.js"></script>
 
   </body>
 </html>
