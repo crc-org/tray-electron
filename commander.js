@@ -14,9 +14,17 @@ module.exports = class DaemonCommander {
         };
 
         const {body} = await got(options);
-        var status = JSON.parse(body);
-    
-        return status.CrcStatus;
+        return JSON.parse(body);
+   }
+
+    async logs() {
+       const options = {
+          url: this.apiPath + `/logs`,
+          method: 'GET'
+        };
+
+        const {body} = await got(options);
+        return  JSON.parse(body);
     }
 
     async start() {
@@ -26,9 +34,7 @@ module.exports = class DaemonCommander {
         };
 
         const {body} = await got(options);
-        var status = JSON.parse(body);
-        
-        return "Starting";
+        return JSON.parse(body);
     }
 
     async stop() {
@@ -38,10 +44,7 @@ module.exports = class DaemonCommander {
         };
 
         const {body} = await got(options);
-        var status = JSON.parse(body);
-    
-
-        return "Stopping";
+        return JSON.parse(body);
     }
 
     async delete() {
@@ -51,8 +54,6 @@ module.exports = class DaemonCommander {
         };
 
         const {body} = await got(options);
-        var status = JSON.parse(body);
-
-        return "Deleting";
+        return JSON.parse(body);
     }
 }

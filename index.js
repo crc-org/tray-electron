@@ -22,8 +22,8 @@ const start = async function() {
 
   while(true) {
     var state = await commander.status();
-    statusDiv.innerHTML = state;
-    createTrayMenu(state);
+    statusDiv.innerHTML = state.CrcStatus;
+    createTrayMenu(state.CrcStatus);
     await delay(1000);
   }
 
@@ -34,7 +34,8 @@ openAbout = function() {
   // open with 'ready-to-show'
   const childWindow = new BrowserWindow(
     {
-      show: true
+      show: true,
+      backgroundColor: '#ffffff'
     });
   childWindow.setMenuBarVisibility (false);
   const url = require('url').format({
@@ -50,6 +51,7 @@ openSettings = function() {
   const childWindow = new BrowserWindow(
     {
       show: true,
+      backgroundColor: '#ffffff',
       webPreferences: {
 	      nodeIntegration: true,
 	      contextIsolation: false,
@@ -71,6 +73,7 @@ openStatus = function() {
   const childWindow = new BrowserWindow(
     {
       show: true,
+      backgroundColor: '#ffffff',
       webPreferences: {
 	      nodeIntegration: true,
 	      contextIsolation: false,
@@ -79,6 +82,7 @@ openStatus = function() {
       }
     });
   childWindow.setMenuBarVisibility (false);
+  childWindow.webContents.openDevTools();
   const url = require('url').format({
     protocol: 'file',
     slashes: true,
@@ -175,5 +179,5 @@ createTrayMenu = function(state) {
   tray.setContextMenu(contextMenu);
 }
 
-createTrayMenu();
+createTrayMenu("Unknown");
 start();

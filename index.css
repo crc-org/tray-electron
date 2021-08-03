@@ -1,8 +1,8 @@
-#actions {
+.list {
     list-style-type: none;
 }
 
-#actions li {
+.list li {
     display: inline-block;
 }
 
