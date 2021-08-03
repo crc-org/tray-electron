@@ -1,4 +1,4 @@
-const {app, Menu, Tray} = require('electron').remote;
+const {app, Menu, Tray, BrowserWindow} = require('electron').remote;
 var ipc = require('electron').ipcRenderer;
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
@@ -29,11 +29,79 @@ const start = async function() {
 
 }
 
+
+openAbout = function() {
+  // open with 'ready-to-show'
+  const childWindow = new BrowserWindow(
+    {
+      show: true
+    });
+  childWindow.setMenuBarVisibility (false);
+  const url = require('url').format({
+    protocol: 'file',
+    slashes: true,
+    pathname: require('path').join(__dirname, 'about.html')
+  })
+  childWindow.loadURL(url);
+}
+
+openSettings = function() {
+  // open with 'ready-to-show'
+  const childWindow = new BrowserWindow(
+    {
+      show: true,
+      webPreferences: {
+	      nodeIntegration: true,
+	      contextIsolation: false,
+	      nativeWindowOpen: true,
+        enableRemoteModule: true,
+      }
+    });
+  childWindow.setMenuBarVisibility (false);
+  const url = require('url').format({
+    protocol: 'file',
+    slashes: true,
+    pathname: require('path').join(__dirname, 'settings.html')
+  })
+  childWindow.loadURL(url)
+}
+
+openStatus = function() {
+  // open with 'ready-to-show'
+  const childWindow = new BrowserWindow(
+    {
+      show: true,
+      webPreferences: {
+	      nodeIntegration: true,
+	      contextIsolation: false,
+	      nativeWindowOpen: true,
+        enableRemoteModule: true,
+      }
+    });
+  childWindow.setMenuBarVisibility (false);
+  const url = require('url').format({
+    protocol: 'file',
+    slashes: true,
+    pathname: require('path').join(__dirname, 'status.html')
+  })
+  childWindow.loadURL(url)
+}
+
+
+function openWebConsole() {
+  //
+}
+
+function clipLoginCommand() {
+  //
+}
+
+
 mapStateForImage = function(state) {
   state = state.toLowerCase();
 
   switch(state) {
-    case 'running':
+    case 'running':  // started
     case 'stopped':
     case 'unknown':
       return state;
@@ -61,7 +129,10 @@ createTrayMenu = function(state) {
       enabled: false
     },
     { type: 'separator' },
-    { label: 'Status and logs' },
+    {
+      label: 'Status and logs',
+      click() { openStatus(); }
+    },
     { type: 'separator' },
     {
       label: 'Start',
@@ -76,12 +147,24 @@ createTrayMenu = function(state) {
       click() { commander.delete(); }
     },
     { type: 'separator' },
-    { label: 'Launch Web Console' },
-    { label: 'Copy OC Login Command' },
+    {
+      label: 'Launch Web Console',
+      click() { openWebConsole(); }
+    },
+    {
+      label: 'Copy OC Login Command',
+      click() { clipLoginCommand(); }
+    },
     { type: 'separator' },
-    { label: 'Settings' },
+    {
+      label: 'Settings',
+      click() { openSettings(); }
+    },
     { type: 'separator' },
-    { label: 'About' },
+    {
+      label: 'About',
+      click() { openAbout(); }
+    },
     {
       label: 'Exit',
       click() { app.quit(); },
