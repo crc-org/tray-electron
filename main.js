@@ -17,7 +17,6 @@ app.once('ready', () => {
 
   window.setMenuBarVisibility(false);
   window.loadURL(url.format({ pathname: 'index.html', protocol: 'file:', slashes: true }));
-  window.webContents.openDevTools();
   window.once('closed', () => window = null);
 });
 

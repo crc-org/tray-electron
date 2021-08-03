@@ -35,7 +35,13 @@ openAbout = function() {
   const childWindow = new BrowserWindow(
     {
       show: true,
-      backgroundColor: '#ffffff'
+      backgroundColor: '#ffffff',
+      webPreferences: {
+	      nodeIntegration: true,
+	      contextIsolation: false,
+	      nativeWindowOpen: true,
+        enableRemoteModule: true 
+      }
     });
   childWindow.setMenuBarVisibility (false);
   const url = require('url').format({
@@ -82,7 +88,6 @@ openStatus = function() {
       }
     });
   childWindow.setMenuBarVisibility (false);
-  childWindow.webContents.openDevTools();
   const url = require('url').format({
     protocol: 'file',
     slashes: true,

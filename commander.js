@@ -27,6 +27,16 @@ module.exports = class DaemonCommander {
         return  JSON.parse(body);
     }
 
+    async version() {
+       const options = {
+          url: this.apiPath + `/version`,
+          method: 'GET'
+        };
+
+        const {body} = await got(options);
+        return  JSON.parse(body);
+    }
+
     async start() {
        const options = {
           url: this.apiPath + `/start`,
