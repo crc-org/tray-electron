@@ -184,6 +184,9 @@ createTrayMenu = function(state) {
 }
 
 app.whenReady().then(() => {
+  // parent window to prevent app closing
+  const parentWindow = new BrowserWindow({ show: false })
+  
   // Setup tray
   tray = new Tray(`./assets/ocp-logo.png`)
   tray.setToolTip('CodeReady Containers');
