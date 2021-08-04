@@ -4,7 +4,7 @@ const os = require('os');
 module.exports = class DaemonCommander {
 
    constructor() {
-      this.apiPath = `http://unix:~/.crc/crc-http.sock`;
+      this.apiPath = `http://unix:~/.crc/crc-http.sock:/api`;
 
       if(os.platform() == "win32")
          this.apiPath = 'http://unix://?/pipe/crc-http:/api';
