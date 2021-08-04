@@ -1,10 +1,13 @@
 const got = require('got');
+const os = require('os');
 
 module.exports = class DaemonCommander {
 
    constructor() {
-      this.apiPath = 'http://unix://?/pipe/crc-http:/api';
+      this.apiPath = `http://unix:~/.crc/crc-http.sock`;
 
+      if(os.platform() == "win32")
+         this.apiPath = 'http://unix://?/pipe/crc-http:/api';
    }
 
    async status() {
