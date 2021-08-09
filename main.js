@@ -195,3 +195,5 @@ app.whenReady().then(() => {
 
   start();
 });
+
+app.dock.hide()
