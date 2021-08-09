@@ -1,18 +1,32 @@
 const {app, clipboard, Menu, Tray, BrowserWindow} = require('electron');
 const path = require('path');
+const childProcess = require('child_process');
+const { dialog } = require('electron')
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const DaemonCommander = require('./commander')
 const commander = new DaemonCommander()
 
+function crcBinary() {
+  if (app.isPackaged) {
+    return path.join(app.getAppPath(), 'crc');
+  }
+  return "crc"
+}
+
 const start = async function() {
+  // launching the daemon
+  childProcess.execFile(crcBinary(), ["daemon", "--watchdog"], function(err, data) {
+    dialog.showErrorBox(`Backend failure`, `Backend failed to start: ${err}`)
+  });
+
+  // polling status
   while(true) {
     var state = await commander.status();
     createTrayMenu(state.CrcStatus);
     await delay(1000);
   }
-
 }
 
 openAbout = function() {
