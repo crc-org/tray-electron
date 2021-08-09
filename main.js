@@ -42,13 +42,8 @@ openAbout = function() {
         enableRemoteModule: true 
       }
     });
-  childWindow.setMenuBarVisibility (false);
-  const url = require('url').format({
-    protocol: 'file',
-    slashes: true,
-    pathname: path.join(app.getAppPath(), 'about.html')
-  })
-  childWindow.loadURL(url);
+  childWindow.setMenuBarVisibility(false);
+  childWindow.loadURL(`file://${path.join(app.getAppPath(), 'about.html')}`)
 }
 
 openSettings = function() {
@@ -64,13 +59,8 @@ openSettings = function() {
         enableRemoteModule: true,
       }
     });
-  childWindow.setMenuBarVisibility (false);
-  const url = require('url').format({
-    protocol: 'file',
-    slashes: true,
-    pathname: path.join(app.getAppPath(), 'settings.html')
-  })
-  childWindow.loadURL(url)
+  childWindow.setMenuBarVisibility(false);
+  childWindow.loadURL(`file://${path.join(app.getAppPath(), 'settings.html')}`)
 }
 
 openStatus = function() {
@@ -86,13 +76,8 @@ openStatus = function() {
         enableRemoteModule: true,
       }
     });
-  childWindow.setMenuBarVisibility (false);
-  const url = require('url').format({
-    protocol: 'file',
-    slashes: true,
-    pathname: path.join(app.getAppPath(), 'status.html')
-  })
-  childWindow.loadURL(url)
+  childWindow.setMenuBarVisibility(false);
+  childWindow.loadURL(`file://${path.join(app.getAppPath(), 'status.html')}`)
 }
 
 
