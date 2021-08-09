@@ -1,4 +1,4 @@
-const {app, clipboard, Menu, Tray, BrowserWindow} = require('electron');
+const {app, clipboard, Menu, Tray, BrowserWindow, shell} = require('electron');
 const path = require('path');
 const childProcess = require('child_process');
 const { dialog } = require('electron')
@@ -14,6 +14,8 @@ function crcBinary() {
   }
   return "crc"
 }
+
+let parentWindow = undefined
 
 const start = async function() {
   // launching the daemon
@@ -84,7 +86,7 @@ openStatus = function() {
 openWebConsole = async function() {
   var result = await commander.consoleUrl();
   var url = result.ClusterConfig.WebConsoleURL;
-  require('electron').shell.openExternal(url);
+  shell.openExternal(url);
 }
 
 clipLoginAdminCommand = async function() {
@@ -184,7 +186,7 @@ createTrayMenu = function(state) {
 
 app.whenReady().then(() => {
   // parent window to prevent app closing
-  const parentWindow = new BrowserWindow({ show: false })
+  parentWindow = new BrowserWindow({ show: false })
 
   // Setup tray
   tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
