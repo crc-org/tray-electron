@@ -1,5 +1,5 @@
 const {app, clipboard, Menu, Tray, BrowserWindow} = require('electron');
-var ipc = require('electron').ipcRenderer;
+const path = require('path');
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -32,7 +32,7 @@ openAbout = function() {
   const url = require('url').format({
     protocol: 'file',
     slashes: true,
-    pathname: require('path').join(__dirname, 'about.html')
+    pathname: path.join(app.getAppPath(), 'about.html')
   })
   childWindow.loadURL(url);
 }
@@ -54,7 +54,7 @@ openSettings = function() {
   const url = require('url').format({
     protocol: 'file',
     slashes: true,
-    pathname: require('path').join(__dirname, 'settings.html')
+    pathname: path.join(app.getAppPath(), 'settings.html')
   })
   childWindow.loadURL(url)
 }
@@ -76,7 +76,7 @@ openStatus = function() {
   const url = require('url').format({
     protocol: 'file',
     slashes: true,
-    pathname: require('path').join(__dirname, 'status.html')
+    pathname: path.join(app.getAppPath(), 'status.html')
   })
   childWindow.loadURL(url)
 }
@@ -124,7 +124,7 @@ createTrayMenu = function(state) {
     {
       label: state,
       click() { null },
-      icon: "./assets/status-" + mapStateForImage(state) + ".png",
+      icon: path.join(app.getAppPath(), 'assets', `status-${mapStateForImage(state)}.png`),
       enabled: false
     },
     { type: 'separator' },
@@ -186,9 +186,9 @@ createTrayMenu = function(state) {
 app.whenReady().then(() => {
   // parent window to prevent app closing
   const parentWindow = new BrowserWindow({ show: false })
-  
+
   // Setup tray
-  tray = new Tray(`./assets/ocp-logo.png`)
+  tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
   tray.setToolTip('CodeReady Containers');
   createTrayMenu("Unknown");
 
