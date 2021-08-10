@@ -1,11 +1,14 @@
-const {app, clipboard, Menu, Tray, BrowserWindow, shell} = require('electron');
+const {app, clipboard, Menu, Tray, BrowserWindow, shell, ipcMain} = require('electron');
 const path = require('path');
 const childProcess = require('child_process');
 const { dialog } = require('electron')
+const fs = require("fs");
+const k8s = require('@kubernetes/client-node');
+
+const DaemonCommander = require('./commander')
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const DaemonCommander = require('./commander')
 const commander = new DaemonCommander()
 
 function crcBinary() {
@@ -31,7 +34,6 @@ function showOnboarding() {
   parentWindow.show()
 }
 
-const { ipcMain } = require('electron')
 ipcMain.on('start-tray', (event, arg) => {
   start()
 })
@@ -40,7 +42,32 @@ const start = async function() {
   // Setup tray
   tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
   tray.setToolTip('CodeReady Containers');
-  createTrayMenu("Unknown");
+  refreshTrayMenu();
+
+  tray.on('click', () => {
+    try {
+      const k8sConfig = new k8s.KubeConfig()
+      const home = k8s.findHomeDir()
+      const config = path.join(home, '.kube', 'config')
+      k8sConfig.loadFromFile(config)
+
+      contexts = k8sConfig.getContexts().map((c) => {
+        return {
+          label: c.name,
+          type: 'checkbox',
+          checked: c.name === k8sConfig.getCurrentContext(),
+          click() {
+            k8sConfig.setCurrentContext(c.name)
+            fs.writeFile(config, k8s.dumpYaml(JSON.parse(k8sConfig.exportConfig())), () => {})
+          }
+        }
+      })
+
+      refreshTrayMenu()
+    } catch (e) {
+      console.log(`Cannot update Kubernetes menu: ${e}`)
+    }
+  })
 
   app.dock.hide()
 
@@ -51,8 +78,11 @@ const start = async function() {
 
   // polling status
   while(true) {
-    var state = await commander.status();
-    createTrayMenu(state.CrcStatus);
+    var ret = await commander.status();
+    if (ret.CrcStatus) {
+      state = ret.CrcStatus
+      refreshTrayMenu()
+    }
     await delay(1000);
   }
 }
@@ -67,7 +97,7 @@ openAbout = function() {
 	      nodeIntegration: true,
 	      contextIsolation: false,
 	      nativeWindowOpen: true,
-        enableRemoteModule: true 
+        enableRemoteModule: true
       }
     });
   childWindow.setMenuBarVisibility(false);
@@ -143,10 +173,10 @@ mapStateForImage = function(state) {
   }
 }
 
-createTrayMenu = function(state) {
+let state = 'Unknown'
+let contexts = []
 
-  if(state == '' || state == undefined) state = `Unknown`;
-
+refreshTrayMenu = function() {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: state,
@@ -189,6 +219,10 @@ createTrayMenu = function(state) {
           click() { clipLoginDeveloperCommand(); }
         }
       ]
+    },
+    {
+      label: 'Kubernetes context',
+      submenu: contexts
     },
     { type: 'separator' },
     {
