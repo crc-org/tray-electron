@@ -17,7 +17,33 @@ function crcBinary() {
 
 let parentWindow = undefined
 
+function needOnboarding() {
+  try {
+    childProcess.execFileSync(crcBinary(), ["setup", "--check-only"])
+    return false
+  } catch (e) {
+    return true
+  }
+}
+
+function showOnboarding() {
+  parentWindow.loadURL(`file://${path.join(app.getAppPath(), 'welcome.html')}`)
+  parentWindow.show()
+}
+
+const { ipcMain } = require('electron')
+ipcMain.on('start-tray', (event, arg) => {
+  start()
+})
+
 const start = async function() {
+  // Setup tray
+  tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
+  tray.setToolTip('CodeReady Containers');
+  createTrayMenu("Unknown");
+
+  app.dock.hide()
+
   // launching the daemon
   childProcess.execFile(crcBinary(), ["daemon", "--watchdog"], function(err, data) {
     dialog.showErrorBox(`Backend failure`, `Backend failed to start: ${err}`)
@@ -186,14 +212,19 @@ createTrayMenu = function(state) {
 
 app.whenReady().then(() => {
   // parent window to prevent app closing
-  parentWindow = new BrowserWindow({ show: false })
+  parentWindow = new BrowserWindow({
+    show: false,
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      nativeWindowOpen: true,
+      enableRemoteModule: true
+    }
+  })
 
-  // Setup tray
-  tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
-  tray.setToolTip('CodeReady Containers');
-  createTrayMenu("Unknown");
-
-  start();
+  if (needOnboarding()) {
+    showOnboarding()
+  } else {
+    start();
+  }
 });
-
-app.dock.hide()
