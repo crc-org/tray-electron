@@ -194,7 +194,9 @@ app.whenReady().then(() => {
   tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
   tray.setToolTip('CodeReady Containers');
   createTrayMenu("Unknown");
-
+  tray.on('click', () => {
+    tray.popUpContextMenu()
+  });
   start();
 });
 
