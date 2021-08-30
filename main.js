@@ -2,6 +2,7 @@ const {app, clipboard, Menu, Tray, BrowserWindow, shell} = require('electron');
 const path = require('path');
 const childProcess = require('child_process');
 const { dialog } = require('electron')
+const os = require('os');
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -16,6 +17,7 @@ function crcBinary() {
 }
 
 let parentWindow = undefined
+var isMac = (os.platform() === "darwin")
 
 const start = async function() {
   // launching the daemon
@@ -196,4 +198,6 @@ app.whenReady().then(() => {
   start();
 });
 
-app.dock.hide()
+if (isMac) {
+  app.dock.hide()
+}
