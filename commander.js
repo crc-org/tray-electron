@@ -46,8 +46,14 @@ module.exports = class DaemonCommander {
          method: 'GET'
       };
 
-      const {body} = await got(options);
-      return JSON.parse(body);
+      try {
+         const response = await got(options);
+         return JSON.parse(response.body);
+      } catch (response) {
+         return {
+            error: response.body
+         }
+      }
    }
 
    async stop() {
@@ -56,18 +62,26 @@ module.exports = class DaemonCommander {
          method: 'GET'
       };
 
-      const {body} = await got(options);
-      return JSON.parse(body);
+      try {
+         _ = await got(options);
+         return true;
+      } catch (response) {
+         return { error: response.body };
+      }
    }
 
    async delete() {
       const options = {
          url: this.apiPath + `/delete`,
-         method: 'GET'
+         method: 'DELETE'
       };
-
-      const {body} = await got(options);
-      return JSON.parse(body);
+      
+      try {
+         _ = await got(options);
+         return true;
+      } catch (response) {
+         return { error: response.body };
+      }
    }
 
    async configGet() {

@@ -23,6 +23,7 @@ const start = async function() {
 
   document.querySelector('#apply').onclick = async() => {
     applyValues();
+    new Notification("Settings Applied", { body: "" }).show();
   }
 
   document.querySelector('#refresh').onclick = async() => {

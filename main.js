@@ -1,4 +1,4 @@
-const {app, clipboard, Menu, Tray, BrowserWindow, shell} = require('electron');
+const {app, clipboard, Menu, Tray, BrowserWindow, shell, Notification} = require('electron');
 const path = require('path');
 const childProcess = require('child_process');
 const { dialog } = require('electron')
@@ -138,15 +138,15 @@ createTrayMenu = function(state) {
     { type: 'separator' },
     {
       label: 'Start',
-      click() { commander.start(); }
+      click() { handleStartClick(); }
     },
     {
       label: 'Stop',
-      click() { commander.stop(); }
+      click() { handleStopClick(); }
     },
     {
       label: 'Delete',
-      click() { commander.delete(); }
+      click() { handleDeleteClick(); }
     },
     { type: 'separator' },
     {
@@ -184,6 +184,37 @@ createTrayMenu = function(state) {
   ]);
 
   tray.setContextMenu(contextMenu);
+}
+
+const showNotification = function(title, body) {
+  new Notification({ title: title, body: body }).show()
+}
+
+const handleStartClick = async function() {
+    const startResult = await commander.start();
+    if (startResult.KubeletStarted) {
+      showNotification("Cluster started", "CodeReady Containers cluster successfully started");
+    } else {
+      showNotification("Failed to start cluster", startResult.error);
+    }
+}
+
+const handleDeleteClick = async function() {
+  const deleteResult = await commander.delete();
+  if (deleteResult.deleted) {
+    showNotification("Cluster Deleted", "CodeReady Containers cluster successfully deleted");
+  } else {
+    showNotification("Cluster not deleted", deleteResult.error);
+  }
+}
+
+const handleStopClick = async function() {
+  const stopResult = await commander.stop();
+  if (stopResult.stopped) {
+    showNotification("Cluster Stopped", "CodeReady Containers cluster stopped")
+  } else {
+    showNotification("Cluster did not Stop", stopResult.error);
+  }
 }
 
 app.whenReady().then(() => {
