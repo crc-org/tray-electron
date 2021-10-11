@@ -18,6 +18,7 @@ function crcBinary() {
 
 let parentWindow = undefined
 var isMac = (os.platform() === "darwin")
+var isWindows = (os.platform() === "win32")
 
 const start = async function() {
   // launching the daemon
@@ -233,4 +234,8 @@ app.whenReady().then(() => {
 
 if (isMac) {
   app.dock.hide()
+}
+
+if (isWindows) {
+  app.setAppUserModelId('com.redhat.crc')
 }
