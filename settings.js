@@ -31,7 +31,7 @@ const start = async function() {
   }
 
   document.querySelector('#pullsecret').onclick = async() => {
-    // change pullsecret
+    window.open('pullsecret.html')
   }
 
   var config = await commander.configGet();

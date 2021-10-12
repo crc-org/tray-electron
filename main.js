@@ -1,4 +1,4 @@
-const {app, clipboard, Menu, Tray, BrowserWindow, shell} = require('electron');
+const {app, clipboard, Menu, Tray, BrowserWindow, shell, ipcMain} = require('electron');
 const path = require('path');
 const childProcess = require('child_process');
 const { dialog } = require('electron')
@@ -65,6 +65,17 @@ openSettings = function() {
     });
   childWindow.setMenuBarVisibility(false);
   childWindow.loadURL(`file://${path.join(app.getAppPath(), 'settings.html')}`)
+  
+  childWindow.webContents.setWindowOpenHandler(({ url }) => {
+    return {
+      action: 'allow',
+      overrideBrowserWindowOptions: {
+        show: true,
+        autoHideMenuBar: true,
+        fullscreenable: false
+      }
+    }
+  })
 }
 
 openStatus = function() {
@@ -189,8 +200,8 @@ createTrayMenu = function(state) {
 app.whenReady().then(() => {
   // parent window to prevent app closing
   parentWindow = new BrowserWindow({ show: false })
-
   // Setup tray
+  
   tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
   tray.setToolTip('CodeReady Containers');
   createTrayMenu("Unknown");
@@ -203,3 +214,7 @@ app.whenReady().then(() => {
 if (isMac) {
   app.dock.hide()
 }
+
+ipcMain.on('close-focused', () => {
+  BrowserWindow.getFocusedWindow().close();
+})
