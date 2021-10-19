@@ -4,7 +4,7 @@ Electron app for CodeReady Containers
 ![](./docs/demo.png)
 
 
-
+[![CircleCI](https://circleci.com/gh/code-ready/tray-electron/tree/master.svg?style=svg)](https://circleci.com/gh/code-ready/tray-electron/tree/master)
 
 # Release
 

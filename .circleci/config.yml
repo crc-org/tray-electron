@@ -1,0 +1,29 @@
+version: 2.1
+jobs:
+  build:
+    working_directory: ~/repo
+    docker:
+      - image: circleci/node:11
+    steps:
+      - checkout
+      - run:
+          name: Update NPM
+          command: "sudo npm install -g npm"
+      - run:
+          name: Install Wine64 (Needed for windows build)
+          command: | 
+            sudo apt-get update
+            sudo apt install wine64 zip
+      - run:
+          name: Install Dependencies
+          command: npm install
+      - run:
+          name: Generate Builds
+          command: npm run release:cross
+      - run:
+          name: Archive release directory
+          command: zip -r artifacts.zip release
+
+      - store_artifacts:
+          path: ~/repo/artifacts.zip
+          destination: builds
