@@ -24,3 +24,8 @@ button:hover {
     background-color: lightskyblue;
     color: white
 }
+
+/* Hide all steps by default: */
+.tab {
+    display: none;
+}
