@@ -7,6 +7,8 @@ var options = {
     ConsentTelemetry: false
 }
 
+var currentTab = 0
+
 function crcBinary() {
     if (remote.app.isPackaged) {
         return path.join(remote.app.getAppPath(), 'crc');
@@ -60,6 +62,18 @@ async function nextPrev(n) {
     showTab(currentTab);
 }
 
+async function showNext() {
+    nextPrev(1)
+}
+
+async function showPrevious() {
+    nextPrev(-1)
+}
+
+function showCurrentTab() {
+    showTab(currentTab)
+}
+
 function validateInput() {
     if (options.Bundle === "") {
         return false
@@ -69,10 +83,10 @@ function validateInput() {
 
 const start = async function () {
     document.getElementById("next-button").onclick = async () => {
-        nextPrev(1)
+        showNext()
     }
     document.getElementById("prev-button").onclick = async () => {
-        nextPrev(-1)
+        showPrevious()
     }
     document.getElementById("openshift-button").onclick = async () => {
         options.Bundle = "ocp"
@@ -82,7 +96,5 @@ const start = async function () {
     }
 }
 
-var currentTab = 0
-showTab(currentTab)
-
+showCurrentTab()
 start()
