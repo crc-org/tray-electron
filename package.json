@@ -7,11 +7,13 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "electron .",
     "release": "electron-packager . --overwrite --out=release",
-    "release:cross": "electron-packager . --overwrite --out=release --platform=darwin,linux,win32"
+    "release:cross": "electron-packager . --overwrite --out=release --platform=darwin,linux,win32",
+    "dev:serve": "concurrently \"electron .\" \"cd src && npm start\""
   },
   "author": "",
   "license": "Apache",
   "devDependencies": {
+    "concurrently": "^6.4.0",
     "electron": "^13.1.7",
     "electron-packager": "^15.3.0"
   },
