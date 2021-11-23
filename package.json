@@ -18,6 +18,8 @@
     "electron-packager": "^15.3.0"
   },
   "dependencies": {
-    "got": "^9.6.0"
+    "electron-is-dev": "^2.0.0",
+    "got": "^9.6.0",
+    "react-router-dom": "^6.0.2"
   }
 }

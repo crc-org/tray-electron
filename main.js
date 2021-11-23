@@ -29,8 +29,10 @@ function needOnboarding() {
 }
 
 function showOnboarding() {
-  parentWindow.loadURL(`file://${path.join(app.getAppPath(), 'welcome.html')}`)
+  //parentWindow.loadURL(`file://${path.join(app.getAppPath(), 'src', 'build', 'index.html')}`)
+  parentWindow.loadURL("http://localhost:3000")
   parentWindow.show()
+  parentWindow.webContents.openDevTools();
 }
 
 const { ipcMain } = require('electron')
@@ -214,6 +216,7 @@ app.whenReady().then(() => {
   // parent window to prevent app closing
   parentWindow = new BrowserWindow({
     show: false,
+    frame: false,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -222,12 +225,14 @@ app.whenReady().then(() => {
     }
   })
   parentWindow.setMenuBarVisibility(false)
+  parentWindow.setti
 
-  if (needOnboarding()) {
-    showOnboarding()
-  } else {
-    start();
-  }
+  // if (needOnboarding()) {
+  //   showOnboarding()
+  // } else {
+  //   start();
+  // }
+  showOnboarding();
 });
 
 if (isMac) {
