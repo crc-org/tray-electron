@@ -1,12 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
-import SimpleWizard from './App';
+import { BrowserRouter,
+  Route,
+  Routes } from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
+import { SplashScreen } from './components/spalsh';
+import OnboardingWizard from './components/setup-wizard';
 
 ReactDOM.render(
   <React.StrictMode>
-    <SimpleWizard />
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<SplashScreen />} />
+        <Route path="setup" element={<OnboardingWizard />} />
+      </Routes>
+    </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );
