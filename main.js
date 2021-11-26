@@ -1,4 +1,4 @@
-const {app, clipboard, Menu, Tray, BrowserWindow, shell} = require('electron');
+const {app, clipboard, Menu, Tray, BrowserWindow, shell, ipcMain} = require('electron');
 const path = require('path');
 const childProcess = require('child_process');
 const { dialog } = require('electron')
@@ -35,7 +35,7 @@ function showOnboarding() {
   parentWindow.webContents.openDevTools();
 }
 
-const { ipcMain } = require('electron')
+
 ipcMain.on('start-tray', (event, arg) => {
   start()
 })
@@ -216,16 +216,11 @@ app.whenReady().then(() => {
   // parent window to prevent app closing
   parentWindow = new BrowserWindow({
     show: false,
-    frame: false,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-      nativeWindowOpen: true,
-      enableRemoteModule: true
+      preload: path.join(__dirname, "preload.js")
     }
   })
-  parentWindow.setMenuBarVisibility(false)
-  parentWindow.setti
+  //parentWindow.setMenuBarVisibility(false)
 
   // if (needOnboarding()) {
   //   showOnboarding()
@@ -238,3 +233,7 @@ app.whenReady().then(() => {
 if (isMac) {
   app.dock.hide()
 }
+
+ipcMain.on('close-active-window', () => {
+  BrowserWindow.getFocusedWindow().close();
+});
