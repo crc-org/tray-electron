@@ -7,9 +7,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: Update NPM
-          command: "sudo npm install -g npm"
-      - run:
           name: Install Wine64 (Needed for windows build)
           command: | 
             sudo apt-get update
