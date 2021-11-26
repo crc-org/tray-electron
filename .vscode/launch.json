@@ -10,7 +10,7 @@
         "windows": {
           "runtimeExecutable": "${workspaceFolder}/node_modules/.bin/electron.cmd"
         },
-        "args" : ["."],
+        "args" : [".", "--inspect=5858", "--remote-debugging-port=8315"],
         "outputCapture": "std"
       }
     ]
