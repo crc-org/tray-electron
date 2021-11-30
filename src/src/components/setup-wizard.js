@@ -18,12 +18,10 @@ import { Wizard,
     DescriptionListDescription,
     DescriptionListGroup,
     DescriptionListTerm,
-    Checkbox,
-    EmptyState,
-    EmptyStateIcon,
-    Title} from '@patternfly/react-core';
+    Checkbox,} from '@patternfly/react-core';
     
 import InfoIcon from '@patternfly/react-icons/dist/esm/icons/info-icon';
+import SetupSpinner from './setup-logs';
 
 export default class OnboardingWizard extends React.Component {
     constructor(props) {
@@ -222,21 +220,3 @@ const Summary = (props) => {
         </Card>
     )
 }
-
-const SetupSpinner = () => {
-    const Spinner = () => (
-      <span className="pf-c-spinner" role="progressbar" aria-valuetext="Running Setup...">
-        <span className="pf-c-spinner__clipper" />
-        <span className="pf-c-spinner__lead-ball" />
-        <span className="pf-c-spinner__tail-ball" />
-      </span>
-    )
-    return (
-      <EmptyState>
-        <EmptyStateIcon variant="container" component={Spinner} />
-        <Title size="lg" headingLevel="h4">
-          Running Setup
-        </Title>
-      </EmptyState>
-    );
-  }
