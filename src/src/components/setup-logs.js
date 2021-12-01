@@ -25,6 +25,21 @@ class SetupSpinner extends React.Component {
         // start the crc setup process
         // different configs needed will be passed as props
         console.log("Its mounted");
+        window.api.handleSetupLogs(async (event, args) => {
+            this.setState((prevState) => {
+                return {
+                    setupLogs: prevState.setupLogs + args
+                }
+            })
+        })
+        window.api.startSetup({
+            bundle: this.props.bundle,
+            consentTelemetry: this.props.telemetry
+        })
+    }
+
+    componentWillUnmount() {
+        window.api.removeSetupLogListeners();
     }
 
     handlePrimaryButtonAction() {
