@@ -1,4 +1,4 @@
-const {app, clipboard, Menu, Tray, BrowserWindow, shell, ipcMain} = require('electron');
+const {app, clipboard, Menu, Tray, BrowserWindow, shell, ipcMain, ipcRenderer} = require('electron');
 const path = require('path');
 const childProcess = require('child_process');
 const { dialog } = require('electron')
@@ -237,3 +237,24 @@ if (isMac) {
 ipcMain.on('close-active-window', () => {
   BrowserWindow.getFocusedWindow().close();
 });
+
+ipcMain.on('start-setup', async (event, args) => {
+  // configure preset
+  console.log(args)
+
+  // configure telemetry
+
+  // run `crc setup`
+  let child = childProcess.execFile(crcBinary(), ["setup"])
+  child.stdout.setEncoding('utf8')
+  child.stderr.setEncoding('utf8')
+  
+  // send back stdout async on channel 'setup-logs-async'
+  child.stdout.on('data', (data) => {
+    event.reply('setup-logs-async', data)
+  });
+
+  child.stderr.on('data', (data) => {
+    event.reply('setup-logs-async', data)
+  });
+})
