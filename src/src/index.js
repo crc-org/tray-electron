@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.scss';
-import { BrowserRouter,
+import { HashRouter,
   Route,
   Routes } from "react-router-dom";
 import reportWebVitals from './reportWebVitals';
@@ -10,12 +10,12 @@ import OnboardingWizard from './components/setup-wizard';
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
+    <HashRouter>
       <Routes>
-        <Route path="/" element={<SplashScreen />} />
-        <Route path="setup" element={<OnboardingWizard />} />
+        <Route path="/" exact element={<SplashScreen />} />
+        <Route path="/setup" element={<OnboardingWizard />} />
       </Routes>
-    </BrowserRouter>
+    </HashRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );
