@@ -12,8 +12,11 @@ jobs:
             sudo apt-get update
             sudo apt install wine64 zip
       - run:
-          name: Install Dependencies
+          name: Install Dependencies (electron)
           command: npm install
+      - run:
+          name: Install Dependencies (react)
+          command: cd src && npm install
       - run:
           name: Generate Builds
           command: npm run release:cross
