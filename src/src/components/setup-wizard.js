@@ -113,7 +113,7 @@ export default class OnboardingWizard extends React.Component {
                 id: 4,
                 name: "Run Setup",
                 isFinishedStep: true,
-                component: <SetupSpinner />,
+                component: <SetupSpinner bundle={this.state.bundle} consentTelemetry={this.state.consentTelemetry} />,
             }
         ];
         const title = 'CodeReady Containers setup wizard';

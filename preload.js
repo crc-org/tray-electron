@@ -1,6 +1,5 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-console.log("Script called");
 contextBridge.exposeInMainWorld('api', {
   closeActiveWindow: () => { 
       ipcRenderer.send('close-active-window');
@@ -16,5 +15,9 @@ contextBridge.exposeInMainWorld('api', {
 
   removeSetupLogListeners: () => {
     ipcRenderer.removeAllListeners('setup-logs-async')
-  }
+  },
+
+  closeSetupWizard: () => {
+    ipcRenderer.send('close-setup-wizard')
+  } 
 });
