@@ -23,7 +23,7 @@ class SetupSpinner extends React.Component {
 
     componentDidMount() {
         // start the crc setup process
-        // different configs needed will be passed as props
+        // different configs needed will be passed as args
         console.log("Its mounted");
         window.api.handleSetupLogs(async (event, args) => {
             this.setState((prevState) => {
@@ -34,7 +34,7 @@ class SetupSpinner extends React.Component {
         })
         window.api.startSetup({
             bundle: this.props.bundle,
-            consentTelemetry: this.props.telemetry
+            consentTelemetry: this.props.consentTelemetry
         })
     }
 
@@ -44,7 +44,7 @@ class SetupSpinner extends React.Component {
 
     handlePrimaryButtonAction() {
         // issue tray start command then close window
-        window.api.closeActiveWindow();
+        window.api.closeSetupWizard();
     }
 
     render () {

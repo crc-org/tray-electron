@@ -29,10 +29,8 @@ function needOnboarding() {
 }
 
 function showOnboarding() {
-  //parentWindow.loadURL(`file://${path.join(app.getAppPath(), 'src', 'build', 'index.html')}`)
-  parentWindow.loadURL("http://localhost:3000")
+  parentWindow.loadURL(`file://${path.join(app.getAppPath(), 'src', 'build', 'index.html')}`)
   parentWindow.show()
-  parentWindow.webContents.openDevTools();
 }
 
 
@@ -220,14 +218,13 @@ app.whenReady().then(() => {
       preload: path.join(__dirname, "preload.js")
     }
   })
-  //parentWindow.setMenuBarVisibility(false)
+  parentWindow.setMenuBarVisibility(false)
 
-  // if (needOnboarding()) {
-  //   showOnboarding()
-  // } else {
-  //   start();
-  // }
-  showOnboarding();
+  if (needOnboarding()) {
+    showOnboarding()
+  } else {
+    start();
+  }
 });
 
 if (isMac) {
@@ -239,10 +236,20 @@ ipcMain.on('close-active-window', () => {
 });
 
 ipcMain.on('start-setup', async (event, args) => {
-  // configure preset
-  console.log(args)
-
   // configure telemetry
+  let allowTelemetry = args.consentTelemetry ? "yes" : "no";
+  try {
+    childProcess.execFileSync(crcBinary(), ["config", "set", "consent-telemetry", allowTelemetry])
+  } catch (e) {
+    event.reply('setup-logs-async', e.message)
+  }
+
+  // configure preset
+  try {
+    childProcess.execFileSync(crcBinary(), ["config", "set", "bundle", args.bundle])
+  } catch (e) {
+    event.reply('setup-logs-async', e.message)
+  }
 
   // run `crc setup`
   let child = childProcess.execFile(crcBinary(), ["setup"])
@@ -257,4 +264,9 @@ ipcMain.on('start-setup', async (event, args) => {
   child.stderr.on('data', (data) => {
     event.reply('setup-logs-async', data)
   });
+})
+
+ipcMain.once('close-setup-wizard', () => {
+  parentWindow.hide();
+  start()
 })

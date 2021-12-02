@@ -4,11 +4,11 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "electron .",
-    "release": "electron-packager . --overwrite --out=release",
-    "release:cross": "electron-packager . --overwrite --out=release --platform=darwin,linux,win32",
-    "dev:serve": "concurrently \"electron .\" \"cd src && npm start\""
+    "build:react": "cd src && npm run build",
+    "start": "npm run build:react && electron .",
+    "release": "npm run build:react && electron-packager . --overwrite --out=release",
+    "release:cross": "npm run build:react && electron-packager . --overwrite --out=release --platform=darwin,linux,win32",
+    "start:dev": "concurrently \"electron .\" \"cd src && npm start\""
   },
   "author": "",
   "license": "Apache",
