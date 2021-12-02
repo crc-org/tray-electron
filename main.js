@@ -21,7 +21,8 @@ var isMac = (os.platform() === "darwin")
 
 function needOnboarding() {
   try {
-    childProcess.execFileSync(crcBinary(), ["setup", "--check-only"])
+    const cp = childProcess.execFileSync(crcBinary(), ["daemon", "--watchdog"])
+    cp.kill()
     return false
   } catch (e) {
     return true
