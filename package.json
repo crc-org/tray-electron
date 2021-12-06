@@ -14,8 +14,8 @@
   "license": "Apache",
   "devDependencies": {
     "concurrently": "^6.4.0",
-    "electron": "^13.1.7",
-    "electron-packager": "^15.3.0"
+    "electron": "^13.6.3",
+    "electron-packager": "^15.4.0"
   },
   "dependencies": {
     "electron-is-dev": "^2.0.0",
