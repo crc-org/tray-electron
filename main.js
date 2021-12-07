@@ -6,7 +6,7 @@ const os = require('os');
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const DaemonCommander = require('./commander')
+const DaemonCommander = require('./commander');
 const commander = new DaemonCommander()
 
 function crcBinary() {
@@ -30,7 +30,11 @@ function needOnboarding() {
 }
 
 function showOnboarding() {
-  parentWindow.loadURL(`file://${path.join(app.getAppPath(), 'src', 'build', 'index.html')}`)
+  let frontEndUrl = 'http://localhost:3000'
+  if (app.isPackaged) {
+    frontEndUrl = `file://${path.join(app.getAppPath(), 'src', 'build', 'index.html')}`
+  }
+  parentWindow.loadURL(frontEndUrl)
   parentWindow.show()
 }
 
