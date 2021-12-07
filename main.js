@@ -32,7 +32,7 @@ function needOnboarding() {
 function showOnboarding() {
   let frontEndUrl = 'http://localhost:3000'
   if (app.isPackaged) {
-    frontEndUrl = `file://${path.join(app.getAppPath(), 'src', 'build', 'index.html')}`
+    frontEndUrl = `file://${path.join(app.getAppPath(), 'frontend', 'build', 'index.html')}`
   }
   parentWindow.loadURL(frontEndUrl)
   parentWindow.show()

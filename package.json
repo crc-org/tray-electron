@@ -4,11 +4,11 @@
   "description": "",
   "main": "main.js",
   "scripts": {
-    "build:react": "cd src && npm run build",
+    "build:react": "cd frontend && npm run build",
     "start": "npm run build:react && electron .",
     "release": "npm run build:react && electron-packager . --overwrite --out=release",
     "release:cross": "npm run build:react && electron-packager . --overwrite --out=release --platform=darwin,linux,win32",
-    "start:dev": "concurrently \"electron .\" \"cd src && npm start\""
+    "start:dev": "concurrently \"electron .\" \"cd frontend && npm start\""
   },
   "author": "",
   "license": "Apache",
@@ -19,7 +19,6 @@
   },
   "dependencies": {
     "electron-is-dev": "^2.0.0",
-    "got": "^9.6.0",
-    "react-router-dom": "^6.0.2"
+    "got": "^9.6.0"
   }
 }
