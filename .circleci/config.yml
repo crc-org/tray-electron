@@ -16,7 +16,7 @@ jobs:
           command: npm install
       - run:
           name: Install Dependencies (react)
-          command: cd src && npm install
+          command: cd frontend && npm install
       - run:
           name: Generate Builds
           command: npm run release:cross
