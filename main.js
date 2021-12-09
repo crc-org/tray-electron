@@ -155,42 +155,23 @@ createTrayMenu = function(state) {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: state,
-      click() { null },
-      icon: path.join(app.getAppPath(), 'assets', `status-${mapStateForImage(state)}.png`),
-      enabled: false
+      click() { openStatus(); },
+      icon: path.join(app.getAppPath(), 'assets', `status-${mapStateForImage(state)}.png`)
     },
     { type: 'separator' },
     {
-      label: 'Status and logs',
-      click() { openStatus(); }
-    },
-    { type: 'separator' },
-    {
-      label: 'Start',
-      click() { commander.start(); }
-    },
-    {
-      label: 'Stop',
-      click() { commander.stop(); }
-    },
-    {
-      label: 'Delete',
-      click() { commander.delete(); }
-    },
-    { type: 'separator' },
-    {
-      label: 'Launch Web Console',
-      click() { openWebConsole(); }
-    },
-    {
-      label: 'Copy OC Login Command',
+      label: 'OpenShift actions',
       submenu: [
         {
-          label: 'Admin',
+          label: 'Launch Console',
+          click() { openWebConsole(); }
+        },
+        {
+          label: 'Copy OC login command (admin)',
           click() { clipLoginAdminCommand(); }
         },
         {
-          label: 'Developer',
+          label: 'Copy OC login command (developer)',
           click() { clipLoginDeveloperCommand(); }
         }
       ]
@@ -200,7 +181,6 @@ createTrayMenu = function(state) {
       label: 'Settings',
       click() { openSettings(); }
     },
-    { type: 'separator' },
     {
       label: 'About',
       click() { openAbout(); }
