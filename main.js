@@ -16,7 +16,7 @@ function crcBinary() {
   return "crc"
 }
 
-let parentWindow = undefined
+let mainWindow = undefined
 var isMac = (os.platform() === "darwin")
 
 function needOnboarding() {
@@ -29,13 +29,18 @@ function needOnboarding() {
   }
 }
 
-function showOnboarding() {
+function getFrontEndUrl(route) {
   let frontEndUrl = 'http://localhost:3000'
   if (app.isPackaged) {
     frontEndUrl = `file://${path.join(app.getAppPath(), 'frontend', 'build', 'index.html')}`
   }
-  parentWindow.loadURL(frontEndUrl)
-  parentWindow.show()
+  return (!route || route === "") ? frontEndUrl : `${frontEndUrl}#/${route}`;
+}
+
+function showOnboarding() {
+  let frontEndUrl = getFrontEndUrl();
+  mainWindow.loadURL(frontEndUrl)
+  mainWindow.show()
 }
 
 
@@ -62,55 +67,16 @@ const start = async function() {
   }
 }
 
-openAbout = function() {
-  // open with 'ready-to-show'
-  const childWindow = new BrowserWindow(
-    {
-      show: true,
-      backgroundColor: '#ffffff',
-      webPreferences: {
-	      nodeIntegration: true,
-	      contextIsolation: false,
-	      nativeWindowOpen: true,
-        enableRemoteModule: true 
-      }
-    });
-  childWindow.setMenuBarVisibility(false);
-  childWindow.loadURL(`file://${path.join(app.getAppPath(), 'about.html')}`)
-}
-
 openSettings = function() {
-  // open with 'ready-to-show'
-  const childWindow = new BrowserWindow(
-    {
-      show: true,
-      backgroundColor: '#ffffff',
-      webPreferences: {
-	      nodeIntegration: true,
-	      contextIsolation: false,
-	      nativeWindowOpen: true,
-        enableRemoteModule: true,
-      }
-    });
-  childWindow.setMenuBarVisibility(false);
-  childWindow.loadURL(`file://${path.join(app.getAppPath(), 'settings.html')}`)
+  let frontEndUrl = getFrontEndUrl("settings");
+  mainWindow.loadURL(frontEndUrl)
+  mainWindow.show()
 }
 
 openStatus = function() {
-  // open with 'ready-to-show'
-  const childWindow = new BrowserWindow(
-    {
-      show: true,
-      backgroundColor: '#ffffff',
-      webPreferences: {
-	      nodeIntegration: true,
-	      contextIsolation: false,
-	      nativeWindowOpen: true,
-        enableRemoteModule: true,
-      }
-    });
-  childWindow.setMenuBarVisibility(false);
-  childWindow.loadURL(`file://${path.join(app.getAppPath(), 'status.html')}`)
+  let frontEndUrl = getFrontEndUrl("status");
+  mainWindow.loadURL(frontEndUrl)
+  mainWindow.show()
 }
 
 
@@ -182,10 +148,6 @@ createTrayMenu = function(state) {
       click() { openSettings(); }
     },
     {
-      label: 'About',
-      click() { openAbout(); }
-    },
-    {
       label: 'Exit',
       click() { app.quit(); },
       accelerator: 'CommandOrControl+Q'
@@ -197,13 +159,16 @@ createTrayMenu = function(state) {
 
 app.whenReady().then(() => {
   // parent window to prevent app closing
-  parentWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
+    width: 1024,
+    height: 738,
+    resizable: false,
     show: false,
     webPreferences: {
       preload: path.join(__dirname, "preload.js")
     }
   })
-  parentWindow.setMenuBarVisibility(false)
+  mainWindow.setMenuBarVisibility(false)
 
   if (needOnboarding()) {
     showOnboarding()
@@ -252,6 +217,6 @@ ipcMain.on('start-setup', async (event, args) => {
 })
 
 ipcMain.once('close-setup-wizard', () => {
-  parentWindow.hide();
+  mainWindow.hide();
   start()
 })

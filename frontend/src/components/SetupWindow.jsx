@@ -209,7 +209,7 @@ export default class SetupWindow extends React.Component {
 
 const Welcome = () => {
     return (
-        <Card isLarge isRounded isFullHeight isHoverable isPlain>
+        <Card isLarge isPlain>
             <CardTitle>Hello</CardTitle>
             <CardBody>In the next few steps we'll ask you a few questions to setup your environment</CardBody>
             <CardFooter>Please click Next to proceed</CardFooter>
@@ -219,7 +219,7 @@ const Welcome = () => {
 
 const ChoosePreset = (props) => {
     return(
-        <Card isLarge isRounded isFullHeight isHoverable isPlain>
+        <Card isLarge isPlain>
             <CardTitle>Please Select the bundle you want to use</CardTitle>
             <CardBody>
                 <Preset handleClick={props.handleBundleOpenshift} presetName="OpenShift" presetDesc={props.ocpDesc}/>
@@ -261,7 +261,7 @@ const Summary = (props) => {
         "Your preference can be changed manually if desired from the settings dialog.";
 
     return (
-        <Card isLarge isRounded isFullHeight isHoverable isPlain>
+        <Card isLarge isPlain>
             <CardTitle>Thank you. You have made the following selection</CardTitle>
             <CardBody isFilled>
                 <DescriptionList isHorizontal>
