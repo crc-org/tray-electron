@@ -16,7 +16,7 @@ ReactDOM.render(
         <Route path="/" exact element={<SplashWindow />} />
         <Route path="/setup" element={<SetupWindow />} />
         <Route path="/status" element={<StatusWindow />} />
-        <Route path="/settings" element={<SettingsWindow />} />
+        <Route path="/config" element={<ConfigWindow />} />
       </Routes>
     </HashRouter>
   </React.StrictMode>,
