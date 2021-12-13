@@ -67,13 +67,13 @@ const start = async function() {
   }
 }
 
-openSettings = function() {
-  let frontEndUrl = getFrontEndUrl("settings");
+openConfiguration = function() {
+  let frontEndUrl = getFrontEndUrl("config");
   mainWindow.loadURL(frontEndUrl)
   mainWindow.show()
 }
 
-openStatus = function() {
+openDetailedStatus = function() {
   let frontEndUrl = getFrontEndUrl("status");
   mainWindow.loadURL(frontEndUrl)
   mainWindow.show()
@@ -120,32 +120,30 @@ createTrayMenu = function(state) {
   const contextMenu = Menu.buildFromTemplate([
     {
       label: state,
-      click() { openStatus(); },
+      click() { openDetailedStatus(); },
       icon: path.join(app.getAppPath(), 'assets', `status-${mapStateForImage(state)}.png`)
     },
-    { type: 'separator' },
     {
-      label: 'OpenShift actions',
-      submenu: [
-        {
-          label: 'Launch Console',
-          click() { openWebConsole(); }
-        },
-        {
-          label: 'Copy OC login command (admin)',
-          click() { clipLoginAdminCommand(); }
-        },
-        {
-          label: 'Copy OC login command (developer)',
-          click() { clipLoginDeveloperCommand(); }
-        }
-      ]
+      label: 'Launch Console',
+      click() { openWebConsole(); }
+    },
+    {
+      label: 'Copy OC login command (admin)',
+      click() { clipLoginAdminCommand(); }
+    },
+    {
+      label: 'Copy OC login command (developer)',
+      click() { clipLoginDeveloperCommand(); }
+    },
+    {
+      label: 'Configuration',
+      click() { openConfiguration(); }
     },
     { type: 'separator' },
-    {
+    /*{
       label: 'Settings',
       click() { openSettings(); }
-    },
+    },*/
     {
       label: 'Exit',
       click() { app.quit(); },
@@ -169,11 +167,11 @@ app.whenReady().then(() => {
   })
   mainWindow.setMenuBarVisibility(false)
 
-  if (needOnboarding()) {
-    showOnboarding()
-  } else {
+  //if (needOnboarding()) {
+  //  showOnboarding()
+  //} else {
     start();
-  }
+  //}
 });
 
 if (isMac) {
@@ -181,7 +179,7 @@ if (isMac) {
 }
 
 ipcMain.on('close-active-window', () => {
-  BrowserWindow.getFocusedWindow().close();
+  BrowserWindow.getFocusedWindow().hide();
 });
 
 
