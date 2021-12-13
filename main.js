@@ -38,6 +38,18 @@ function needOnboarding() {
 }
 
 function showOnboarding() {
+  // parent window to prevent app closing
+  mainWindow = new BrowserWindow({
+    width: 1024,
+    height: 738,
+    resizable: false,
+    show: false,
+    webPreferences: {
+      preload: path.join(__dirname, "preload-setup.js")
+    }
+  })
+  mainWindow.setMenuBarVisibility(false)
+
   let frontEndUrl = getFrontEndUrl();
   mainWindow.loadURL(frontEndUrl)
   mainWindow.show()
@@ -49,18 +61,6 @@ function showOnboarding() {
 // ------------------------------------------------------------------------- */
 
 app.whenReady().then(() => {
-  // parent window to prevent app closing
-  mainWindow = new BrowserWindow({
-    width: 1024,
-    height: 738,
-    resizable: false,
-    show: false,
-    webPreferences: {
-      preload: path.join(__dirname, "preload.js")
-    }
-  })
-  mainWindow.setMenuBarVisibility(false)
-
   if (needOnboarding()) {
     showOnboarding()
   } else {
@@ -73,6 +73,18 @@ if (isMac) {
 }
 
 const appStart = async function() {
+  // parent window to prevent app closing
+  mainWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    resizable: false,
+    show: false,
+    webPreferences: {
+      preload: path.join(__dirname, "preload-main.js")
+    }
+  })
+  mainWindow.setMenuBarVisibility(false)
+
   // Setup tray
   tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
   tray.setToolTip('CodeReady Containers');
