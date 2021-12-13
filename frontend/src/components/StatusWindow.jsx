@@ -9,6 +9,14 @@ import {
 export default class StatusWindow extends React.Component {
   constructor(props) {
     super(props);
+
+    this.control = React.createRef();
+  }
+
+  componentDidMount() {
+    window.api.onStatusChanged(async (event, status) => {
+      this.control.current.updateStatus(status);
+    })
   }
 
   onStart() {
@@ -26,7 +34,7 @@ export default class StatusWindow extends React.Component {
   render() {
     return (
     <Bullseye>
-        <ControlCard
+        <ControlCard ref={this.control}
           onStartClicked={this.onStart}
           onStopClicked={this.onStop}
           onDeleteClicked={this.onDelete} />

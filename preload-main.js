@@ -15,5 +15,9 @@ contextBridge.exposeInMainWorld('api', {
 
   deleteInstance: (args) => {
     ipcRenderer.send('delete-instance', args);
+  },
+
+  onStatusChanged: (cb) => {
+    ipcRenderer.on('status-changed', cb)
   }
 });
