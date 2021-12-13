@@ -19,5 +19,17 @@ contextBridge.exposeInMainWorld('api', {
 
   closeSetupWizard: () => {
     ipcRenderer.send('close-setup-wizard')
-  } 
+  },
+
+  startInstance: (args) => {
+    ipcRenderer.send('start-instance', args);
+  },
+
+  stopInstance: (args) => {
+    ipcRenderer.send('stop-instance', args);
+  },
+
+  deleteInstance: (args) => {
+    ipcRenderer.send('delete-instance', args);
+  }
 });
