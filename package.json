@@ -14,11 +14,14 @@
   "license": "Apache",
   "devDependencies": {
     "concurrently": "^6.4.0",
-    "electron": "^13.6.3",
+    "electron": "^16.0.4",
     "electron-packager": "^15.4.0"
   },
   "dependencies": {
+    "analytics-node": "^6.0.0",
     "electron-is-dev": "^2.0.0",
-    "got": "^9.6.0"
+    "got": "^9.6.0",
+    "object-hash": "^2.2.0",
+    "uuid": "^8.3.2"
   }
 }
