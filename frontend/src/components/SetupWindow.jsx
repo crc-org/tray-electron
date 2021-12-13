@@ -1,5 +1,6 @@
 import React from 'react';
-import { Wizard,
+import {
+    Wizard,
     Card,
     CardTitle,
     CardBody,
@@ -19,14 +20,12 @@ import { Wizard,
     DescriptionListGroup,
     DescriptionListTerm,
     Checkbox,
-    Title,
     EmptyState,
     EmptyStateBody,
-    EmptyStateIcon,
     EmptyStateSecondaryActions,
     EmptyStatePrimary,
 } from '@patternfly/react-core';
-    import InfoIcon from '@patternfly/react-icons/dist/esm/icons/info-icon';
+import InfoIcon from '@patternfly/react-icons/dist/esm/icons/info-icon';
 import {
     LogWindow
 } from '@gbraad/crc-react-components';
@@ -43,7 +42,6 @@ class SetupSpinner extends React.Component {
     componentDidMount() {
         // start the crc setup process
         // different configs needed will be passed as args
-        console.log("Its mounted");
         window.api.handleSetupLogs(async (event, message) => {
             this.logWindow.current.log(message);
         })
@@ -63,20 +61,8 @@ class SetupSpinner extends React.Component {
     }
 
     render () {
-        const Spinner = () => (
-            <span className="pf-c-spinner" role="progressbar" aria-valuetext="Running Setup...">
-              <span className="pf-c-spinner__clipper" />
-              <span className="pf-c-spinner__lead-ball" />
-              <span className="pf-c-spinner__tail-ball" />
-            </span>
-        )
-
         return (
             <EmptyState>
-                <EmptyStateIcon variant="container" component={Spinner} />
-                <Title size="lg" headingLevel="h4">
-                    Running Setup
-                </Title>
                 <EmptyStateBody>
                     <LogWindow ref={this.logWindow} />
                 </EmptyStateBody>
