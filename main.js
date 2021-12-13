@@ -19,6 +19,14 @@ function crcBinary() {
 let mainWindow = undefined
 var isMac = (os.platform() === "darwin")
 
+function getFrontEndUrl(route) {
+  let frontEndUrl = 'http://localhost:3000'
+  if (app.isPackaged) {
+    frontEndUrl = `file://${path.join(app.getAppPath(), 'frontend', 'build', 'index.html')}`
+  }
+  return (!route || route === "") ? frontEndUrl : `${frontEndUrl}#/${route}`;
+}
+
 function needOnboarding() {
   try {
     const cp = childProcess.execFileSync(crcBinary(), ["daemon", "--watchdog"])
@@ -29,14 +37,6 @@ function needOnboarding() {
   }
 }
 
-function getFrontEndUrl(route) {
-  let frontEndUrl = 'http://localhost:3000'
-  if (app.isPackaged) {
-    frontEndUrl = `file://${path.join(app.getAppPath(), 'frontend', 'build', 'index.html')}`
-  }
-  return (!route || route === "") ? frontEndUrl : `${frontEndUrl}#/${route}`;
-}
-
 function showOnboarding() {
   let frontEndUrl = getFrontEndUrl();
   mainWindow.loadURL(frontEndUrl)
@@ -44,11 +44,35 @@ function showOnboarding() {
 }
 
 
-ipcMain.on('start-tray', (event, arg) => {
-  start()
-})
+/* ----------------------------------------------------------------------------
+// Main functions
+// ------------------------------------------------------------------------- */
 
-const start = async function() {
+app.whenReady().then(() => {
+  // parent window to prevent app closing
+  mainWindow = new BrowserWindow({
+    width: 1024,
+    height: 738,
+    resizable: false,
+    show: false,
+    webPreferences: {
+      preload: path.join(__dirname, "preload.js")
+    }
+  })
+  mainWindow.setMenuBarVisibility(false)
+
+  if (needOnboarding()) {
+    showOnboarding()
+  } else {
+    appStart();
+  }
+});
+
+if (isMac) {
+  app.dock.hide()
+}
+
+const appStart = async function() {
   // Setup tray
   tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
   tray.setToolTip('CodeReady Containers');
@@ -66,6 +90,10 @@ const start = async function() {
     await delay(1000);
   }
 }
+
+/* ----------------------------------------------------------------------------
+// Tray menu functions
+// ------------------------------------------------------------------------- */
 
 openConfiguration = function() {
   let frontEndUrl = getFrontEndUrl("config");
@@ -97,6 +125,11 @@ clipLoginDeveloperCommand = async function() {
   clipboard.writeText(command);
 }
 
+
+/* ----------------------------------------------------------------------------
+// Tray menu
+// ------------------------------------------------------------------------- */
+
 mapStateForImage = function(state) {
   state = state.toLowerCase();
 
@@ -114,7 +147,6 @@ mapStateForImage = function(state) {
 }
 
 createTrayMenu = function(state) {
-
   if(state == '' || state == undefined) state = `Unknown`;
 
   const contextMenu = Menu.buildFromTemplate([
@@ -154,33 +186,18 @@ createTrayMenu = function(state) {
   tray.setContextMenu(contextMenu);
 }
 
-app.whenReady().then(() => {
-  // parent window to prevent app closing
-  mainWindow = new BrowserWindow({
-    width: 1024,
-    height: 738,
-    resizable: false,
-    show: false,
-    webPreferences: {
-      preload: path.join(__dirname, "preload.js")
-    }
-  })
-  mainWindow.setMenuBarVisibility(false)
 
-  //if (needOnboarding()) {
-  //  showOnboarding()
-  //} else {
-    start();
-  //}
-});
-
-if (isMac) {
-  app.dock.hide()
-}
+/* ----------------------------------------------------------------------------
+// Generic events
+// ------------------------------------------------------------------------- */
 
 ipcMain.on('close-active-window', () => {
   BrowserWindow.getFocusedWindow().hide();
 });
+
+ipcMain.on('start-tray', (event, arg) => {
+  appStart()
+})
 
 
 /* ----------------------------------------------------------------------------
@@ -220,7 +237,7 @@ ipcMain.on('start-setup', async (event, args) => {
 
 ipcMain.once('close-setup-wizard', () => {
   mainWindow.hide();
-  start()
+  appStart()
 })
 
 
