@@ -42,7 +42,7 @@ class SetupSpinner extends React.Component {
     componentDidMount() {
         // start the crc setup process
         // different configs needed will be passed as args
-        window.api.handleSetupLogs(async (event, message) => {
+        window.api.onSetupLogs(async (event, message) => {
             this.logWindow.current.log(message);
         })
         window.api.startSetup({

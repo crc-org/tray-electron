@@ -9,7 +9,7 @@ contextBridge.exposeInMainWorld('api', {
       ipcRenderer.send('start-setup', args);
   },
 
-  handleSetupLogs: (cb) => {
+  onSetupLogs: (cb) => {
     ipcRenderer.on('setup-logs-async', cb)
   },
 

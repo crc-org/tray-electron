@@ -1,4 +1,12 @@
-const {app, clipboard, Menu, Tray, BrowserWindow, shell, ipcMain, ipcRenderer} = require('electron');
+const {
+  app,
+  clipboard,
+  Menu,
+  Tray,
+  BrowserWindow,
+  shell,
+  ipcMain 
+} = require('electron');
 const path = require('path');
 const childProcess = require('child_process');
 const { dialog } = require('electron')
@@ -105,6 +113,7 @@ const appStart = async function() {
     var state = await commander.status();
     createTrayMenu(state.CrcStatus);
     await delay(1000);
+    mainWindow.webContents.send('status-changed', state);
   }
 }
 
@@ -167,29 +176,38 @@ mapStateForImage = function(state) {
   }
 }
 
+isRunning = function(state) {
+  state = state.toLowerCase();
+  return state === "running";
+}
+
 createTrayMenu = function(state) {
   if(state == '' || state == undefined) state = `Unknown`;
+  var enabledWhenRunning = isRunning(state);
 
   const contextMenu = Menu.buildFromTemplate([
     {
       label: state,
       click() { openDetailedStatus(); },
-      icon: path.join(app.getAppPath(), 'assets', `status-${mapStateForImage(state)}.png`)
+      icon: path.join(app.getAppPath(), 'assets', `status-${mapStateForImage(state)}.png`),
     },
     {
-      label: 'Launch Console',
-      click() { openWebConsole(); }
+      label: '  Launch Console',
+      click() { openWebConsole(); },
+      enabled: enabledWhenRunning
     },
     {
-      label: 'Copy OC login command (admin)',
-      click() { clipLoginAdminCommand(); }
+      label: '  Copy OC login command (admin)',
+      click() { clipLoginAdminCommand(); },
+      enabled: enabledWhenRunning
     },
     {
-      label: 'Copy OC login command (developer)',
-      click() { clipLoginDeveloperCommand(); }
+      label: '  Copy OC login command (developer)',
+      click() { clipLoginDeveloperCommand(); },
+      enabled: enabledWhenRunning
     },
     {
-      label: 'Configuration',
+      label: '  Configuration',
       click() { openConfiguration(); }
     },
     { type: 'separator' },
