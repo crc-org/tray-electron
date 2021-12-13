@@ -79,7 +79,6 @@ openStatus = function() {
   mainWindow.show()
 }
 
-
 openWebConsole = async function() {
   var result = await commander.consoleUrl();
   var url = result.ClusterConfig.WebConsoleURL;
@@ -185,6 +184,11 @@ ipcMain.on('close-active-window', () => {
   BrowserWindow.getFocusedWindow().close();
 });
 
+
+/* ----------------------------------------------------------------------------
+// Setup
+// ------------------------------------------------------------------------- */
+
 ipcMain.on('start-setup', async (event, args) => {
   // configure telemetry
   let allowTelemetry = args.consentTelemetry ? "yes" : "no";
@@ -220,3 +224,20 @@ ipcMain.once('close-setup-wizard', () => {
   mainWindow.hide();
   start()
 })
+
+
+/* ----------------------------------------------------------------------------
+// VM interaction
+// ------------------------------------------------------------------------- */
+
+ipcMain.on('start-instance', async (event, args) => {
+  commander.start();
+});
+
+ipcMain.on('stop-instance', async (event, args) => {
+  commander.stop();
+});
+
+ipcMain.on('delete-instance', async (event, args) => {
+  commander.delete();
+});
