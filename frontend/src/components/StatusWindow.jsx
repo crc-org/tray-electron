@@ -1,5 +1,8 @@
 import React from 'react';
 import {
+  Bullseye
+} from '@patternfly/react-core';
+import {
   ControlCard
 } from '@gbraad/crc-react-components';
 
@@ -22,10 +25,12 @@ export default class StatusWindow extends React.Component {
 
   render() {
     return (
+    <Bullseye>
         <ControlCard
           onStartClicked={this.onStart}
           onStopClicked={this.onStop}
           onDeleteClicked={this.onDelete} />
+    </Bullseye>
     );
   }
 }

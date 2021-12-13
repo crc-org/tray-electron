@@ -17,7 +17,7 @@ export default class SplashWindow extends React.Component {
   render() { 
     return (
       <Page>
-        <PageSection sticky="top" variant={PageSectionVariants.darker} isWidthLimited hasShadowBottom={false}>
+        <PageSection sticky="top" variant={PageSectionVariants.darker} isWidthLimited hasShadowBottom={false} style={{height:"420px"}}>
           <Bullseye>
             <LogoBanner />
           </Bullseye>
