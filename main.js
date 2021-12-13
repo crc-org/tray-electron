@@ -24,6 +24,7 @@ function crcBinary() {
   return "crc"
 }
 
+let miniStatusWindow = undefined
 let mainWindow = undefined
 var isMac = (os.platform() === "darwin")
 
@@ -81,7 +82,25 @@ if (isMac) {
 }
 
 const appStart = async function() {
-  // parent window to prevent app closing
+  miniStatusWindow = new BrowserWindow({
+    width: 360,
+    height: 250,
+    resizable: false,
+    show: false,
+    frame: false,
+    titleBarStyle: 'hidden',
+    webPreferences: {
+      preload: path.join(__dirname, "preload-main.js")
+    }
+  })
+  miniStatusWindow.setMenuBarVisibility(false)
+
+  miniStatusWindow.on('close', async e => {
+    e.preventDefault()
+    miniStatusWindow.hide();
+  })
+  miniStatusWindow.loadURL(getFrontEndUrl("ministatus"));
+  
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -103,6 +122,25 @@ const appStart = async function() {
   tray.setToolTip('CodeReady Containers');
   createTrayMenu("Unknown");
 
+  tray.on('click', function(e, location) {
+    const { x, y } = location;
+    const { height, width } = miniStatusWindow.getBounds();
+    const { trayh, trayw } = tray.getBounds();
+
+    if(miniStatusWindow.isVisible()) {
+      miniStatusWindow.hide();
+    } else {
+      const yPosition = 20;
+      miniStatusWindow.setBounds({
+        x: x - width / 2,
+        y: yPosition,
+        height,
+        width
+      });
+      miniStatusWindow.show();
+    }
+  });
+
   // launching the daemon
   childProcess.execFile(crcBinary(), ["daemon", "--watchdog"], function(err, data) {
     dialog.showErrorBox(`Backend failure`, `Backend failed to start: ${err}`)
@@ -114,6 +152,7 @@ const appStart = async function() {
     createTrayMenu(state.CrcStatus);
     await delay(1000);
     mainWindow.webContents.send('status-changed', state);
+    miniStatusWindow.webContents.send('status-changed', state);
   }
 }
 
