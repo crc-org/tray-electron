@@ -23,33 +23,29 @@ import { Wizard,
     EmptyState,
     EmptyStateBody,
     EmptyStateIcon,
-    CodeBlock,
-    CodeBlockCode,
     EmptyStateSecondaryActions,
     EmptyStatePrimary,
 } from '@patternfly/react-core';
     import InfoIcon from '@patternfly/react-icons/dist/esm/icons/info-icon';
+import {
+    LogWindow
+} from '@gbraad/crc-react-components';
 
 class SetupSpinner extends React.Component {
     constructor(props) {
         super(props)
 
-        this.state = {
-            setupLogs: "",
-        }
         this.handlePrimaryButtonAction = this.handlePrimaryButtonAction.bind(this);
+
+        this.logWindow = React.createRef();
     }
 
     componentDidMount() {
         // start the crc setup process
         // different configs needed will be passed as args
         console.log("Its mounted");
-        window.api.handleSetupLogs(async (event, args) => {
-            this.setState((prevState) => {
-                return {
-                    setupLogs: prevState.setupLogs + args
-                }
-            })
+        window.api.handleSetupLogs(async (event, message) => {
+            this.logWindow.current.log(message);
         })
         window.api.startSetup({
             bundle: this.props.bundle,
@@ -82,9 +78,7 @@ class SetupSpinner extends React.Component {
                     Running Setup
                 </Title>
                 <EmptyStateBody>
-                    <CodeBlock>
-                        <CodeBlockCode id="setup-logs">{this.state.setupLogs}</CodeBlockCode>
-                    </CodeBlock>
+                    <LogWindow ref={this.logWindow} />
                 </EmptyStateBody>
                 <EmptyStatePrimary>
                     <Button variant={ButtonVariant.primary} onClick={this.handlePrimaryButtonAction}>Close window and start crc</Button>

@@ -7,7 +7,7 @@ import { HashRouter,
 import SplashWindow from './components/SplashWindow';
 import SetupWindow from './components/SetupWindow';
 import StatusWindow from './components/StatusWindow';
-import SettingsWindow from './components/SettingsWindow';
+import ConfigWindow from './components/ConfigWindow';
 
 ReactDOM.render(
   <React.StrictMode>
