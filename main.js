@@ -85,6 +85,11 @@ const appStart = async function() {
   })
   mainWindow.setMenuBarVisibility(false)
 
+  mainWindow.on('close', async e => {
+    e.preventDefault()
+    mainWindow.hide();
+  })
+
   // Setup tray
   tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
   tray.setToolTip('CodeReady Containers');
@@ -109,14 +114,18 @@ const appStart = async function() {
 
 openConfiguration = function() {
   let frontEndUrl = getFrontEndUrl("config");
-  mainWindow.loadURL(frontEndUrl)
-  mainWindow.show()
+  mainWindow.loadURL(frontEndUrl);
+
+    // when ready
+  mainWindow.show();
 }
 
 openDetailedStatus = function() {
   let frontEndUrl = getFrontEndUrl("status");
-  mainWindow.loadURL(frontEndUrl)
-  mainWindow.show()
+  mainWindow.loadURL(frontEndUrl);
+
+  // when ready
+  mainWindow.show();
 }
 
 openWebConsole = async function() {
@@ -184,10 +193,6 @@ createTrayMenu = function(state) {
       click() { openConfiguration(); }
     },
     { type: 'separator' },
-    /*{
-      label: 'Settings',
-      click() { openSettings(); }
-    },*/
     {
       label: 'Exit',
       click() { app.quit(); },
@@ -204,6 +209,10 @@ createTrayMenu = function(state) {
 // ------------------------------------------------------------------------- */
 
 ipcMain.on('close-active-window', () => {
+  BrowserWindow.getFocusedWindow().close();
+});
+
+ipcMain.on('hide-active-window', () => {
   BrowserWindow.getFocusedWindow().hide();
 });
 
