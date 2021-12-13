@@ -2,7 +2,7 @@ const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
   closeActiveWindow: () => { 
-      ipcRenderer.send('close-active-window');
+      ipcRenderer.send('hide-active-window');
   },
 
   startInstance: (args) => {
