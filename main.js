@@ -11,10 +11,16 @@ const path = require('path');
 const childProcess = require('child_process');
 const { dialog } = require('electron')
 const os = require('os');
+const DaemonCommander = require('./commander');
+const Config = require('./config');
+const Telemetry = require('./telemetry');
+
+const config = new Config()
+// create the telemetry object
+const telemetry = new Telemetry(config.get('enableTelemetry'))
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
-const DaemonCommander = require('./commander');
 const commander = new DaemonCommander()
 
 function crcBinary() {

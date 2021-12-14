@@ -20,6 +20,7 @@
   "dependencies": {
     "analytics-node": "^6.0.0",
     "electron-is-dev": "^2.0.0",
+    "electron-store": "^8.0.1",
     "got": "^9.6.0",
     "object-hash": "^2.2.0",
     "uuid": "^8.3.2"
