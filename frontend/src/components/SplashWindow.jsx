@@ -30,8 +30,8 @@ export default class SplashWindow extends React.Component {
             </Bullseye>
         </PageSection>
         <PageSection sticky="bottom" variant={PageSectionVariants.light} isFilled hasShadowBottom={false} hasShadowTop={false}>
-          <Bullseye>
-              <ActionButton />
+          <Bullseye style={{ paddingTop: "70px" }}>
+            <ActionButton />
           </Bullseye>
         </PageSection>
       </Page>
