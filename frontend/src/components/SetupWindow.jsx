@@ -64,7 +64,7 @@ class SetupSpinner extends React.Component {
         return (
             <EmptyState>
                 <EmptyStateBody>
-                    <LogWindow ref={this.logWindow} />
+                    <LogWindow ref={this.logWindow} rows="14" cols="130" />
                 </EmptyStateBody>
                 <EmptyStatePrimary>
                     <Button variant={ButtonVariant.primary} onClick={this.handlePrimaryButtonAction}>Close window and start crc</Button>
@@ -143,9 +143,9 @@ export default class SetupWindow extends React.Component {
                 id: 2, 
                 name: 'Choose your environment', 
                 component: <ChoosePreset 
-                                handleBundleOpenshift={this.handleBundleOpenshift} 
-                                handleBundlePodman={this.handleBundlePodman} 
-                                ocpDesc={ocpDesc} 
+                                handleBundleOpenshift={this.handleBundleOpenshift}
+                                ocpDesc={ocpDesc}
+                                handleBundlePodman={this.handleBundlePodman}
                                 podmanDesc={podmanDesc} 
                                 currentBundle={this.state.bundle}
                             />, 
@@ -203,6 +203,7 @@ const ChoosePreset = (props) => {
             <CardTitle>Please Select the bundle you want to use</CardTitle>
             <CardBody>
                 <Preset handleClick={props.handleBundleOpenshift} presetName="OpenShift" presetDesc={props.ocpDesc}/>
+                <br />
                 <Preset handleClick={props.handleBundlePodman} presetName="Podman" presetDesc={props.podmanDesc}/>
             </CardBody>
             <CardFooter>
@@ -224,7 +225,7 @@ const ChoosePreset = (props) => {
 const Preset = (props) => {
     return (
         <>
-            <Button variant={ButtonVariant.primary} isLarge onClick={props.handleClick}>
+            <Button variant={ButtonVariant.primary} style={{ width: "160px" }} isLarge onClick={props.handleClick}>
                 {props.presetName}
             </Button>
             <TextContent>
