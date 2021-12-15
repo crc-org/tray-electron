@@ -72,7 +72,7 @@ class SetupSpinner extends React.Component {
         return (
             <EmptyState>
                 <EmptyStateBody>
-                    <LogWindow ref={this.logWindow} rows='14' cols='130' />
+                    <LogWindow ref={this.logWindow} rows={14} cols={130} />
                 </EmptyStateBody>
                 <EmptyStatePrimary>
                     <Button isDisabled={this.state.notReadyForUse} variant={ButtonVariant.primary} onClick={this.handlePrimaryButtonAction}>Start using CRC</Button>
