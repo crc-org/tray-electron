@@ -34,9 +34,14 @@ class SetupSpinner extends React.Component {
     constructor(props) {
         super(props)
 
+        this.state = {
+            notReadyForUse: true,
+        };
+
         this.handlePrimaryButtonAction = this.handlePrimaryButtonAction.bind(this);
 
         this.logWindow = React.createRef();
+        this.startUsingButton = React.createRef();
     }
 
     componentDidMount() {
@@ -44,6 +49,9 @@ class SetupSpinner extends React.Component {
         // different configs needed will be passed as args
         window.api.onSetupLogs(async (event, message) => {
             this.logWindow.current.log(message);
+        })
+        window.api.onSetupEnded(async (event, message) => {
+            this.setState({ notReadyForUse: false });
         })
         window.api.startSetup({
             bundle: this.props.bundle,
@@ -64,10 +72,10 @@ class SetupSpinner extends React.Component {
         return (
             <EmptyState>
                 <EmptyStateBody>
-                    <LogWindow ref={this.logWindow} rows="14" cols="130" />
+                    <LogWindow ref={this.logWindow} rows='14' cols='130' />
                 </EmptyStateBody>
                 <EmptyStatePrimary>
-                    <Button variant={ButtonVariant.primary} onClick={this.handlePrimaryButtonAction}>Close window and start crc</Button>
+                    <Button isDisabled={this.state.notReadyForUse} variant={ButtonVariant.primary} onClick={this.handlePrimaryButtonAction}>Start using CRC</Button>
                 </EmptyStatePrimary>
                 <EmptyStateSecondaryActions>
                     <Button variant={ButtonVariant.link} component="a" href="https://crc.dev">Visit Getting started Guide</Button>
@@ -210,12 +218,10 @@ const ChoosePreset = (props) => {
                 <Hint>
                     <HintTitle>
                         <HelperText>
-                            <HelperTextItem icon={<InfoIcon />}>Currently selected bundle is: {props.currentBundle}</HelperTextItem>
+                            <HelperTextItem icon={<InfoIcon />}>Currently selected bundle is: <i>{props.currentBundle}</i>
+                            <br />These settings can later be changed in the settings dialog</HelperTextItem>
                         </HelperText>
                     </HintTitle>
-                    <HintBody>
-                        These settings can later be changed in the settings dialog
-                    </HintBody>
                 </Hint>
             </CardFooter>
         </Card>

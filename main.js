@@ -302,6 +302,9 @@ ipcMain.on('start-setup', async (event, args) => {
   let child = childProcess.execFile(crcBinary(), ["setup"])
   child.stdout.setEncoding('utf8')
   child.stderr.setEncoding('utf8')
+  child.on('exit', function() {
+    event.reply('setup-ended');
+  })
   
   // send back stdout async on channel 'setup-logs-async'
   child.stdout.on('data', (data) => {
