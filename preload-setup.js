@@ -13,6 +13,10 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.on('setup-logs-async', cb)
   },
 
+  onSetupEnded: (cb) => {
+    ipcRenderer.on('setup-ended', cb)
+  },
+
   removeSetupLogListeners: () => {
     ipcRenderer.removeAllListeners('setup-logs-async')
   },
