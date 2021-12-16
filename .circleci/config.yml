@@ -12,6 +12,9 @@ jobs:
             sudo apt-get update
             sudo apt install wine64 zip
       - run:
+          name: add access token for github npm registry
+          command: echo "//npm.pkg.github.com/:_authToken=$GH_NPM_TOKEN" >> ./frontend/.npmrc
+      - run:
           name: Install Dependencies (electron)
           command: npm install
       - run:
