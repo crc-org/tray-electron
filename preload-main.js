@@ -43,6 +43,14 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.on('config-saved', cb)
   },
 
+  pullsecretChange: (args) => {
+    ipcRenderer.send('pullsecret-change', args);
+  },
+
+  onPullsecretChanged: (cb) => {
+    ipcRenderer.on('pullsecret-changed', cb)
+  },
+
   telemetry: {
     trackError: (errorMsg) => {
       telemetry.trackError(errorMsg)

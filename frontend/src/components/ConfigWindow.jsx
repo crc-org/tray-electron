@@ -30,8 +30,13 @@ export default class ConfigWindow extends React.Component {
     }
 
     settingsValueChanged(caller, key, value) {
-        // perform validation
+        // perform validation ?
         caller.updateValue(key, value);
+
+        if(key === "pullsecretContent") {
+            window.api.pullsecretChange({ pullsecret: value });
+            caller.updateValue("pullsecret", "")
+        }
     }
 
     settingsSave(data) {

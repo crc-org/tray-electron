@@ -417,3 +417,12 @@ ipcMain.on('config-load', async (event, args) => {
             console.log("Failed to get config");
           });
 });
+
+ipcMain.on('pullsecret-change', async (event, args) => {
+    commander.pullSecretStore(args.pullsecret)
+          .then(value => {
+            event.reply('pullsecret-changed', {});
+          }).catch(err => {
+            // error
+          });
+});
