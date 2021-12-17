@@ -231,6 +231,12 @@ isRunning = function(state) {
   return state === "running";
 }
 
+quitApp = () => {
+  miniStatusWindow.destroy()
+  mainWindow.destroy()
+  app.quit()
+}
+
 createTrayMenu = function(state) {
   if(state == '' || state == undefined) state = `Unknown`;
   var enabledWhenRunning = isRunning(state);
@@ -263,7 +269,7 @@ createTrayMenu = function(state) {
     { type: 'separator' },
     {
       label: 'Exit',
-      click() { app.quit(); },
+      click() { quitApp(); },
       accelerator: 'CommandOrControl+Q'
     }
   ]);
