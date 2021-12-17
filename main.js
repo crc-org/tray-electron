@@ -334,16 +334,20 @@ ipcMain.on('start-setup', async (event, args) => {
     // make sure we start the daemon and store the pull secret
     // if(daemonAvailable()) {
     if (daemonStart()) {
-      setTimeout(() => {
-        commander.pullSecretStore(args.pullsecret).then(value => {
-          if(value === "OK") {
-            event.reply('setup-logs-async', "Pull secret stored in keyring");
-          }
-          event.reply('setup-ended');
-        }).catch(err => {
-          event.reply('setup-logs-async', "Pull secret not stored; Please restart");
-        });
-      }, 8000);
+      if(args.pullsecret !== "") {
+        setTimeout(() => {
+          commander.pullSecretStore(args.pullsecret).then(value => {
+            if(value === "OK") {
+              event.reply('setup-logs-async', "Pull secret stored in keyring");
+            }
+            event.reply('setup-ended');
+          }).catch(err => {
+            event.reply('setup-logs-async', "Pull secret not stored; Please restart");
+          });
+        }, 8000);
+      } else {
+        event.reply('setup-ended');
+      }
     }
     //
   })
@@ -378,4 +382,31 @@ ipcMain.on('stop-instance', async (event, args) => {
 
 ipcMain.on('delete-instance', async (event, args) => {
   commander.delete();
+});
+
+
+/* ----------------------------------------------------------------------------
+// configuration
+// ------------------------------------------------------------------------- */
+
+
+ipcMain.on('config-save', async (event, args) => {
+    const values = Object.entries(args).filter(values => values[1] != "");
+    commander.configSet({ properties: Object.fromEntries(values) })
+          .then(reply => {
+            event.reply('config-saved', {});
+          })
+          .catch(ex => {
+            console.log("Failed to set config");
+          });
+});
+
+ipcMain.on('config-load', async (event, args) => {
+    commander.configGet()
+          .then(reply => {
+            event.reply('config-loaded', reply);
+          })
+          .catch(ex => {
+            console.log("Failed to get config");
+          });
 });
