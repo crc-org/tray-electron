@@ -44,7 +44,8 @@ function getFrontEndUrl(route) {
 
 function needOnboarding() {
   try {
-    const cp = childProcess.execFileSync(crcBinary(), ["daemon", "--watchdog"])
+    const cp = childProcess.execFileSync(crcBinary(), ["daemon", "--watchdog"],
+                  { windowsHide: true });
     cp.kill()
     return false
   } catch (e) {
@@ -313,14 +314,16 @@ ipcMain.on('start-setup', async (event, args) => {
   // configure telemetry
   let allowTelemetry = args.consentTelemetry ? "yes" : "no";
   try {
-    childProcess.execFileSync(crcBinary(), ["config", "set", "consent-telemetry", allowTelemetry])
+    childProcess.execFileSync(crcBinary(), ["config", "set", "consent-telemetry", allowTelemetry],
+      { windowsHide: true })
   } catch (e) {
     event.reply('setup-logs-async', e.message)
   }
 
   // configure preset
   try {
-    childProcess.execFileSync(crcBinary(), ["config", "set", "preset", args.preset])
+    childProcess.execFileSync(crcBinary(), ["config", "set", "preset", args.preset],
+      { windowsHide: true })
   } catch (e) {
     event.reply('setup-logs-async', e.message)
   }
