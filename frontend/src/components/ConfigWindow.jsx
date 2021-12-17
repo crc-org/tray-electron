@@ -8,9 +8,9 @@ import {
 import '@code-ready/crc-react-components/dist/index.css';
 
 export default class ConfigWindow extends React.Component {
-    constructor(props) {
-        super(props);
-    }
+    // constructor(props) {
+    //     super(props);
+    // }
 
     render() {
         return (
