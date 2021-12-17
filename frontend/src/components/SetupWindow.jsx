@@ -292,7 +292,7 @@ const ProvidePullSecret = (props) => {
                         <HelperText>
                             <HelperTextItem icon={<InfoIcon />}>The pull secret is necessary to allow you to pull container images from the registry.
                             A personal pull secret can be obtained from the <a target="_blank"
-                            href="https://cloud.redhat.com/openshift/create/local">CRC download page</a>.
+                            rel="noreferrer" href="https://cloud.redhat.com/openshift/create/local">CRC download page</a>.
                             Please use the "Copy pull secret" option and paste the content into the field above.</HelperTextItem>
                         </HelperText>
                     </HintTitle>
