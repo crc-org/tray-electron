@@ -14,7 +14,7 @@ const os = require('os');
 const DaemonCommander = require('./commander');
 const Config = require('./config');
 const Telemetry = require('./telemetry');
-const { Console } = require('console');
+const showNotification = require('./notification');
 
 const config = new Config()
 // create the telemetry object
@@ -34,6 +34,7 @@ function crcBinary() {
 let miniStatusWindow = undefined
 let mainWindow = undefined
 var isMac = (os.platform() === "darwin")
+var isWin = (os.platform() === "win32")
 
 function getFrontEndUrl(route) {
   let frontEndUrl = 'http://localhost:3000'
@@ -92,6 +93,9 @@ if (isMac) {
   app.dock.hide()
 }
 
+if (isWin) {
+  app.setAppUserModelId("redhat.codereadycontainers.tray")
+}
 
 /* ----------------------------------------------------------------------------
 // General application start
@@ -150,7 +154,7 @@ const appStart = async function() {
   tray.setToolTip('CodeReady Containers');
   createTrayMenu("Unknown");
 
-  tray.on('click', function(e, location) {
+  showMiniStatusWindow = function(e, location) {
     const { x, y } = location;
     const { height, width } = miniStatusWindow.getBounds();
     const { trayh, trayw } = tray.getBounds();
@@ -167,7 +171,15 @@ const appStart = async function() {
       });
       miniStatusWindow.show();
     }
-  });
+  }
+
+  tray.on('click', showMiniStatusWindow);
+  const {x, y} = tray.getBounds();
+
+  showNotification({
+    body: "Tray is running",
+    onClick: (e) => { showMiniStatusWindow(e, {x: x, y: y}) }
+  })
 
   // polling status
   while(true) {
@@ -378,14 +390,23 @@ ipcMain.once('close-setup-wizard', () => {
 
 ipcMain.on('start-instance', async (event, args) => {
   commander.start();
+  showNotification({
+    body: "CodeReady Containers instance is starting"
+  })
 });
 
 ipcMain.on('stop-instance', async (event, args) => {
   commander.stop();
+  showNotification({
+    body: "CodeReady Containers instance is stopping"
+  })
 });
 
 ipcMain.on('delete-instance', async (event, args) => {
   commander.delete();
+  showNotification({
+    body: "CodeReady Containers instance is being deleted"
+  })
 });
 
 
