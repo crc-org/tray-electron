@@ -80,7 +80,7 @@ module.exports = class DaemonCommander {
       return JSON.parse(body);
    }
 
-   async configPost(values) {
+   async configSet(values) {
       const options = {
          url: this.apiPath + `/config`
       };

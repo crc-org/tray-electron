@@ -14,6 +14,7 @@ const os = require('os');
 const DaemonCommander = require('./commander');
 const Config = require('./config');
 const Telemetry = require('./telemetry');
+const { Console } = require('console');
 
 const config = new Config()
 // create the telemetry object
@@ -397,9 +398,12 @@ ipcMain.on('config-save', async (event, args) => {
     const values = Object.entries(args).filter(values => values[1] != "");
     commander.configSet({ properties: Object.fromEntries(values) })
           .then(reply => {
+
             event.reply('config-saved', {});
           })
           .catch(ex => {
+            console.log(ex);
+
             console.log("Failed to set config");
           });
 });
