@@ -116,7 +116,18 @@ module.exports = class DaemonCommander {
       return "OK";
    }
 
-   async pullSecret() {
+   async pullSecretStore(value) {
+      const options = {
+         url: this.apiPath + `/pull-secret`,
+      };
+
+      const {body} = await got.post(options, {
+         body: value
+      });
+      return "OK";
+   }
+
+   async pullSecretAvailable() {
       const options = {
          url: this.apiPath + `/pull-secret`,
          method: 'GET'
