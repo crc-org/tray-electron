@@ -1,12 +1,12 @@
 import React from 'react';
 import {
-    Wizard,
     Card,
     CardTitle,
     CardBody,
     CardFooter,
     Button,
-    ButtonVariant, 
+    ButtonVariant,
+    TextArea,
     TextContent,
     TextVariants,
     Text,
@@ -24,6 +24,9 @@ import {
     EmptyStateBody,
     EmptyStateSecondaryActions,
     EmptyStatePrimary,
+    Wizard,
+    WizardFooter,
+    WizardContextConsumer
 } from '@patternfly/react-core';
 import InfoIcon from '@patternfly/react-icons/dist/esm/icons/info-icon';
 import {
@@ -54,8 +57,9 @@ class SetupSpinner extends React.Component {
             this.setState({ notReadyForUse: false });
         })
         window.api.startSetup({
-            bundle: this.props.bundle,
-            consentTelemetry: this.props.consentTelemetry
+            preset: this.props.preset,
+            consentTelemetry: this.props.consentTelemetry,
+            pullsecret: this.props.pullsecret
         })
     }
 
@@ -92,43 +96,50 @@ export default class SetupWindow extends React.Component {
 
         this.onNext = this.onNext.bind(this);
         this.closeWizard = this.closeWizard.bind(this);
-        this.handleBundleOpenshift = this.handleBundleOpenshift.bind(this);
-        this.handleBundlePodman = this.handleBundlePodman.bind(this);
+        this.handlePresetOpenshift = this.handlePresetOpenshift.bind(this);
+        this.handlePresetPodman = this.handlePresetPodman.bind(this);
         this.handleTelemetryConsent = this.handleTelemetryConsent.bind(this);
+        this.handlePullSecretChanged = this.handlePullSecretChanged.bind(this);
 
         this.state = {
             stepIdReached: 1,
-            bundle: "openshift",
-            consentTelemetry: false
+            preset: "openshift",
+            consentTelemetry: false,
+            pullsecret: ""
         };
 
     }
 
     onNext({ id }) {
-      this.setState({
-        stepIdReached: this.state.stepIdReached < id ? id : this.state.stepIdReached
-      });
+        this.setState({
+            stepIdReached: this.state.stepIdReached < id ? id : this.state.stepIdReached
+        });
     }
 
     closeWizard() {
         window.api.closeActiveWindow();
     }
 
-    handleBundlePodman() {
+    handlePresetPodman() {
         this.setState(() => {
-                return {bundle: "podman"};
+                return {preset: "podman"};
             }
         );
-        console.log(this.state.bundle);
     }
 
-    handleBundleOpenshift() {
+    handlePresetOpenshift() {
         this.setState(() => {
-                return {bundle: "openshift"};
+                return {preset: "openshift"};
             }
         );
-        console.log(this.state.bundle);
     }
+
+    handlePullSecretChanged = value => {
+        this.setState(() => {
+                return {pullsecret: value};
+            }
+        );
+    };
 
     handleTelemetryConsent() {
         this.setState((prevState) => {
@@ -141,40 +152,102 @@ export default class SetupWindow extends React.Component {
         const ocpDesc = "This option will run a full cluster environment as a single node. This option will provide a registry, telemetry and access to Operator Hub";
         const podmanDesc = "This options will allow you to use podman to run containers inside a VM environment. It will expose the podman command";
 
+        const CustomFooter = (
+            <WizardFooter>
+              <WizardContextConsumer>
+                {({ activeStep, goToStepByName, goToStepById, onNext, onBack, onClose }) => {
+                    // Allow to skip the pullsecret step in case of podman
+                    if (activeStep.name === "Choose your preset") {
+                        return (
+                        <>
+                            <Button style={{width: 120}} variant="secondary" onClick={onBack}>
+                            Back
+                            </Button>
+                            <Button style={{width: 120}} variant="primary" type="submit" onClick={() =>
+                                {
+                                    if(this.state.preset === "podman") {
+                                        goToStepById(4);
+                                    } else {
+                                        onNext();
+                                    }
+                                }}>
+                            Next
+                            </Button>
+                        </>
+                        )
+                    }
+                    if (activeStep.id !== 4) {
+                        return (
+                        <>
+                            <Button style={{width: 120}} variant="secondary" onClick={onBack} className={activeStep.id === 1 ? 'pf-m-disabled' : ''}>
+                            Back
+                            </Button>
+                            <Button style={{width: 120}} variant="primary" type="submit" onClick={onNext}>
+                            Next
+                            </Button>
+                        </>
+                        )
+                    }
+                    // Final step buttons
+                    return (
+                        <>
+                        <Button variant="secondary" onClick={() => goToStepById(1)}>Go to Beginning</Button>
+                        <Button style={{width: 120}} onClick={() => onNext()}>Run setup</Button>
+                        </>
+                    )}}
+              </WizardContextConsumer>
+            </WizardFooter>
+          );
+
+
         const steps = [
             { 
                 id: 1, 
                 name: 'Welcome', 
-                component: <Welcome/>, 
+                component: <Welcome />, 
             },
             { 
                 id: 2, 
-                name: 'Choose your environment', 
+                name: 'Choose your preset', 
                 component: <ChoosePreset 
-                                handleBundleOpenshift={this.handleBundleOpenshift}
-                                ocpDesc={ocpDesc}
-                                handleBundlePodman={this.handleBundlePodman}
-                                podmanDesc={podmanDesc} 
-                                currentBundle={this.state.bundle}
-                            />, 
-                canJumpTo: stepIdReached >= 2, 
+                    handlePresetOpenshift={this.handlePresetOpenshift}
+                    ocpDesc={ocpDesc}
+                    handlePresetPodman={this.handlePresetPodman}
+                    podmanDesc={podmanDesc} 
+                    currentPreset={this.state.preset}
+                />, 
+
+            },
+            {
+                id: 3,
+                name: 'Provide pull secret',
+                component: <ProvidePullSecret
+                                    handleTextAreaChange={this.handlePullSecretChanged}
+                                    pullsecret={this.state.pullsecret}
+                                />,
+                canJumpTo: stepIdReached >= 2 && this.state.preset === "openshift",
+                
             },
             { 
-                id: 3, 
+                id: 4, 
                 name: 'Review selection', 
                 component: <Summary 
-                                bundle={this.state.bundle} 
+                                preset={this.state.preset} 
                                 handleTelemetryConsent={this.handleTelemetryConsent} 
                                 checked={this.state.consentTelemetry}
                             />, 
-                canJumpTo: stepIdReached >= 3,
+                canJumpTo: stepIdReached >= 2,
                 nextButtonText: "Run Setup",
             },
             {
-                id: 4,
+                id: 5,
                 name: "Run Setup",
                 isFinishedStep: true,
-                component: <SetupSpinner bundle={this.state.bundle} consentTelemetry={this.state.consentTelemetry} />,
+                component: <SetupSpinner
+                                preset={this.state.preset}
+                                consentTelemetry={this.state.consentTelemetry}
+                                pullsecret={this.state.pullsecret}
+                            />,
             }
         ];
         const title = 'CodeReady Containers setup wizard';
@@ -190,6 +263,7 @@ export default class SetupWindow extends React.Component {
                 steps={steps}
                 onNext={this.onNext}
                 height={700}
+                footer={CustomFooter}
             />
         );
     }
@@ -198,27 +272,50 @@ export default class SetupWindow extends React.Component {
 const Welcome = () => {
     return (
         <Card isLarge isPlain>
-            <CardTitle>Hello</CardTitle>
+            <CardTitle>Welcome to CodeReady Containers</CardTitle>
             <CardBody>In the next few steps we'll ask you a few questions to setup your environment</CardBody>
-            <CardFooter>Please click Next to proceed</CardFooter>
+            <CardFooter>Please click 'Next' to proceed</CardFooter>
       </Card>
+    );
+}
+
+const ProvidePullSecret = (props) => {
+    return(
+        <Card isLarge isPlain>
+            <CardTitle>Please provide a pull secret</CardTitle>
+            <CardBody>
+                <TextArea style={{height: "240px", resize: "none"}} autoResize={false} value={props.pullsecret} onChange={props.handleTextAreaChange} />
+            </CardBody>
+            <CardFooter>
+                <Hint>
+                    <HintTitle>
+                        <HelperText>
+                            <HelperTextItem icon={<InfoIcon />}>The pull secret is necessary to allow you to pull container images from the registry.
+                            A personal pull secret can be obtained from the <a target="_blank"
+                            href="https://cloud.redhat.com/openshift/create/local">CRC download page</a>.
+                            Please use the "Copy pull secret" option and paste the content into the field above.</HelperTextItem>
+                        </HelperText>
+                    </HintTitle>
+                </Hint>
+            </CardFooter>
+        </Card>
     );
 }
 
 const ChoosePreset = (props) => {
     return(
         <Card isLarge isPlain>
-            <CardTitle>Please Select the bundle you want to use</CardTitle>
+            <CardTitle>Please select the preset you want to use</CardTitle>
             <CardBody>
-                <Preset handleClick={props.handleBundleOpenshift} presetName="OpenShift" presetDesc={props.ocpDesc}/>
+                <Preset handleClick={props.handlePresetOpenshift} presetName="OpenShift" presetDesc={props.ocpDesc}/>
                 <br />
-                <Preset handleClick={props.handleBundlePodman} presetName="Podman" presetDesc={props.podmanDesc}/>
+                <Preset handleClick={props.handlePresetPodman} presetName="Podman" presetDesc={props.podmanDesc}/>
             </CardBody>
             <CardFooter>
                 <Hint>
                     <HintTitle>
                         <HelperText>
-                            <HelperTextItem icon={<InfoIcon />}>Currently selected bundle is: <i>{props.currentBundle}</i>
+                            <HelperTextItem icon={<InfoIcon />}>Currently selected preset is: <i>{props.currentPreset}</i>
                             <br />These settings can later be changed in the settings dialog</HelperTextItem>
                         </HelperText>
                     </HintTitle>
@@ -253,8 +350,8 @@ const Summary = (props) => {
             <CardBody isFilled>
                 <DescriptionList isHorizontal>
                     <DescriptionListGroup>
-                        <DescriptionListTerm>Bundle</DescriptionListTerm>
-                        <DescriptionListDescription>{props.bundle}</DescriptionListDescription>
+                        <DescriptionListTerm>Preset</DescriptionListTerm>
+                        <DescriptionListDescription>{props.preset}</DescriptionListDescription>
                     </DescriptionListGroup>
                     <DescriptionListTerm>
                         <Checkbox 

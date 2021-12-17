@@ -90,6 +90,23 @@ if (isMac) {
   app.dock.hide()
 }
 
+
+/* ----------------------------------------------------------------------------
+// General application start
+// ------------------------------------------------------------------------- */
+
+const daemonStart = function() {
+  // launching the daemon
+  childProcess.execFile(crcBinary(), ["daemon", "--watchdog"], function(err, data) {
+    const msg = `Backend failure, Backend failed to start: ${err}`;
+    dialog.showErrorBox(`Backend failure`, msg)
+    telemetry.trackError(`Error at main.start(): ${msg}`)
+    return false;
+  });
+
+  return true;
+}
+
 const appStart = async function() {
   miniStatusWindow = new BrowserWindow({
     width: 360,
@@ -148,13 +165,6 @@ const appStart = async function() {
       });
       miniStatusWindow.show();
     }
-  });
-
-  // launching the daemon
-  childProcess.execFile(crcBinary(), ["daemon", "--watchdog"], function(err, data) {
-    const msg = `Backend failure, Backend failed to start: ${err}`;
-    dialog.showErrorBox(`Backend failure`, msg)
-    telemetry.trackError(`Error at main.start(): ${msg}`)
   });
 
   // polling status
@@ -310,7 +320,7 @@ ipcMain.on('start-setup', async (event, args) => {
 
   // configure preset
   try {
-    childProcess.execFileSync(crcBinary(), ["config", "set", "preset", args.bundle])
+    childProcess.execFileSync(crcBinary(), ["config", "set", "preset", args.preset])
   } catch (e) {
     event.reply('setup-logs-async', e.message)
   }
@@ -320,7 +330,22 @@ ipcMain.on('start-setup', async (event, args) => {
   child.stdout.setEncoding('utf8')
   child.stderr.setEncoding('utf8')
   child.on('exit', function() {
-    event.reply('setup-ended');
+
+    // make sure we start the daemon and store the pull secret
+    // if(daemonAvailable()) {
+    if (daemonStart()) {
+      setTimeout(() => {
+        commander.pullSecretStore(args.pullsecret).then(value => {
+          if(value === "OK") {
+            event.reply('setup-logs-async', "Pull secret stored in keyring");
+          }
+          event.reply('setup-ended');
+        }).catch(err => {
+          event.reply('setup-logs-async', "Pull secret not stored; Please restart");
+        });
+      }, 8000);
+    }
+    //
   })
   
   // send back stdout async on channel 'setup-logs-async'
