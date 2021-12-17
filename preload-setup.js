@@ -17,10 +17,6 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.on('setup-ended', cb)
   },
 
-  onConfigurationSaved: (cb) => {
-    ipcRenderer.on('config-saved', cb)
-  },
-
   removeSetupLogListeners: () => {
     ipcRenderer.removeAllListeners('setup-logs-async')
   },
