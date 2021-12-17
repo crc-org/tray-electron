@@ -28,7 +28,7 @@ import {
 import InfoIcon from '@patternfly/react-icons/dist/esm/icons/info-icon';
 import {
     LogWindow
-} from '@gbraad/crc-react-components';
+} from '@code-ready/crc-react-components';
 
 class SetupSpinner extends React.Component {
     constructor(props) {

@@ -4,8 +4,8 @@ import {
 } from '@patternfly/react-core';
 import {
   ControlCard
-} from '@gbraad/crc-react-components';
-import '@gbraad/crc-react-components/dist/index.css';
+} from '@code-ready/crc-react-components';
+import '@code-ready/crc-react-components/dist/index.css';
 
 export default class StatusWindow extends React.Component {
   constructor(props) {
