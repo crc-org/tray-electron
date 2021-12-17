@@ -304,7 +304,7 @@ ipcMain.on('start-setup', async (event, args) => {
 
   // configure preset
   try {
-    childProcess.execFileSync(crcBinary(), ["config", "set", "bundle", args.bundle])
+    childProcess.execFileSync(crcBinary(), ["config", "set", "preset", args.bundle])
   } catch (e) {
     event.reply('setup-logs-async', e.message)
   }
