@@ -72,7 +72,7 @@ module.exports = class DaemonCommander {
 
    async configGet() {
       const options = {
-         url: this.apiPath + `/config/get`,
+         url: this.apiPath + `/config`,
          method: 'GET'
       };
 
@@ -82,7 +82,7 @@ module.exports = class DaemonCommander {
 
    async configPost(values) {
       const options = {
-         url: this.apiPath + `/config/set`
+         url: this.apiPath + `/config`
       };
 
       const {body} = await got.post(options, {

@@ -26,7 +26,23 @@ contextBridge.exposeInMainWorld('api', {
   onStatusChanged: (cb) => {
     ipcRenderer.on('status-changed', cb)
   },
+
+  configurationLoad: (args) => {
+    ipcRenderer.send('config-load', args);
+  },
+
+  configurationSave: (args) => {
+    ipcRenderer.send('config-save', args);
+  },
+
+  onConfigurationLoaded: (cb) => {
+    ipcRenderer.on('config-loaded', cb)
+  },
   
+  onConfigurationSaved: (cb) => {
+    ipcRenderer.on('config-saved', cb)
+  },
+
   telemetry: {
     trackError: (errorMsg) => {
       telemetry.trackError(errorMsg)
