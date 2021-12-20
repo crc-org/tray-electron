@@ -24,7 +24,7 @@ contextBridge.exposeInMainWorld('api', {
   },
 
   onStatusChanged: (cb) => {
-    ipcRenderer.on('status-changed', cb)
+    ipcRenderer.on('status-changed', cb);
   },
 
   configurationLoad: (args) => {
@@ -36,11 +36,11 @@ contextBridge.exposeInMainWorld('api', {
   },
 
   onConfigurationLoaded: (cb) => {
-    ipcRenderer.on('config-loaded', cb)
+    ipcRenderer.on('config-loaded', cb);
   },
   
   onConfigurationSaved: (cb) => {
-    ipcRenderer.on('config-saved', cb)
+    ipcRenderer.on('config-saved', cb);
   },
 
   pullsecretChange: (args) => {
@@ -48,16 +48,24 @@ contextBridge.exposeInMainWorld('api', {
   },
 
   onPullsecretChanged: (cb) => {
-    ipcRenderer.on('pullsecret-changed', cb)
+    ipcRenderer.on('pullsecret-changed', cb);
   },
+
+  retrieveLogs: (args) => {
+    ipcRenderer.send('logs-retrieve', args);
+  },
+
+  onLogsRetrieved: (cb) => {
+    ipcRenderer.on('logs-retrieved', cb);
+  }, 
 
   telemetry: {
     trackError: (errorMsg) => {
-      telemetry.trackError(errorMsg)
+      telemetry.trackError(errorMsg);
     },
 
     trackSuccess: (successMsg) => {
-      telemetry.trackSuccess(successMsg)
+      telemetry.trackSuccess(successMsg);
     }
   }
 });

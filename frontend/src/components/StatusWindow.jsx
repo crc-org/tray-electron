@@ -13,6 +13,7 @@ export default class StatusWindow extends React.Component {
     super(props);
     this.state = {
       preset: "unknown",
+      lastLineRead: 0
     };
 
     this.onStart = this.onStart.bind(this);
@@ -28,30 +29,33 @@ export default class StatusWindow extends React.Component {
       if(status.preset !== undefined) {
         this.setState({"preset": status.preset})
       }
-
       this.control.current.updateStatus(status);
     })
-  }
 
-  log(message) {
-    this.logWindow.current.log(message);
+    window.api.onLogsRetrieved(async (event, logs) => {
+      if(logs.Messages.length > this.state.lastLineRead) {
+        var lineIndex = 0;
+        for(lineIndex = this.state.lastLineRead; lineIndex < logs.Messages.length; lineIndex++) {
+          var log = logs.Messages[lineIndex];
+          this.logWindow.current.log(log);
+        }
+        this.setState({lastLineRead: lineIndex});
+      }
+    })
+
+    // This is NOT ideal
+    window.api.retrieveLogs();
   }
 
   onStart() {
-    this.log("→ Start clicked");
-
     window.api.startInstance({})
   }
 
   onStop() {
-    this.log("→ Stop clicked");
-
     window.api.stopInstance({})
   }
 
   onDelete() {
-    this.log("→ Delete clicked");
-
     window.api.deleteInstance({})
   }
 

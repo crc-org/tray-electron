@@ -186,8 +186,8 @@ const appStart = async function() {
     var status = await commander.status();
     createTrayMenu(status);
     await delay(1000);
-    mainWindow.webContents.send('status-changed', state);
-    miniStatusWindow.webContents.send('status-changed', state);
+    mainWindow.webContents.send('status-changed', status);
+    miniStatusWindow.webContents.send('status-changed', status);
   }
 }
 
@@ -513,3 +513,16 @@ openCockpit = function() {
     mainWindow.show();
   });
 }
+
+/* ----------------------------------------------------------------------------
+// Logs
+// ------------------------------------------------------------------------- */
+
+ipcMain.on('logs-retrieve', async (event, args) => {
+  // ouch
+  while(true) {
+    var logs = await commander.logs();
+    await delay(3000);
+    mainWindow.webContents.send('logs-retrieved', logs);
+  }
+});

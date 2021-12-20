@@ -48,7 +48,6 @@ const LogoBanner = () => {
 const ActionButton = () => {
     let navigate = useNavigate();
     let showSetupWizard = () => {
-        console.log("clicked")
         navigate('/setup');
     }
 

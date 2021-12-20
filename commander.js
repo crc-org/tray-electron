@@ -136,4 +136,14 @@ module.exports = class DaemonCommander {
       const {body} = await got(options);
       return JSON.parse(body);
    }
+
+   async logs() {
+      const options = {
+         url: this.apiPath + `/logs`,
+         method: 'GET'
+      };
+
+      const {body} = await got(options);
+      return JSON.parse(body);
+   }
 }
