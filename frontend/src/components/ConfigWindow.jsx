@@ -3,7 +3,7 @@ import {
     Bullseye
 } from '@patternfly/react-core';
 import {
-    Settings
+    Configuration
 } from '@code-ready/crc-react-components';
 import '@code-ready/crc-react-components/dist/index.css';
 
@@ -11,16 +11,16 @@ export default class ConfigWindow extends React.Component {
     constructor(props) {
         super(props);
 
-        this.settingsValueChanged = this.settingsValueChanged.bind(this);
-        this.settingsSave = this.settingsSave.bind(this);
-        this.settingsReset = this.settingsReset.bind(this);
+        this.configurationValueChanged = this.configurationValueChanged.bind(this);
+        this.configurationSave = this.configurationSave.bind(this);
+        this.configurationReset = this.configurationReset.bind(this);
 
-        this.settings = React.createRef();
+        this.config = React.createRef();
     }
 
     componentDidMount() {
         window.api.onConfigurationLoaded(async (event, data) => {
-            this.settings.current.updateValues(data.Configs);
+            this.config.current.updateValues(data.Configs);
         })
         window.api.onConfigurationSaved(async (event, message) => {
 
@@ -29,7 +29,7 @@ export default class ConfigWindow extends React.Component {
         window.api.configurationLoad({})
     }
 
-    settingsValueChanged(caller, key, value) {
+    configurationValueChanged(caller, key, value) {
         // perform validation ?
         caller.updateValue(key, value);
 
@@ -39,25 +39,25 @@ export default class ConfigWindow extends React.Component {
         }
     }
 
-    settingsSave(data) {
+    configurationSave(data) {
         window.api.configurationSave(data)
     }
 
-    settingsReset() {
-        this.settingsLoad();
+    configurationReset() {
+        this.configurationLoad();
     }
 
-    settingsLoad() {
+    configurationLoad() {
         window.api.configurationLoad({})
     }
 
     render() {
         return (
             <Bullseye>
-                <Settings ref={this.settings}
-                        onValueChanged={this.settingsValueChanged}
-                        onSaveClicked={this.settingsSave}
-                        onResetClicked={this.settingsReset} />
+                <Configuration ref={this.config}
+                        onValueChanged={this.configurationValueChanged}
+                        onSaveClicked={this.configurationSave}
+                        onResetClicked={this.configurationReset} />
             </Bullseye>
         );
     }
