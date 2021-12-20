@@ -419,12 +419,15 @@ ipcMain.on('config-save', async (event, args) => {
     const values = Object.entries(args).filter(values => values[1] != "");
     commander.configSet({ properties: Object.fromEntries(values) })
           .then(reply => {
-
             event.reply('config-saved', {});
+            showNotification({
+              body: "Configuration saved"
+            })
           })
           .catch(ex => {
-            console.log(ex);
-
+            showNotification({
+              body: "Configuation not saved"
+            })
             console.log("Failed to set config");
           });
 });
@@ -433,8 +436,14 @@ ipcMain.on('config-load', async (event, args) => {
     commander.configGet()
           .then(reply => {
             event.reply('config-loaded', reply);
+            showNotification({
+              body: "Configuration loaded"
+            })
           })
           .catch(ex => {
+            showNotification({
+              body: "Configuation not loaded"
+            })
             console.log("Failed to get config");
           });
 });
@@ -443,7 +452,13 @@ ipcMain.on('pullsecret-change', async (event, args) => {
     commander.pullSecretStore(args.pullsecret)
           .then(value => {
             event.reply('pullsecret-changed', {});
+            showNotification({
+              body: "Pull secret stored"
+            })
           }).catch(err => {
             // error
+            showNotification({
+              body: "Pull secret not stored"
+            })
           });
 });
