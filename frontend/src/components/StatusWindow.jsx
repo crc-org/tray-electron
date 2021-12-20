@@ -11,6 +11,9 @@ import '@code-ready/crc-react-components/dist/index.css';
 export default class StatusWindow extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      preset: "unknown",
+    };
 
     this.onStart = this.onStart.bind(this);
     this.onStop = this.onStop.bind(this);
@@ -22,6 +25,10 @@ export default class StatusWindow extends React.Component {
 
   componentDidMount() {
     window.api.onStatusChanged(async (event, status) => {
+      if(status.preset !== undefined) {
+        this.setState({"preset": status.preset})
+      }
+
       this.control.current.updateStatus(status);
     })
   }
@@ -53,6 +60,7 @@ export default class StatusWindow extends React.Component {
       <>
         <Bullseye>
           <ControlCard ref={this.control}
+            preset={this.state.preset}
             onStartClicked={this.onStart}
             onStopClicked={this.onStop}
             onDeleteClicked={this.onDelete} />

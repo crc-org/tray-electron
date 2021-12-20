@@ -116,7 +116,7 @@ const daemonStart = function() {
 const appStart = async function() {
   miniStatusWindow = new BrowserWindow({
     width: 360,
-    height: 250,
+    height: 245,
     resizable: false,
     show: false,
     frame: false,
@@ -152,7 +152,7 @@ const appStart = async function() {
   // Setup tray
   tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
   tray.setToolTip('CodeReady Containers');
-  createTrayMenu("Unknown");
+  createTrayMenu({crcStatus: "Unknown", preset: "Unknown"});
 
   showMiniStatusWindow = function(e, location) {
     const { x, y } = location;
@@ -183,8 +183,8 @@ const appStart = async function() {
 
   // polling status
   while(true) {
-    var state = await commander.status();
-    createTrayMenu(state.CrcStatus);
+    var status = await commander.status();
+    createTrayMenu(status);
     await delay(1000);
     mainWindow.webContents.send('status-changed', state);
     miniStatusWindow.webContents.send('status-changed', state);
@@ -211,19 +211,19 @@ openDetailedStatus = function() {
   mainWindow.show();
 }
 
-openWebConsole = async function() {
+openOpenShiftConsole = async function() {
   var result = await commander.consoleUrl();
   var url = result.ClusterConfig.WebConsoleURL;
   shell.openExternal(url);
 }
 
-clipLoginAdminCommand = async function() {
+clipOpenShiftLoginAdminCommand = async function() {
   var result = await commander.consoleUrl();
   var command = "oc.exe login -u kubeadmin -p " + result.ClusterConfig.KubeAdminPass + " " + result.ClusterConfig.ClusterAPI;
   clipboard.writeText(command);
 }
 
-clipLoginDeveloperCommand = async function() {
+clipOpenShiftLoginDeveloperCommand = async function() {
   var result = await commander.consoleUrl();
   var command = "oc.exe login -u developer -p developer " + result.ClusterConfig.ClusterAPI;
   clipboard.writeText(command);
@@ -261,31 +261,44 @@ quitApp = () => {
   app.quit()
 }
 
-createTrayMenu = function(state) {
-  if(state == '' || state == undefined) state = `Unknown`;
+createTrayMenu = function(status) {
+  var state = status.crcStatus;
+  var preset = status.preset;
+
+  if(state == "" || state == undefined) state = "Unknown";
   var enabledWhenRunning = isRunning(state);
 
-  const contextMenu = Menu.buildFromTemplate([
+  const podmanOptions = {
+    label: '  Launch Console',
+    click() { openPodmanConsole(); },
+    enabled: enabledWhenRunning
+  }
+
+  const openShiftOptions = [{
+    label: '  Launch Console',
+    click() { openOpenShiftConsole(); },
+    enabled: enabledWhenRunning
+  },
+  {
+    label: '  Copy OC login command (admin)',
+    click() { clipOpenShiftLoginAdminCommand(); },
+    enabled: enabledWhenRunning
+  },
+  {
+    label: '  Copy OC login command (developer)',
+    click() { clipOpenShiftLoginDeveloperCommand(); },
+    enabled: enabledWhenRunning
+  }];
+
+  let presetOptions = (preset === "openshift") ? { ...openShiftOptions } : podmanOptions;
+
+  let menuTemplate = [
     {
       label: state,
       click() { openDetailedStatus(); },
       icon: path.join(app.getAppPath(), 'assets', `status-${mapStateForImage(state)}.png`),
     },
-    {
-      label: '  Launch Console',
-      click() { openWebConsole(); },
-      enabled: enabledWhenRunning
-    },
-    {
-      label: '  Copy OC login command (admin)',
-      click() { clipLoginAdminCommand(); },
-      enabled: enabledWhenRunning
-    },
-    {
-      label: '  Copy OC login command (developer)',
-      click() { clipLoginDeveloperCommand(); },
-      enabled: enabledWhenRunning
-    },
+    presetOptions,
     {
       label: '  Configuration',
       click() { openConfiguration(); }
@@ -296,7 +309,10 @@ createTrayMenu = function(state) {
       click() { quitApp(); },
       accelerator: 'CommandOrControl+Q'
     }
-  ]);
+  ]
+
+
+  const contextMenu = Menu.buildFromTemplate(menuTemplate);
 
   tray.setContextMenu(contextMenu);
 }
@@ -414,7 +430,6 @@ ipcMain.on('delete-instance', async (event, args) => {
 // configuration
 // ------------------------------------------------------------------------- */
 
-
 ipcMain.on('config-save', async (event, args) => {
     const values = Object.entries(args).filter(values => values[1] != "");
     commander.configSet({ properties: Object.fromEntries(values) })
@@ -462,3 +477,39 @@ ipcMain.on('pullsecret-change', async (event, args) => {
             })
           });
 });
+
+
+/* ----------------------------------------------------------------------------
+// Podman specific
+// ------------------------------------------------------------------------- */
+
+const podmanHost = "10.0.21.230";
+
+app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+  if (url.startsWith(`https://${podmanHost}:9090/`)) {
+    event.preventDefault()
+    callback(true)
+  } else {
+    callback(false)
+  }
+})
+
+const podmanStart = async function() {
+  const filter = {
+    urls: [`http://${podmanHost}:9090/*`]
+  }
+
+  session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
+    details.requestHeaders['Authorization'] = 'Bearer Y29yZQ=='
+    callback({ requestHeaders: details.requestHeaders })
+  });
+}
+
+openCockpit = function() {
+  var url = `http://${podmanHost}:9090/cockpit/@localhost/podman/index.html`;
+  mainWindow.loadURL(url)
+
+  mainWindow.webContents.on('did-finish-load', function() {
+    mainWindow.show();
+  });
+}
