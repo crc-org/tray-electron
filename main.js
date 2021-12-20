@@ -483,7 +483,7 @@ ipcMain.on('pullsecret-change', async (event, args) => {
 // Podman specific
 // ------------------------------------------------------------------------- */
 
-const podmanHost = "192.168.127.2";
+const podmanHost = "podman.crc.testing";
 
 app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
   if (url.startsWith(`https://${podmanHost}:9090/`)) {
