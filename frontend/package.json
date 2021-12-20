@@ -4,7 +4,7 @@
   "private": true,
   "homepage": ".",
   "dependencies": {
-    "@code-ready/crc-react-components": "^0.5.5",
+    "@code-ready/crc-react-components": "^0.7.0",
     "@patternfly/react-core": "^4.175.4",
     "@testing-library/jest-dom": "^5.15.1",
     "@testing-library/react": "^11.1.0",
