@@ -17,10 +17,7 @@ export default class MiniStatusWindow extends React.Component {
 
   componentDidMount() {
     window.api.onStatusChanged(async (event, status) => {
-      if(status.preset !== undefined) {
-        this.setState({"preset": status.preset})
-      }
-
+      this.setState({"preset": status.Preset})
       this.control.current.updateStatus(status);
     })
   }

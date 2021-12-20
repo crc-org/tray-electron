@@ -152,7 +152,7 @@ const appStart = async function() {
   // Setup tray
   tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
   tray.setToolTip('CodeReady Containers');
-  createTrayMenu({crcStatus: "Unknown", preset: "Unknown"});
+  createTrayMenu({CrcStatus: "Unknown", Preset: "Unknown"});
 
   showMiniStatusWindow = function(e, location) {
     const { x, y } = location;
@@ -262,8 +262,8 @@ quitApp = () => {
 }
 
 createTrayMenu = function(status) {
-  var state = status.crcStatus;
-  var preset = status.preset;
+  var state = status.CrcStatus;
+  var preset = status.Preset;
 
   if(state == "" || state == undefined) state = "Unknown";
   var enabledWhenRunning = isRunning(state);
@@ -483,7 +483,7 @@ ipcMain.on('pullsecret-change', async (event, args) => {
 // Podman specific
 // ------------------------------------------------------------------------- */
 
-const podmanHost = "10.0.21.230";
+const podmanHost = "192.168.127.2";
 
 app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
   if (url.startsWith(`https://${podmanHost}:9090/`)) {
@@ -494,7 +494,7 @@ app.on('certificate-error', (event, webContents, url, error, certificate, callba
   }
 })
 
-const podmanStart = async function() {
+const podmanSetup = async function() {
   const filter = {
     urls: [`http://${podmanHost}:9090/*`]
   }
@@ -505,13 +505,15 @@ const podmanStart = async function() {
   });
 }
 
-openCockpit = function() {
+openPodmanConsole = function() {
+  podmanSetup();
+
   var url = `http://${podmanHost}:9090/cockpit/@localhost/podman/index.html`;
   mainWindow.loadURL(url)
 
-  mainWindow.webContents.on('did-finish-load', function() {
+  //mainWindow.webContents.on('did-finish-load', function() {
     mainWindow.show();
-  });
+  //});
 }
 
 /* ----------------------------------------------------------------------------
