@@ -269,13 +269,13 @@ createTrayMenu = function(status) {
   var enabledWhenRunning = isRunning(state);
 
   const podmanOptions = {
-    label: '  Launch Console',
+    label: '  Open Console',
     click() { openPodmanConsole(); },
     enabled: enabledWhenRunning
   }
 
   const openShiftOptions = [{
-    label: '  Launch Console',
+    label: '  Open Console',
     click() { openOpenShiftConsole(); },
     enabled: enabledWhenRunning
   },
