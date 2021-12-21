@@ -378,7 +378,7 @@ ipcMain.on('start-setup', async (event, args) => {
       } else {
         setTimeout(() => {
           event.reply('setup-ended');
-        }, 3000);
+        }, 8000);
       }
     }
     //
