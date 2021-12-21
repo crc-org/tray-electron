@@ -26,11 +26,13 @@ export default class StatusWindow extends React.Component {
 
   componentDidMount() {
     window.api.onStatusChanged(async (event, status) => {
-      this.setState({"preset": status.Preset})
+      this.setState({preset: status.Preset})
       this.control.current.updateStatus(status);
     })
 
     window.api.onLogsRetrieved(async (event, logs) => {
+      // TODO: onNewLogsRetrieved
+
       if(logs.Messages.length > this.state.lastLineRead) {
         var lineIndex = 0;
         for(lineIndex = this.state.lastLineRead; lineIndex < logs.Messages.length; lineIndex++) {

@@ -311,9 +311,7 @@ createTrayMenu = function(status) {
     }
   ]
 
-
   const contextMenu = Menu.buildFromTemplate(menuTemplate);
-
   tray.setContextMenu(contextMenu);
 }
 
@@ -378,7 +376,9 @@ ipcMain.on('start-setup', async (event, args) => {
           });
         }, 8000);
       } else {
-        event.reply('setup-ended');
+        setTimeout(() => {
+          event.reply('setup-ended');
+        }, 3000);
       }
     }
     //
