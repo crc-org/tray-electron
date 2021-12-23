@@ -5,7 +5,8 @@ const {
   Tray,
   BrowserWindow,
   shell,
-  ipcMain 
+  ipcMain,
+  session 
 } = require('electron');
 const path = require('path');
 const childProcess = require('child_process');
@@ -183,9 +184,9 @@ const appStart = async function() {
 
   // polling status
   while(true) {
+    await delay(1000);
     var status = await commander.status();
     createTrayMenu(status);
-    await delay(1000);
     mainWindow.webContents.send('status-changed', status);
     miniStatusWindow.webContents.send('status-changed', status);
   }
