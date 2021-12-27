@@ -341,8 +341,8 @@ const Preset = (props) => {
 }
 
 const Summary = (props) => {
-    const telemetryDesc = "CodeReady Containers is constantly improving and we would like to know more about usage." +
-        "For preview releases this information is very valuable to resolve issues and can therefore not be turned off."
+    const telemetryDesc = "CodeReady Containers is constantly improving and we would like to know more about usage. " +
+        "For preview releases this information is very valuable to resolve issues and can therefore not be turned off at this time."
         //"Your preference can be changed manually if desired from the settings dialog.";
 
     return (
