@@ -87,6 +87,8 @@ app.whenReady().then(() => {
   if (needOnboarding()) {
     showOnboarding()
   } else {
+    daemonStart();
+    delay(4000);
     appStart();
   }
 });
@@ -198,11 +200,15 @@ const appStart = async function() {
 
   // polling status
   while(true) {
+    try {
+      var status = await commander.status();
+      createTrayMenu(status);
+      mainWindow.webContents.send('status-changed', status);
+      miniStatusWindow.webContents.send('status-changed', status);
+    } catch(e) {
+      console.log("Status tick: " + e);
+    }
     await delay(1000);
-    var status = await commander.status();
-    createTrayMenu(status);
-    mainWindow.webContents.send('status-changed', status);
-    miniStatusWindow.webContents.send('status-changed', status);
   }
 }
 
@@ -538,11 +544,16 @@ openPodmanConsole = function() {
 // Logs
 // ------------------------------------------------------------------------- */
 
+// TODO: perhaps move this to renderer process
 ipcMain.on('logs-retrieve', async (event, args) => {
   // ouch
   while(true) {
-    var logs = await commander.logs();
+    try {
+      var logs = await commander.logs();
+      mainWindow.webContents.send('logs-retrieved', logs);
+    } catch(e) {
+        console.log("Logs tick: " + e)
+    }
     await delay(3000);
-    mainWindow.webContents.send('logs-retrieved', logs);
   }
 });
