@@ -53,7 +53,6 @@ function needOnboarding() {
     cp.kill()
     return false
   } catch (e) {
-
     return true
   }
 }
@@ -207,6 +206,10 @@ const appStart = async function() {
       miniStatusWindow.webContents.send('status-changed', status);
     } catch(e) {
       console.log("Status tick: " + e);
+      const unknownStatus = { CrcStatus: "Stopped" };
+      createTrayMenu(unknownStatus);
+      mainWindow.webContents.send('status-changed', unknownStatus);
+      miniStatusWindow.webContents.send('status-changed', unknownStatus);
     }
     await delay(1000);
   }
@@ -402,6 +405,7 @@ ipcMain.on('start-setup', async (event, args) => {
         }, 8000);
       } else {
         setTimeout(() => {
+          event.reply('setup-logs-async', "Ready.");  // Press Play On Tape ;-P
           event.reply('setup-ended');
         }, 8000);
       }
