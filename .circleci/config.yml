@@ -28,11 +28,11 @@ jobs:
           command: zip -r windows-release.zip release/tray-electron-win32-x64/
       - run:
           name: Archive macOS release directory
-          command: zip -r macos-release.zip release/tray-electron-darwin-x64/
+          command: tar -cvzf macos-release.tar.gz release/tray-electron-darwin-x64/
 
       - store_artifacts:
           path: ~/repo/windows-release.zip
           destination: crc-tray-electron-windows
       - store_artifacts:
-          path: ~/repo/macos-release.zip
+          path: ~/repo/macos-release.tar.gz
           destination: crc-tray-electron-macos
