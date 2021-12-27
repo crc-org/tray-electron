@@ -24,9 +24,15 @@ jobs:
           name: Generate Builds
           command: npm run release:cross
       - run:
-          name: Archive release directory
-          command: zip -r artifacts.zip release
+          name: Archive Windows release directory
+          command: zip -r windows-release.zip release/tray-electron-win32-x64/
+      - run:
+          name: Archive macOS release directory
+          command: zip -r macos-release.zip release/tray-electron-darwin-x64/
 
       - store_artifacts:
-          path: ~/repo/artifacts.zip
-          destination: builds
+          path: ~/repo/windows-release.zip
+          destination: crc-tray-electron-windows
+      - store_artifacts:
+          path: ~/repo/macos-release.zip
+          destination: crc-tray-electron-macos
