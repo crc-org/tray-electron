@@ -104,7 +104,7 @@ export default class SetupWindow extends React.Component {
         this.state = {
             stepIdReached: 1,
             preset: "openshift",
-            consentTelemetry: false,
+            consentTelemetry: true,  // for dev-preview releases
             pullsecret: ""
         };
 
@@ -341,8 +341,9 @@ const Preset = (props) => {
 }
 
 const Summary = (props) => {
-    const telemetryDesc = "CodeReady Containers is constantly improving and we would like to know more about usage" +
-        "Your preference can be changed manually if desired from the settings dialog.";
+    const telemetryDesc = "CodeReady Containers is constantly improving and we would like to know more about usage." +
+        "For preview releases this information is very valuable to resolve issues and can therefore not be turned off."
+        //"Your preference can be changed manually if desired from the settings dialog.";
 
     return (
         <Card isLarge isPlain>
@@ -361,6 +362,7 @@ const Summary = (props) => {
                             description={telemetryDesc || props.checked}
                             onChange={props.handleTelemetryConsent}
                             isChecked={props.checked}
+                            isDisabled={true}  // can't be changed for dev-preview
                         />
                     </DescriptionListTerm> 
                 </DescriptionList>

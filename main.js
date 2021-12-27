@@ -34,6 +34,7 @@ function crcBinary() {
 
 let miniStatusWindow = undefined
 let mainWindow = undefined
+let podmanWindow = undefined
 var isMac = (os.platform() === "darwin")
 var isWin = (os.platform() === "win32")
 
@@ -150,6 +151,19 @@ const appStart = async function() {
     mainWindow.hide();
   })
 
+  podmanWindow = new BrowserWindow({
+    width: 1024,
+    height: 768,
+    resizable: false,
+    show: false,
+  })
+  podmanWindow.setMenuBarVisibility(false)
+
+  podmanWindow.on('close', async e => {
+    e.preventDefault()
+    podmanWindow.hide();
+  })
+
   // Setup tray
   tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
   tray.setToolTip('CodeReady Containers');
@@ -200,16 +214,18 @@ openConfiguration = function() {
   let frontEndUrl = getFrontEndUrl("config");
   mainWindow.loadURL(frontEndUrl);
 
-    // when ready
-  mainWindow.show();
+  mainWindow.webContents.on('did-finish-load', function() {
+    mainWindow.show();
+  });
 }
 
 openDetailedStatus = function() {
   let frontEndUrl = getFrontEndUrl("status");
   mainWindow.loadURL(frontEndUrl);
 
-  // when ready
-  mainWindow.show();
+  mainWindow.webContents.on('did-finish-load', function() {
+    mainWindow.show();
+  });
 }
 
 openOpenShiftConsole = async function() {
@@ -259,6 +275,7 @@ isRunning = function(state) {
 quitApp = () => {
   miniStatusWindow.destroy()
   mainWindow.destroy()
+  podmanWindow.destroy();
   app.quit()
 }
 
@@ -510,11 +527,11 @@ openPodmanConsole = function() {
   podmanSetup();
 
   var url = `http://${podmanHost}:9090/cockpit/@localhost/podman/index.html`;
-  mainWindow.loadURL(url)
+  podmanWindow.loadURL(url)
 
-  //mainWindow.webContents.on('did-finish-load', function() {
-    mainWindow.show();
-  //});
+  podmanWindow.webContents.on('did-finish-load', function() {
+    podmanWindow.show();
+  });
 }
 
 /* ----------------------------------------------------------------------------
