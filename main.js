@@ -387,8 +387,9 @@ ipcMain.on('start-setup', async (event, args) => {
 
     // make sure we start the daemon and store the pull secret
     // if(daemonAvailable()) {
+    event.reply('setup-logs-async', "Starting daemon process ...");
     if (daemonStart()) {
-      if(args.pullsecret !== "") {
+      if(args.pullsecret !== "") {  // when no pull-secret given let's continue
         setTimeout(() => {
           commander.pullSecretStore(args.pullsecret).then(value => {
             if(value === "OK") {
