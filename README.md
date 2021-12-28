@@ -1,5 +1,5 @@
-Electron app for CodeReady Containers
-=====================================
+Desktop/tray app for CodeReady Containers
+=========================================
 
 ![](./docs/demo.png)
 
