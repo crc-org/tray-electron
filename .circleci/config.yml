@@ -31,8 +31,8 @@ jobs:
           command: cd release && tar -cvzf crc-tray-macos.tar.gz crc-tray-darwin-x64/
 
       - store_artifacts:
-          path: ~/repo/crc-tray-windows.zip
+          path: ~/repo/release/crc-tray-windows.zip
           destination: crc-tray-windows
       - store_artifacts:
-          path: ~/repo/crc-tray-macos.tar.gz
+          path: ~/repo/release/crc-tray-macos.tar.gz
           destination: crc-tray-macos
