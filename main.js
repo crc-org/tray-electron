@@ -434,24 +434,39 @@ ipcMain.once('close-setup-wizard', () => {
 // ------------------------------------------------------------------------- */
 
 ipcMain.on('start-instance', async (event, args) => {
-  commander.start();
-  showNotification({
-    body: "CodeReady Containers instance is starting"
-  })
+  try {
+    commander.start();
+    showNotification({
+      body: "CodeReady Containers instance is starting"
+    })
+  }
+  catch(e) {
+    console.log("Action error: " + e)
+  }
 });
 
 ipcMain.on('stop-instance', async (event, args) => {
-  commander.stop();
-  showNotification({
-    body: "CodeReady Containers instance is stopping"
-  })
+  try {
+    commander.stop();
+    showNotification({
+      body: "CodeReady Containers instance is stopping"
+    })
+  }
+  catch(e) {
+    console.log("Action error: " + e)
+  }
 });
 
 ipcMain.on('delete-instance', async (event, args) => {
-  commander.delete();
-  showNotification({
-    body: "CodeReady Containers instance is being deleted"
-  })
+  try {
+    commander.delete();
+    showNotification({
+      body: "CodeReady Containers instance is being deleted"
+    })
+  }
+  catch(e) {
+    console.log("Action error: " + e)
+  }
 });
 
 
