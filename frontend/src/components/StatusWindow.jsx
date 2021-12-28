@@ -70,7 +70,7 @@ export default class StatusWindow extends React.Component {
             onDeleteClicked={this.onDelete} />
         </Bullseye>
         <Bullseye>
-          <LogWindow cols={94} rows={12} ref={this.logWindow} />
+          <LogWindow cols={89} rows={12} ref={this.logWindow} />
         </Bullseye>
       </>
     );
