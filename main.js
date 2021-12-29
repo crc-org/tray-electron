@@ -25,18 +25,36 @@ const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
 const commander = new DaemonCommander()
 
+
+/* ----------------------------------------------------------------------------
+// Platform specific
+// ------------------------------------------------------------------------- */
+
+var isMac = (os.platform() === "darwin")
+var isWin = (os.platform() === "win32")
+
 function crcBinary() {
   if (app.isPackaged) {
+    if (isWin) {
+      // This returns `crc` as located in c:\Progra~1\CodeRe~1\
+      return path.join(app.getAppPath(), '..', '..', 'crc');
+    }
+
+    // This returns `crc` as located in the webapp folder
     return path.join(app.getAppPath(), 'crc');
   }
+
+  // No path provided
   return "crc"
 }
+
+/* ----------------------------------------------------------------------------
+// Basic initilization
+// ------------------------------------------------------------------------- */
 
 let miniStatusWindow = undefined
 let mainWindow = undefined
 let podmanWindow = undefined
-var isMac = (os.platform() === "darwin")
-var isWin = (os.platform() === "win32")
 
 function getFrontEndUrl(route) {
   let frontEndUrl = 'http://localhost:3000'
@@ -45,6 +63,11 @@ function getFrontEndUrl(route) {
   }
   return (!route || route === "") ? frontEndUrl : `${frontEndUrl}#/${route}`;
 }
+
+
+/* ----------------------------------------------------------------------------
+// Onboarding / setup
+// ------------------------------------------------------------------------- */
 
 function needOnboarding() {
   try {
