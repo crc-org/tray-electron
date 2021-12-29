@@ -295,11 +295,11 @@ createTrayMenu = function(status) {
   if(state == "" || state == undefined) state = "Unknown";
   var enabledWhenRunning = isRunning(state);
 
-  const podmanOptions = {
+  const podmanOptions = [{
     label: '  Open Console',
     click() { openPodmanConsole(); },
     enabled: enabledWhenRunning
-  }
+  }];
 
   const openShiftOptions = [{
     label: '  Open Console',
@@ -317,7 +317,10 @@ createTrayMenu = function(status) {
     enabled: enabledWhenRunning
   }];
 
-  let presetOptions = (preset === "openshift") ? { ...openShiftOptions } : podmanOptions;
+  let presetOptions = [];
+  if (preset !== undefined && preset !== "Unknown") {
+    presetOptions = (preset === "openshift") ? openShiftOptions : podmanOptions;
+  }
 
   let menuTemplate = [
     {
@@ -325,7 +328,7 @@ createTrayMenu = function(status) {
       click() { openDetailedStatus(); },
       icon: path.join(app.getAppPath(), 'assets', `status-${mapStateForImage(state)}.png`),
     },
-    presetOptions,
+    ...presetOptions,
     {
       label: '  Configuration',
       click() { openConfiguration(); }
