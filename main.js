@@ -36,8 +36,13 @@ var isWin = (os.platform() === "win32")
 function crcBinary() {
   if (app.isPackaged) {
     if (isWin) {
-      // This returns `crc` as located in c:\Progra~1\CodeRe~1\
+      // This returns `crc` as located in c:\Program Files\CodeReady Containers\
       return path.join(app.getAppPath(), '..', '..', 'crc');
+    }
+
+    if (isMac) {
+      // This returns `crc` as located in /Applications/CodeReady Containers.app/Contents/Resources
+      return path.join(app.getAppPath(), '..', 'crc');
     }
 
     // This returns `crc` as located in the webapp folder
