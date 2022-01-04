@@ -389,6 +389,10 @@ ipcMain.on('start-tray', (event, arg) => {
   appStart()
 })
 
+ipcMain.on('open-link', (event, arg) => {
+  shell.openExternal(arg)
+})
+
 
 /* ----------------------------------------------------------------------------
 // Setup
