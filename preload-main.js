@@ -57,7 +57,7 @@ contextBridge.exposeInMainWorld('api', {
 
   onLogsRetrieved: (cb) => {
     ipcRenderer.on('logs-retrieved', cb);
-  }, 
+  },
 
   telemetry: {
     trackError: (errorMsg) => {

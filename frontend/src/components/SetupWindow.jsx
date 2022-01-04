@@ -72,6 +72,10 @@ class SetupSpinner extends React.Component {
         window.api.closeSetupWizard();
     }
 
+    handleDocsLinks(url) {
+        window.api.openLinkInDefaultBrowser(url)
+    }
+
     render () {
         return (
             <EmptyState>
@@ -82,8 +86,8 @@ class SetupSpinner extends React.Component {
                     <Button isDisabled={this.state.notReadyForUse} variant={ButtonVariant.primary} onClick={this.handlePrimaryButtonAction}>Start using CRC</Button>
                 </EmptyStatePrimary>
                 <EmptyStateSecondaryActions>
-                    <Button variant={ButtonVariant.link} component="a" href="https://crc.dev">Visit Getting started Guide</Button>
-                    <Button variant={ButtonVariant.link} component="a" href="https://crc.dev">Example Deployments</Button>
+                    <Button variant={ButtonVariant.link} onClick={ () => { this.handleDocsLinks("https://crc.dev") }}>Visit Getting started Guide</Button>
+                    <Button variant={ButtonVariant.link} onClick={ () => { this.handleDocsLinks("https://crc.dev") }}>Example Deployments</Button>
                 </EmptyStateSecondaryActions>
             </EmptyState>
         );
