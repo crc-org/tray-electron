@@ -76,9 +76,8 @@ function getFrontEndUrl(route) {
 
 function needOnboarding() {
   try {
-    const cp = childProcess.execFileSync(crcBinary(), ["daemon", "--watchdog"],
+    const cp = childProcess.execFileSync(crcBinary(), ["setup", "--check-only"],
                   { windowsHide: true });
-    cp.kill()
     return false
   } catch (e) {
     return true
