@@ -1,6 +1,10 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
+  openLinkInDefaultBrowser: (url) => {
+    ipcRenderer.send('open-link', url)
+  },
+  
   closeActiveWindow: () => { 
       ipcRenderer.send('close-active-window');
   },
