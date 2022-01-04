@@ -6,7 +6,7 @@ const {
   BrowserWindow,
   shell,
   ipcMain,
-  session 
+  session
 } = require('electron');
 const path = require('path');
 const childProcess = require('child_process');
@@ -96,6 +96,23 @@ function showOnboarding() {
     }
   })
   mainWindow.setMenuBarVisibility(false)
+
+  mainWindow.on('close', async e => {
+    e.preventDefault()
+    const choice = dialog.showMessageBoxSync(mainWindow, {
+      message: "Are you sure you want to close the on-boarding wizard?",
+      title: "CodeReady Containers",
+      type: "warning",
+      buttons: ["Yes", "No"],
+      defaultId: 1,
+      cancelId: 1,
+    })
+
+    if (choice == 0) {
+      mainWindow.destroy()
+      app.quit()
+    }
+  })
 
   let frontEndUrl = getFrontEndUrl();
   mainWindow.loadURL(frontEndUrl)
