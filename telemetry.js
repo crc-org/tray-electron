@@ -10,6 +10,10 @@ let writeKey = 'R7jGNYYO5gH0Nl5gDlMEuZ3gPlDJKQak'; // test
 let userIdHashPath = path.join(__dirname, "segmentIdentityHash");
 let userIdPath = path.join(os.homedir(), '.redhat', 'anonymousId');
 
+if (app.isPackaged) {
+    writeKey = 'cvpHsNcmGCJqVzf6YxrSnVlwFSAZaYtp';
+}
+
 module.exports = class Telemetry {
     #traits = {
         tray_os_version: os.version(), // Windows 10 Pro
