@@ -19,7 +19,7 @@ const showNotification = require('./notification');
 
 const config = new Config()
 // create the telemetry object
-const telemetry = new Telemetry(config.get('enableTelemetry'))
+const telemetry = new Telemetry(config.get('enableTelemetry'), getSegmentWriteKey())
 
 const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 
@@ -51,6 +51,13 @@ function crcBinary() {
 
   // No path provided
   return "crc"
+}
+
+function getSegmentWriteKey() {
+  if (app.isPackaged) {
+    return 'cvpHsNcmGCJqVzf6YxrSnVlwFSAZaYtp'
+  }
+  return 'R7jGNYYO5gH0Nl5gDlMEuZ3gPlDJKQak'
 }
 
 /* ----------------------------------------------------------------------------
@@ -628,3 +635,15 @@ ipcMain.on('logs-retrieve', async (event, args) => {
     await delay(3000);
   }
 });
+
+/* ----------------------------------------------------------------------------
+// Telemetry
+// ------------------------------------------------------------------------- */
+
+ipcMain.on('track-error', async (event, arg) => {
+  telemetry.trackError(arg)
+})
+
+ipcMain.on('track-success', async (event, arg) => {
+  telemetry.trackSuccess(arg)
+})

@@ -6,7 +6,6 @@ const fs = require('fs');
 const {v4: uuidv4 } = require('uuid');
 const hash = require('object-hash');
 
-let writeKey = 'R7jGNYYO5gH0Nl5gDlMEuZ3gPlDJKQak'; // test
 let userIdHashPath = path.join(os.homedir(), '.crc', "segmentIdentityHash");
 let userIdPath = path.join(os.homedir(), '.redhat', 'anonymousId');
 
@@ -25,7 +24,7 @@ module.exports = class Telemetry {
         ip: "0.0.0.0"
     }
 
-    constructor(telemetryEnabled) {
+    constructor(telemetryEnabled, writeKey) {
         this.telemetryEnabled = telemetryEnabled
         
         if (!telemetryEnabled) {

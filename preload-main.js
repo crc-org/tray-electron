@@ -1,10 +1,4 @@
 const { contextBridge, ipcRenderer } = require('electron');
-const Config = require('./config');
-const Telemetry = require('./telemetry');
-
-
-const config = new Config()
-const telemetry = new Telemetry(config.get('enableTelemetry'))
 
 contextBridge.exposeInMainWorld('api', {
   closeActiveWindow: () => { 
@@ -61,11 +55,11 @@ contextBridge.exposeInMainWorld('api', {
 
   telemetry: {
     trackError: (errorMsg) => {
-      telemetry.trackError(errorMsg);
+      ipcRenderer.send('track-error', errorMsg);
     },
 
     trackSuccess: (successMsg) => {
-      telemetry.trackSuccess(successMsg);
+     ipcRenderer.send('track-success', successMsg);
     }
   }
 });
