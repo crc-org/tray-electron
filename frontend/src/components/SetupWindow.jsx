@@ -6,7 +6,6 @@ import {
     CardFooter,
     Button,
     ButtonVariant,
-    TextArea,
     TextContent,
     TextVariants,
     Text,
@@ -30,7 +29,8 @@ import {
 } from '@patternfly/react-core';
 import InfoIcon from '@patternfly/react-icons/dist/esm/icons/info-icon';
 import {
-    LogWindow
+    LogWindow,
+    PullSecretInputCard
 } from '@code-ready/crc-react-components';
 
 class SetupSpinner extends React.Component {
@@ -139,6 +139,8 @@ export default class SetupWindow extends React.Component {
     }
 
     handlePullSecretChanged = value => {
+
+        console.log(value);
         this.setState(() => {
                 return {pullsecret: value};
             }
@@ -285,24 +287,9 @@ const Welcome = () => {
 
 const ProvidePullSecret = (props) => {
     return(
-        <Card isLarge isPlain>
-            <CardTitle>Please provide a pull secret</CardTitle>
-            <CardBody>
-                <TextArea style={{height: "240px", resize: "none"}} autoResize={false} value={props.pullsecret} onChange={props.handleTextAreaChange} />
-            </CardBody>
-            <CardFooter>
-                <Hint>
-                    <HintTitle>
-                        <HelperText>
-                            <HelperTextItem icon={<InfoIcon />}>The pull secret is necessary to allow you to pull container images from the registry.
-                            A personal pull secret can be obtained from the <a target="_blank"
-                            rel="noreferrer" href="https://cloud.redhat.com/openshift/create/local">CRC download page</a>.
-                            Please use the "Copy pull secret" option and paste the content into the field above.</HelperTextItem>
-                        </HelperText>
-                    </HintTitle>
-                </Hint>
-            </CardFooter>
-        </Card>
+        <PullSecretInputCard height="220px"
+            pullsecret={props.pullsecret}
+            onChanged={props.handleTextAreaChange} />
     );
 }
 
