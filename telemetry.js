@@ -7,7 +7,7 @@ const {v4: uuidv4 } = require('uuid');
 const hash = require('object-hash');
 
 let writeKey = 'R7jGNYYO5gH0Nl5gDlMEuZ3gPlDJKQak'; // test
-let userIdHashPath = path.join(__dirname, "segmentIdentityHash");
+let userIdHashPath = path.join(os.homedir(), '.crc', "segmentIdentityHash");
 let userIdPath = path.join(os.homedir(), '.redhat', 'anonymousId');
 
 if (app.isPackaged) {
