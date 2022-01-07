@@ -157,14 +157,24 @@ if (isWin) {
 
 const daemonStart = function() {
   // launching the daemon
-  childProcess.execFile(crcBinary(), ["daemon", "--watchdog"], function(err, data) {
+  const daemonProcess = childProcess.spawn(crcBinary(), ["daemon", "--watchdog"], {
+    detached: true,
+    windowsHide: true
+  })
+
+  daemonProcess.on('error', err => {
     const msg = `Backend failure, Backend failed to start: ${err}`;
     dialog.showErrorBox(`Backend failure`, msg)
     telemetry.trackError(`Error at main.start(): ${msg}`)
-    return false;
-  });
+  })
 
-  return true;
+  daemonProcess.stdout.on('date', (data) => {
+    // noop
+  })
+
+  daemonProcess.stderr.on('data', (data) => {
+    // noop
+  })
 }
 
 const appStart = async function() {
