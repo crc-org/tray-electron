@@ -33,6 +33,10 @@ const commander = new DaemonCommander()
 
 var isMac = (os.platform() === "darwin")
 var isWin = (os.platform() === "win32")
+var occommand = "oc";
+if (isWin) {
+  occommand = "oc.exe";
+}
 
 function crcBinary() {
   if (app.isPackaged) {
@@ -318,13 +322,13 @@ openOpenShiftConsole = async function() {
 
 clipOpenShiftLoginAdminCommand = async function() {
   var result = await commander.consoleUrl();
-  var command = "oc.exe login -u kubeadmin -p " + result.ClusterConfig.KubeAdminPass + " " + result.ClusterConfig.ClusterAPI;
+  var command = `${occommand} login -u kubeadmin -p ` + result.ClusterConfig.KubeAdminPass + " " + result.ClusterConfig.ClusterAPI;
   clipboard.writeText(command);
 }
 
 clipOpenShiftLoginDeveloperCommand = async function() {
   var result = await commander.consoleUrl();
-  var command = "oc.exe login -u developer -p developer " + result.ClusterConfig.ClusterAPI;
+  var command = `${occommand} login -u developer -p developer ` + result.ClusterConfig.ClusterAPI;
   clipboard.writeText(command);
 }
 
