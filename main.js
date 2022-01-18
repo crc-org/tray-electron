@@ -70,6 +70,7 @@ let logsWindow = undefined;
 let configurationWindow = undefined;
 let podmanWindow = undefined;
 let setupWindow = undefined;
+let pullsecretChangeWindow = undefined;
 
 function getFrontEndUrl(route) {
   let frontEndUrl = 'http://localhost:3000'
@@ -199,7 +200,7 @@ const appStart = async function() {
   })
   miniStatusWindow.loadURL(getFrontEndUrl("ministatus"));
   
-
+  // TODO: deal with duplication
   logsWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -217,7 +218,7 @@ const appStart = async function() {
   })
   logsWindow.loadURL(getFrontEndUrl("logs"));
 
-
+  // TODO: deal with duplication
   configurationWindow = new BrowserWindow({
     width: 800,
     height: 600,
@@ -235,7 +236,25 @@ const appStart = async function() {
   })
   configurationWindow.loadURL(getFrontEndUrl("configuration"));
 
+  // TODO: deal with duplication
+  pullsecretChangeWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    resizable: false,
+    show: false,
+    webPreferences: {
+      preload: path.join(__dirname, "preload-main.js")
+    }
+  })
+  pullsecretChangeWindow.setMenuBarVisibility(false)
 
+  pullsecretChangeWindow.on('close', async e => {
+    e.preventDefault()
+    pullsecretChangeWindow.hide();
+  })
+  pullsecretChangeWindow.loadURL(getFrontEndUrl("pullsecret"));
+
+  // TODO: deal with duplication
   podmanWindow = new BrowserWindow({
     width: 1024,
     height: 768,
@@ -586,6 +605,15 @@ ipcMain.on('config-load', async (event, args) => {
             })
             console.log("Failed to get config");
           });
+});
+
+
+/* ----------------------------------------------------------------------------
+// Pull secret specific
+// ------------------------------------------------------------------------- */
+
+ipcMain.on('open-pullsecret-window', async (event, args) => {
+  pullsecretChangeWindow.show();
 });
 
 ipcMain.on('pullsecret-change', async (event, args) => {

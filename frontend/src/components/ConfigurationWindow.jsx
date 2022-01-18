@@ -14,6 +14,7 @@ export default class ConfigurationWindow extends React.Component {
         this.configurationValueChanged = this.configurationValueChanged.bind(this);
         this.configurationSave = this.configurationSave.bind(this);
         this.configurationReset = this.configurationReset.bind(this);
+        this.openPullsecretChangeWindow = this.openPullsecretChangeWindow.bind(this);
 
         this.config = React.createRef();
     }
@@ -32,11 +33,6 @@ export default class ConfigurationWindow extends React.Component {
     configurationValueChanged(caller, key, value) {
         // perform validation ?
         caller.updateValue(key, value);
-
-        if(key === "pullsecretContent") {
-            window.api.pullsecretChange({ pullsecret: value });
-            caller.updateValue("pullsecret", "")
-        }
     }
 
     configurationSave(data) {
@@ -51,13 +47,18 @@ export default class ConfigurationWindow extends React.Component {
         window.api.configurationLoad({})
     }
 
+    openPullsecretChangeWindow() {
+        window.api.openOpullsecretChangeWindow({})
+    }
+
     render() {
         return (
             <Bullseye>
                 <Configuration ref={this.config}
                         onValueChanged={this.configurationValueChanged}
                         onSaveClicked={this.configurationSave}
-                        onResetClicked={this.configurationReset} />
+                        onResetClicked={this.configurationReset}
+                        onPullsecretChangeClicked={this.openPullsecretChangeWindow} />
             </Bullseye>
         );
     }
