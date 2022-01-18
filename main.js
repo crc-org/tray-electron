@@ -65,9 +65,11 @@ function getSegmentWriteKey() {
 // Basic initilization
 // ------------------------------------------------------------------------- */
 
-let miniStatusWindow = undefined
-let mainWindow = undefined
-let podmanWindow = undefined
+let miniStatusWindow = undefined;
+let logsWindow = undefined;
+let configurationWindow = undefined;
+let podmanWindow = undefined;
+let setupWindow = undefined;
 
 function getFrontEndUrl(route) {
   let frontEndUrl = 'http://localhost:3000'
@@ -94,7 +96,7 @@ function needOnboarding() {
 
 function showOnboarding() {
   // parent window to prevent app closing
-  mainWindow = new BrowserWindow({
+  setupWindow = new BrowserWindow({
     width: 1024,
     height: 738,
     resizable: false,
@@ -103,11 +105,11 @@ function showOnboarding() {
       preload: path.join(__dirname, "preload-setup.js")
     }
   })
-  mainWindow.setMenuBarVisibility(false)
+  setupWindow.setMenuBarVisibility(false)
 
-  mainWindow.on('close', async e => {
+  setupWindow.on('close', async e => {
     e.preventDefault()
-    const choice = dialog.showMessageBoxSync(mainWindow, {
+    const choice = dialog.showMessageBoxSync(setupWindow, {
       message: "Are you sure you want to close the on-boarding wizard?",
       title: "CodeReady Containers",
       type: "warning",
@@ -117,14 +119,13 @@ function showOnboarding() {
     })
 
     if (choice == 0) {
-      mainWindow.destroy()
+      setupWindow.destroy()
       app.quit()
     }
   })
 
-  let frontEndUrl = getFrontEndUrl();
-  mainWindow.loadURL(frontEndUrl)
-  mainWindow.show()
+  setupWindow.loadURL(getFrontEndUrl("splash"));
+  setupWindow.show()
 
   telemetry.trackSuccess("Successfully started the onboarding screen")
 }
@@ -198,7 +199,8 @@ const appStart = async function() {
   })
   miniStatusWindow.loadURL(getFrontEndUrl("ministatus"));
   
-  mainWindow = new BrowserWindow({
+
+  logsWindow = new BrowserWindow({
     width: 800,
     height: 600,
     resizable: false,
@@ -207,12 +209,32 @@ const appStart = async function() {
       preload: path.join(__dirname, "preload-main.js")
     }
   })
-  mainWindow.setMenuBarVisibility(false)
+  logsWindow.setMenuBarVisibility(false)
 
-  mainWindow.on('close', async e => {
+  logsWindow.on('close', async e => {
     e.preventDefault()
-    mainWindow.hide();
+    logsWindow.hide();
   })
+  logsWindow.loadURL(getFrontEndUrl("logs"));
+
+
+  configurationWindow = new BrowserWindow({
+    width: 800,
+    height: 600,
+    resizable: false,
+    show: false,
+    webPreferences: {
+      preload: path.join(__dirname, "preload-main.js")
+    }
+  })
+  configurationWindow.setMenuBarVisibility(false)
+
+  configurationWindow.on('close', async e => {
+    e.preventDefault()
+    configurationWindow.hide();
+  })
+  configurationWindow.loadURL(getFrontEndUrl("configuration"));
+
 
   podmanWindow = new BrowserWindow({
     width: 1024,
@@ -226,6 +248,7 @@ const appStart = async function() {
     e.preventDefault()
     podmanWindow.hide();
   })
+
 
   // Setup tray
   tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
@@ -264,13 +287,11 @@ const appStart = async function() {
     try {
       var status = await commander.status();
       createTrayMenu(status);
-      mainWindow.webContents.send('status-changed', status);
       miniStatusWindow.webContents.send('status-changed', status);
     } catch(e) {
       console.log("Status tick: " + e);
       const unknownStatus = { CrcStatus: "Stopped" };
       createTrayMenu(unknownStatus);
-      mainWindow.webContents.send('status-changed', unknownStatus);
       miniStatusWindow.webContents.send('status-changed', unknownStatus);
     }
     await delay(1000);
@@ -281,22 +302,12 @@ const appStart = async function() {
 // Tray menu functions
 // ------------------------------------------------------------------------- */
 
-openConfiguration = function() {
-  let frontEndUrl = getFrontEndUrl("config");
-  mainWindow.loadURL(frontEndUrl);
-
-  mainWindow.webContents.on('did-finish-load', function() {
-    mainWindow.show();
-  });
+openConfigurationWindow = function() {
+  configurationWindow.show();
 }
 
-openDetailedStatus = function() {
-  let frontEndUrl = getFrontEndUrl("status");
-  mainWindow.loadURL(frontEndUrl);
-
-  mainWindow.webContents.on('did-finish-load', function() {
-    mainWindow.show();
-  });
+openLogsWindow = function() {
+  logsWindow.show();
 }
 
 openOpenShiftConsole = async function() {
@@ -345,7 +356,8 @@ isRunning = function(state) {
 
 quitApp = () => {
   miniStatusWindow.destroy()
-  mainWindow.destroy()
+  logsWindow.destroy();
+  configurationWindow.destroy();
   podmanWindow.destroy();
   app.quit()
 }
@@ -387,13 +399,13 @@ createTrayMenu = function(status) {
   let menuTemplate = [
     {
       label: state,
-      click() { openDetailedStatus(); },
+      click() { openLogsWindow(); },
       icon: path.join(app.getAppPath(), 'assets', `status-${mapStateForImage(state)}.png`),
     },
     ...presetOptions,
     {
       label: '  Configuration',
-      click() { openConfiguration(); }
+      click() { openConfigurationWindow(); }
     },
     { type: 'separator' },
     {
@@ -493,7 +505,7 @@ ipcMain.on('start-setup', async (event, args) => {
 })
 
 ipcMain.once('close-setup-wizard', () => {
-  mainWindow.hide();
+  setupWindow.hide();
   appStart()
 })
 
@@ -641,7 +653,7 @@ ipcMain.on('logs-retrieve', async (event, args) => {
   while(true) {
     try {
       var logs = await commander.logs();
-      mainWindow.webContents.send('logs-retrieved', logs);
+      logsWindow.webContents.send('logs-retrieved', logs);
     } catch(e) {
         console.log("Logs tick: " + e)
     }

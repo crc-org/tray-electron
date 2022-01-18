@@ -6,21 +6,23 @@ import { HashRouter,
   Routes } from "react-router-dom";
 import SplashWindow from './components/SplashWindow';
 import SetupWindow from './components/SetupWindow';
-import StatusWindow from './components/StatusWindow';
-import ConfigWindow from './components/ConfigWindow';
+import LogsWindow from './components/LogsWindow';
+import ConfigurationWindow from './components/ConfigurationWindow';
 import MiniStatusWindow from './components/MiniStatusWindow';
 
 ReactDOM.render(
   <React.StrictMode>
     <HashRouter>
       <Routes>
-        <Route path="/" exact element={<SplashWindow />} />
+        <Route path="/" exact element={<p>No route given</p>} />
+        <Route path="/splash" element={<SplashWindow />} />
         <Route path="/setup" element={<SetupWindow />} />
-        <Route path="/status" element={<StatusWindow />} />
-        <Route path="/config" element={<ConfigWindow />} />
+        <Route path="/logs" element={<LogsWindow />} />
+        <Route path="/configuration" element={<ConfigurationWindow />} />
         <Route path="/ministatus" element={<MiniStatusWindow />} />
       </Routes>
     </HashRouter>
   </React.StrictMode>,
   document.getElementById('root')
 );
+
