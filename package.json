@@ -8,8 +8,8 @@
   "scripts": {
     "build:react": "cd frontend && npm run build",
     "start": "npm run build:react && electron .",
-    "release": "npm run build:react && electron-packager . --ignore='frontend/package.json' --ignore='/frontend/node_modules' --ignore='/frontend/src' --overwrite --asar --out=release",
-    "release:cross": "npm run build:react && electron-packager . --ignore='/frontend/package.json' --ignore='/frontend/node_modules' --ignore='/frontend/src' --overwrite --asar --out=release --platform=darwin,win32",
+    "release": "npm run build:react && electron-packager . --ignore='frontend/package.json' --ignore='/frontend/node_modules' --ignore='/frontend/src' --overwrite --asar --out=release --prune=true --icon=assets/appicon",
+    "release:cross": "npm run build:react && electron-packager . --ignore='/frontend/package.json' --ignore='/frontend/node_modules' --ignore='/frontend/src' --overwrite --asar --out=release --platform=darwin,win32 --prune=true --icon=assets/appicon",
     "start:dev": "concurrently \"electron .\" \"cd frontend && npm start\""
   },
   "devDependencies": {
