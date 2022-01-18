@@ -37,6 +37,10 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.on('config-saved', cb);
   },
 
+  openOpullsecretChangeWindow: (args) => {
+    ipcRenderer.send('open-pullsecret-window', args);
+  },
+
   pullsecretChange: (args) => {
     ipcRenderer.send('pullsecret-change', args);
   },

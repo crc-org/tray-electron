@@ -9,6 +9,7 @@ import SetupWindow from './components/SetupWindow';
 import LogsWindow from './components/LogsWindow';
 import ConfigurationWindow from './components/ConfigurationWindow';
 import MiniStatusWindow from './components/MiniStatusWindow';
+import PullSecretChangeWindow from './components/PullSecretChangeWindow';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -20,6 +21,7 @@ ReactDOM.render(
         <Route path="/logs" element={<LogsWindow />} />
         <Route path="/configuration" element={<ConfigurationWindow />} />
         <Route path="/ministatus" element={<MiniStatusWindow />} />
+        <Route path="/pullsecret" element={<PullSecretChangeWindow />} />
       </Routes>
     </HashRouter>
   </React.StrictMode>,
