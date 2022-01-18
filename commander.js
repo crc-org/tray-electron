@@ -134,7 +134,7 @@ module.exports = class DaemonCommander {
       };
 
       const {body} = await got(options);
-      return JSON.parse(body);
+      return body;
    }
 
    async logs() {

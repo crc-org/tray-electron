@@ -72,6 +72,7 @@ let podmanWindow = undefined;
 let setupWindow = undefined;
 let pullsecretChangeWindow = undefined;
 
+
 function getFrontEndUrl(route) {
   let frontEndUrl = 'http://localhost:3000'
   if (app.isPackaged) {
@@ -378,6 +379,7 @@ quitApp = () => {
   logsWindow.destroy();
   configurationWindow.destroy();
   podmanWindow.destroy();
+  pullsecretChangeWindow.destroy();
   app.quit()
 }
 
@@ -534,6 +536,16 @@ ipcMain.once('close-setup-wizard', () => {
 // ------------------------------------------------------------------------- */
 
 ipcMain.on('start-instance', async (event, args) => {
+  if(await isPullsecretMissing()) {
+    showNotification({
+      body: "Unable to start as pull secret is not given."
+    })
+
+    pullsecretChangeWindow.show();
+
+    return; 
+  }
+
   try {
     commander.start();
     showNotification({
@@ -611,6 +623,19 @@ ipcMain.on('config-load', async (event, args) => {
 /* ----------------------------------------------------------------------------
 // Pull secret specific
 // ------------------------------------------------------------------------- */
+
+isPullsecretMissing = async function() {
+  let isPullsecretMissing = true;
+  await commander.pullSecretAvailable()
+  .then(reply => {
+    isPullsecretMissing = false;
+  })
+  .catch(ex => {
+    isPullsecretMissing = true;
+  });
+
+  return isPullsecretMissing;
+}
 
 ipcMain.on('open-pullsecret-window', async (event, args) => {
   pullsecretChangeWindow.show();
