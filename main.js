@@ -17,6 +17,7 @@ const DaemonCommander = require('./commander');
 const Config = require('./config');
 const Telemetry = require('./telemetry');
 const showNotification = require('./notification');
+const which = require('which');
 
 const config = new Config()
 // create the telemetry object
@@ -352,6 +353,48 @@ clipOpenShiftLoginDeveloperCommand = async function() {
   clipboard.writeText(command);
 }
 
+openOpenshiftDevTerminal = async function() {
+  prepareDevTerminaleForPreset("openshift")
+}
+
+openPodmanDevTerminal = async function() {
+  prepareDevTerminalForPreset("podman")
+}
+
+// preset is either openshift or podman
+prepareDevTerminalForPreset = async function(preset) {
+  var command = "";
+
+  switch(preset) {
+    case "openshift":
+      command = "oc-env"
+      break
+    case "podman":
+      command = "podman-env"
+      break
+    default:
+      return false
+  }
+  //TODO: use iterm or iterm2 for macOS
+  if (isWin) {
+    var poshPath = which.sync("powershell.exe", { nothrow: true })
+    if (poshPath !== null) {
+      const posh = childProcess.spawn(poshPath, [`-NoExit -command "& {${crcBinary()} ${command} | Invoke-Expression}"`], {
+        detached: true,
+        shell: true,
+        cwd: os.homedir(),
+        stdio: 'ignore'
+      })
+
+      posh.unref()
+    }
+  } else {
+    showNotification({
+      body: "Only supported on Windows currently"
+    })
+  }
+}
+
 
 /* ----------------------------------------------------------------------------
 // Tray menu
@@ -398,6 +441,11 @@ createTrayMenu = function(status) {
     label: '  Open Console',
     click() { openPodmanConsole(); },
     enabled: enabledWhenRunning
+  },
+  {
+    label: '  Open developer terminal',
+    click() { openPodmanDevTerminal() },
+    enabled: enabledWhenRunning
   }];
 
   const openShiftOptions = [{
@@ -413,6 +461,11 @@ createTrayMenu = function(status) {
   {
     label: '  Copy OC login command (developer)',
     click() { clipOpenShiftLoginDeveloperCommand(); },
+    enabled: enabledWhenRunning
+  },
+  {
+    label: '  Open developer terminal',
+    click() { openOpenshiftDevTerminal(); },
     enabled: enabledWhenRunning
   }];
 
