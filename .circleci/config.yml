@@ -26,6 +26,9 @@ jobs:
       - run:
           name: Archive macOS release directory
           command: cd release && tar -cvzf crc-tray-macos.tar.gz crc-tray-darwin-x64/
+      - run:
+          name: Archive Linux release directory
+          command: cd release && tar -cvzf crc-tray-linux.tar.gz crc-tray-linux-x64/
 
       - store_artifacts:
           path: ~/repo/release/crc-tray-windows.zip
@@ -33,3 +36,6 @@ jobs:
       - store_artifacts:
           path: ~/repo/release/crc-tray-macos.tar.gz
           destination: crc-tray-macos.tar.gz
+      - store_artifacts:
+          path: ~/repo/release/crc-tray-linux.tar.gz
+          destination: crc-tray-linux.tar.gz
