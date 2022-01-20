@@ -497,26 +497,24 @@ ipcMain.on('start-setup', async (event, args) => {
     // make sure we start the daemon and store the pull secret
     // if(daemonAvailable()) {
     event.reply('setup-logs-async', "Starting daemon process ...");
-    if (daemonStart()) {
-      if(args.pullsecret !== "") {  // when no pull-secret given let's continue
-        setTimeout(() => {
-          commander.pullSecretStore(args.pullsecret).then(value => {
-            if(value === "OK") {
-              event.reply('setup-logs-async', "Pull secret stored in keyring");
-            }
-            event.reply('setup-ended');
-          }).catch(err => {
-            event.reply('setup-logs-async', "Pull secret not stored; Please restart");
-          });
-        }, 8000);
-      } else {
-        setTimeout(() => {
-          event.reply('setup-logs-async', "Ready.");  // Press Play On Tape ;-P
+    daemonStart();
+    if(args.pullsecret !== "") {  // when no pull-secret given let's continue
+      setTimeout(() => {
+        commander.pullSecretStore(args.pullsecret).then(value => {
+          if(value === "OK") {
+            event.reply('setup-logs-async', "Pull secret stored in keyring");
+          }
           event.reply('setup-ended');
-        }, 8000);
-      }
+        }).catch(err => {
+          event.reply('setup-logs-async', "Pull secret not stored; Please restart");
+        });
+      }, 8000);
+    } else {
+      setTimeout(() => {
+        event.reply('setup-logs-async', "Ready.");  // Press Play On Tape ;-P
+        event.reply('setup-ended');
+      }, 8000);
     }
-    //
   })
   
   // send back stdout async on channel 'setup-logs-async'
