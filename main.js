@@ -153,29 +153,49 @@ function showOnboarding() {
 // Main functions
 // ------------------------------------------------------------------------- */
 
-app.on('browser-window-focus', (e, w) => {
-  w.webContents.on('did-fail-load', () => {
-    w.webContents.reload()
+const gotTheLock = app.requestSingleInstanceLock()
+if (!gotTheLock) {
+  app.quit()
+} else {
+  app.on('second-instance', () => {
+    if (setupWindow && isOnboarding) {
+      if (setupWindow.isMinimized()) setupWindow.restore()
+      setupWindow.focus()
+    } else {
+      dialog.showMessageBox({
+        title: "CodeReady Containers",
+        message: "CodeReady Containers is already running. Please use the tray icon to intereact",
+        type: "info"
+      }).then(() => {})
+      .catch(() => {})
+    }
   })
-})
 
-app.whenReady().then(() => {
-  if (needOnboarding()) {
-    showOnboarding()
-  } else {
-    daemonStart();
-    delay(4000);
-    appStart();
+  app.on('browser-window-focus', (e, w) => {
+    w.webContents.on('did-fail-load', () => {
+      w.webContents.reload()
+    })
+  })
+
+  app.whenReady().then(() => {
+    if (needOnboarding()) {
+      showOnboarding()
+    } else {
+      daemonStart();
+      delay(4000);
+      appStart();
+    }
+  });
+
+  if (isMac) {
+    app.dock.hide()
   }
-});
-
-if (isMac) {
-  app.dock.hide()
+  
+  if (isWin) {
+    app.setAppUserModelId("redhat.codereadycontainers.tray")
+  }
 }
 
-if (isWin) {
-  app.setAppUserModelId("redhat.codereadycontainers.tray")
-}
 
 /* ----------------------------------------------------------------------------
 // General application start
@@ -444,6 +464,7 @@ quitApp = () => {
   configurationWindow.destroy();
   podmanWindow.destroy();
   pullsecretChangeWindow.destroy();
+  app.releaseSingleInstanceLock();
   app.quit()
 }
 
