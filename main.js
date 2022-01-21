@@ -425,9 +425,36 @@ prepareDevTerminalForPreset = async function(preset) {
 
       posh.unref()
     }
+  } else if (isMac) {
+    var script = `tell application "Terminal"
+    do script "eval $(${crcBinary} ${command})"
+end tell
+
+tell application "System events"
+    try
+        set frontmost of application process "Terminal" to true
+    end try
+end`
+
+    const scriptFileName = path.join(os.tmpdir(), 'crc-mac-terminal-script')
+    fs.writeFile(scriptFileName, script, (err) => {
+      if (err) {
+        showNotification({
+          body: "Failed to open Developer terminal" + err.message
+        })
+      } else {
+        const terminal = childProcess.spawn('osascript', [scriptFileName], {
+          detached: true,
+          shell: true,
+          stdio: 'ignore'
+        })
+
+        terminal.unref()
+      }
+    })
   } else {
     showNotification({
-      body: "Only supported on Windows currently"
+      body: "Only supported on Windows and macOS currently"
     })
   }
 }
