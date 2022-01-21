@@ -91,6 +91,8 @@ function getFrontEndUrl(route) {
 // Onboarding / setup
 // ------------------------------------------------------------------------- */
 
+let isOnboarding = false;
+
 function needOnboarding() {
   try {
     const cp = childProcess.execFileSync(crcBinary(), ["setup", "--check-only"],
@@ -102,6 +104,9 @@ function needOnboarding() {
 }
 
 function showOnboarding() {
+  // the onboarding process got started
+  isOnboarding = true;
+
   // parent window to prevent app closing
   setupWindow = new BrowserWindow({
     width: 1024,
@@ -115,6 +120,12 @@ function showOnboarding() {
   setupWindow.setMenuBarVisibility(false)
 
   setupWindow.on('close', async e => {
+    if(!isOnboarding) {
+      // onboarding finished
+      return
+    }
+
+    // onboarding is active
     e.preventDefault()
     const choice = dialog.showMessageBoxSync(setupWindow, {
       message: "Are you sure you want to close the on-boarding wizard?",
@@ -581,8 +592,12 @@ ipcMain.on('start-setup', async (event, args) => {
 })
 
 ipcMain.once('close-setup-wizard', () => {
+  // onboarding finished
+  isOnboarding = false;
+
   setupWindow.hide();
-  appStart()
+  appStart();
+  setupWindow.destroy();
 })
 
 
