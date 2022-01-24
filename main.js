@@ -153,6 +153,12 @@ function showOnboarding() {
 // Main functions
 // ------------------------------------------------------------------------- */
 
+app.on('browser-window-focus', (e, w) => {
+  w.webContents.on('did-fail-load', () => {
+    w.webContents.reload()
+  })
+})
+
 app.whenReady().then(() => {
   if (needOnboarding()) {
     showOnboarding()
