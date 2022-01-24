@@ -6,9 +6,6 @@ import {
     CardFooter,
     Button,
     ButtonVariant,
-    TextContent,
-    TextVariants,
-    Text,
     Hint,
     HintBody,
     HelperText,
@@ -30,6 +27,7 @@ import {
 import InfoIcon from '@patternfly/react-icons/dist/esm/icons/info-icon';
 import {
     LogWindow,
+    PresetSelection,
     PullSecretInputCard
 } from '@code-ready/crc-react-components';
 
@@ -100,8 +98,7 @@ export default class SetupWindow extends React.Component {
 
         this.onNext = this.onNext.bind(this);
         this.closeWizard = this.closeWizard.bind(this);
-        this.handlePresetOpenshift = this.handlePresetOpenshift.bind(this);
-        this.handlePresetPodman = this.handlePresetPodman.bind(this);
+        this.handlePresetSelection = this.handlePresetSelection.bind(this);
         this.handleTelemetryConsent = this.handleTelemetryConsent.bind(this);
         this.handlePullSecretChanged = this.handlePullSecretChanged.bind(this);
 
@@ -124,28 +121,21 @@ export default class SetupWindow extends React.Component {
         window.api.closeActiveWindow();
     }
 
-    handlePresetPodman() {
+    handlePresetSelection(value) {
+        console.log(value)
+
         this.setState(() => {
-                return {preset: "podman"};
+                return {preset: value};
             }
         );
     }
 
-    handlePresetOpenshift() {
-        this.setState(() => {
-                return {preset: "openshift"};
-            }
-        );
-    }
-
-    handlePullSecretChanged = value => {
-
-        console.log(value);
+    handlePullSecretChanged(value) {
         this.setState(() => {
                 return {pullsecret: value};
             }
         );
-    };
+    }
 
     handleTelemetryConsent() {
         this.setState((prevState) => {
@@ -155,8 +145,6 @@ export default class SetupWindow extends React.Component {
 
     render() {
         const { stepIdReached } = this.state;
-        const ocpDesc = "This option will run a full cluster environment as a single node. This option will provide a registry, telemetry and access to Operator Hub";
-        const podmanDesc = "This options will allow you to use podman to run containers inside a VM environment. It will expose the podman command";
 
         const CustomFooter = (
             <WizardFooter>
@@ -216,11 +204,8 @@ export default class SetupWindow extends React.Component {
                 id: 2, 
                 name: 'Choose your preset', 
                 component: <ChoosePreset 
-                    handlePresetOpenshift={this.handlePresetOpenshift}
-                    ocpDesc={ocpDesc}
-                    handlePresetPodman={this.handlePresetPodman}
-                    podmanDesc={podmanDesc} 
-                    currentPreset={this.state.preset}
+                    preset={this.state.preset}
+                    handlePresetSelection={this.handlePresetSelection}
                 />, 
 
             },
@@ -298,36 +283,23 @@ const ChoosePreset = (props) => {
         <Card isLarge isPlain>
             <CardTitle>Please select the preset you want to use</CardTitle>
             <CardBody>
-                <Preset handleClick={props.handlePresetOpenshift} presetName="OpenShift" presetDesc={props.ocpDesc}/>
-                <br />
-                <Preset handleClick={props.handlePresetPodman} presetName="Podman" presetDesc={props.podmanDesc}/>
+                <PresetSelection
+                    value={props.preset}
+                    podmanDescription="This option will allow you to use podman to run containers inside a VM environment."
+                    openshiftDescription="This option will run a full cluster environment as a single node, providing a registry, monitoring and access to Operator Hub"
+                    onChange={props.handlePresetSelection} />
             </CardBody>
             <CardFooter>
                 <Hint>
                     <HintTitle>
                         <HelperText>
-                            <HelperTextItem icon={<InfoIcon />}>Currently selected preset is: <i>{props.currentPreset}</i>
-                            <br />These settings can later be changed in the settings dialog</HelperTextItem>
+                            <HelperTextItem icon={<InfoIcon />}>Currently selected preset is: <i>{props.preset}</i>
+                            <br />These settings can later be changed in the configuration dialog</HelperTextItem>
                         </HelperText>
                     </HintTitle>
                 </Hint>
             </CardFooter>
         </Card>
-    );
-}
-
-const Preset = (props) => {
-    return (
-        <>
-            <Button variant={ButtonVariant.primary} style={{ width: "160px" }} isLarge onClick={props.handleClick}>
-                {props.presetName}
-            </Button>
-            <TextContent>
-                <Text component={TextVariants.p}>
-                    {props.presetDesc}
-                </Text>
-            </TextContent>
-        </>
     );
 }
 

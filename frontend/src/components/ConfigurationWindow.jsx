@@ -54,11 +54,13 @@ export default class ConfigurationWindow extends React.Component {
     render() {
         return (
             <Bullseye>
-                <Configuration ref={this.config}
+                <div style={{margin: "20px"}}>
+                    <Configuration ref={this.config}
                         onValueChanged={this.configurationValueChanged}
                         onSaveClicked={this.configurationSave}
                         onResetClicked={this.configurationReset}
                         onPullsecretChangeClicked={this.openPullsecretChangeWindow} />
+                </div>
             </Bullseye>
         );
     }
