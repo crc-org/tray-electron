@@ -37,6 +37,8 @@ export default class ConfigurationWindow extends React.Component {
 
     configurationSave(data) {
         window.api.configurationSave(data)
+
+        window.close();
     }
 
     configurationReset() {
