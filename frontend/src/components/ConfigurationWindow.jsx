@@ -37,7 +37,7 @@ export default class ConfigurationWindow extends React.Component {
 
     configurationSave(data) {
         window.api.configurationSave(data)
-
+        
         window.close();
     }
 
@@ -50,7 +50,7 @@ export default class ConfigurationWindow extends React.Component {
     }
 
     openPullsecretChangeWindow() {
-        window.api.openOpullsecretChangeWindow({})
+        window.api.openPullsecretChangeWindow({})
     }
 
     render() {
