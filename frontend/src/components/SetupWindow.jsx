@@ -285,6 +285,8 @@ const ChoosePreset = (props) => {
             <CardBody>
                 <PresetSelection
                     value={props.preset}
+                    podmanDescription="This option will allow you to use podman to run containers inside a VM environment."
+                    openshiftDescription="This option will run a full cluster environment as a single node, providing a registry, monitoring and access to Operator Hub"
                     onChange={props.handlePresetSelection} />
             </CardBody>
             <CardFooter>
