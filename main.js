@@ -263,7 +263,7 @@ const appStart = async function() {
 
   // TODO: deal with duplication
   configurationWindow = new BrowserWindow({
-    width: 700,
+    width: 780,
     height: 440,
     resizable: false,
     show: false,

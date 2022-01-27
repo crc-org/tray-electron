@@ -1,8 +1,5 @@
 import React from 'react';
 import {
-    Bullseye
-} from '@patternfly/react-core';
-import {
     Configuration
 } from '@code-ready/crc-react-components';
 import '@code-ready/crc-react-components/dist/index.css';
@@ -55,15 +52,12 @@ export default class ConfigurationWindow extends React.Component {
 
     render() {
         return (
-            <Bullseye>
-                <div style={{margin: "20px"}}>
-                    <Configuration ref={this.config}
-                        onValueChanged={this.configurationValueChanged}
-                        onSaveClicked={this.configurationSave}
-                        onResetClicked={this.configurationReset}
-                        onPullsecretChangeClicked={this.openPullsecretChangeWindow} />
-                </div>
-            </Bullseye>
+            <Configuration ref={this.config}
+                onValueChanged={this.configurationValueChanged}
+                onSaveClicked={this.configurationSave}
+                onResetClicked={this.configurationReset}
+                onPullsecretChangeClicked={this.openPullsecretChangeWindow}
+                height="320px" />
         );
     }
 }
