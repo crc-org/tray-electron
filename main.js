@@ -76,6 +76,7 @@ let configurationWindow = undefined;
 let podmanWindow = undefined;
 let setupWindow = undefined;
 let pullsecretChangeWindow = undefined;
+let aboutWindow = undefined;
 
 
 function getFrontEndUrl(route) {
@@ -311,6 +312,24 @@ const appStart = async function() {
     podmanWindow.hide();
   })
 
+  aboutWindow = new BrowserWindow({
+    width: 600,
+    height: 450,
+    resizable: false,
+    show: false,
+    title: 'About',
+    webPreferences: {
+      preload: path.join(__dirname, "preload-main.js")
+    }
+  });
+
+  aboutWindow.setMenuBarVisibility(false);
+  aboutWindow.loadURL(getFrontEndUrl('about'));
+
+  aboutWindow.on('close', async e => {
+    e.preventDefault()
+    aboutWindow.hide();
+  });
 
   // Setup tray
   tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
@@ -370,6 +389,10 @@ openConfigurationWindow = function() {
 
 openLogsWindow = function() {
   logsWindow.show();
+}
+
+openAboutWindow = () => {
+  aboutWindow.show();
 }
 
 openOpenShiftConsole = async function() {
@@ -491,6 +514,7 @@ quitApp = () => {
   configurationWindow.destroy();
   podmanWindow.destroy();
   pullsecretChangeWindow.destroy();
+  aboutWindow.destroy();
   app.releaseSingleInstanceLock();
   app.quit()
 }
@@ -549,6 +573,14 @@ createTrayMenu = function(status) {
     {
       label: '  Configuration',
       click() { openConfigurationWindow(); }
+    },
+    {
+      type: 'separator'
+    },
+    {
+      label: 'About',
+      click() { openAboutWindow(); },
+      accelerator: "Shift+A"
     },
     { type: 'separator' },
     {
@@ -849,3 +881,18 @@ ipcMain.on('track-error', async (event, arg) => {
 ipcMain.on('track-success', async (event, arg) => {
   telemetry.trackSuccess(arg)
 })
+
+/* ----------------------------------------------------------------------------
+// About
+// ------------------------------------------------------------------------- */
+
+ipcMain.handle('get-about', async () => {
+  const version = await commander.version();
+  return {
+    appVersion: app.getVersion(),
+    crcVersion: version.CrcVersion,
+    crcCommit: version.CommitSha,
+    ocpBundleVersion: version.OpenshiftVersion,
+    podmanVersion: version.PodmanVersion
+  };
+});

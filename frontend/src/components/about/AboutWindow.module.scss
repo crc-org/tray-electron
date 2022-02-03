@@ -1,0 +1,38 @@
+.alignLeft {
+  float: left;
+  font-weight: bold;
+}
+
+.alignRight {
+  float: right;
+  font-weight: bold;
+}
+
+.clearBoth {
+  clear: both;
+}
+
+.marginBox {
+  padding: 20px;
+}
+
+.linksBox{
+  clear: both;
+  margin-top: 50px;
+}
+
+.docButton {
+  padding-left: 0;
+}
+
+.repoButton {
+  padding-right: 0;
+}
+
+.logo {
+  background-image: url("./../../assets/crc-logo-black.png");
+  background-size: cover;
+  background-position: center;
+  width: 450px;
+  height: 200px;
+}

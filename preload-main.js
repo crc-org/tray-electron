@@ -1,6 +1,10 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('api', {
+  openLinkInDefaultBrowser: (url) => {
+    ipcRenderer.send('open-link', url)
+  },
+  
   closeActiveWindow: () => { 
     ipcRenderer.send('hide-active-window');
   },
@@ -63,7 +67,11 @@ contextBridge.exposeInMainWorld('api', {
     },
 
     trackSuccess: (successMsg) => {
-     ipcRenderer.send('track-success', successMsg);
+      ipcRenderer.send('track-success', successMsg);
     }
+  },
+
+  about: () => {
+    return ipcRenderer.invoke('get-about');
   }
 });
