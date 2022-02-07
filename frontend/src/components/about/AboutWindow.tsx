@@ -1,7 +1,6 @@
 import React from 'react';
 import { Bullseye, Button } from "@patternfly/react-core";
 import ExternalLinkSquareAltIcon from '@patternfly/react-icons/dist/esm/icons/external-link-square-alt-icon';
-import GithubIcon from '@patternfly/react-icons/dist/esm/icons/github-icon';
 import { Versions } from '../../global';
 
 import styles from './AboutWindow.module.scss';
@@ -11,8 +10,7 @@ export class AboutWindow extends React.Component {
   constructor(props: {}) {
     super(props);
     this.state = {}
-    this.openDocumentation = this.openDocumentation.bind(this);
-    this.openRepo = this.openRepo.bind(this);
+    this.openDocumentationLink = this.openDocumentationLink.bind(this);
   }
 
   async componentDidMount(): Promise<void> {
@@ -22,13 +20,10 @@ export class AboutWindow extends React.Component {
     this.setState(versions);
   }
 
-  private openDocumentation(): void {
+  private openDocumentationLink(): void {
     window.api.openLinkInDefaultBrowser(`https://access.redhat.com/documentation/en-us/red_hat_codeready_containers/${this.state.crcVersion}`);
   }
 
-  private openRepo(): void {
-    window.api.openLinkInDefaultBrowser('https://github.com/code-ready/tray-electron');
-  }
 
   render(): React.ReactNode {
 
@@ -51,13 +46,8 @@ export class AboutWindow extends React.Component {
 
           <div className={styles.linksBox}>
             <span className={styles.alignLeft}>
-              <Button variant="link" className={styles.docButton} icon={<ExternalLinkSquareAltIcon />} iconPosition="right" component="a" onClick={this.openDocumentation} target="_blank">
+              <Button variant="link" className={styles.docButton} icon={<ExternalLinkSquareAltIcon />} iconPosition="right" component="a" onClick={this.openDocumentationLink} target="_blank">
                 Documentation
-              </Button>
-            </span>
-            <span className={styles.alignRight}>
-              <Button variant="link" className={styles.repoButton} icon={<GithubIcon />} iconPosition="left" component="a" onClick={this.openRepo} target="_blank">
-                Tray Repository
               </Button>
             </span>
           </div>
