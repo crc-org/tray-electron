@@ -77,7 +77,7 @@ let podmanWindow = undefined;
 let setupWindow = undefined;
 let pullsecretChangeWindow = undefined;
 let aboutWindow = undefined;
-
+let trayMenu = undefined;
 
 function getFrontEndUrl(route) {
   let frontEndUrl = 'http://localhost:3000'
@@ -346,7 +346,7 @@ const appStart = async function() {
     } else {
       const yPosition = 20;
       miniStatusWindow.setBounds({
-        x: x - width / 2,
+        x: Math.round(x - width / 2), // all values should be an integer
         y: yPosition,
         height,
         width
@@ -355,7 +355,23 @@ const appStart = async function() {
     }
   }
 
-  tray.on('click', showMiniStatusWindow);
+  //open tray menu differently on mac and win
+  tray.on('click', (e, bounds) => {
+    if(isMac) {
+        tray.popUpContextMenu(trayMenu);
+    } else {
+      showMiniStatusWindow(e, bounds);
+    }
+  });
+
+  tray.on('right-click', (e, bounds) => {
+    if(isMac) {
+      showMiniStatusWindow(e, bounds);
+    } else {
+      tray.popUpContextMenu(trayMenu);
+    }
+  });
+
   const {x, y} = tray.getBounds();
 
   showNotification({
@@ -590,8 +606,7 @@ createTrayMenu = function(status) {
     }
   ]
 
-  const contextMenu = Menu.buildFromTemplate(menuTemplate);
-  tray.setContextMenu(contextMenu);
+  trayMenu = Menu.buildFromTemplate(menuTemplate);
 }
 
 
