@@ -10,24 +10,35 @@ export default class MiniStatusWindow extends React.Component {
     super(props);
     this.state = {
       preset: "unknown",
+      vmstatus: "unknown"
     };
 
     this.control = React.createRef();
+    this.onPlayPause = this.onPlayPause.bind(this);
   }
 
   componentDidMount() {
     window.api.onStatusChanged(async (event, status) => {
       this.setState({preset: status.Preset})
+
+      // Toggle states of the button
+      if(status.CrcStatus === "Stopping") {
+        this.setState({vmstatus: "Starting"})
+      } else {
+        this.setState({vmstatus: status.CrcStatus})
+      }
+
       this.control.current.updateStatus(status);
     })
   }
 
-  onStart() {
-    window.api.startInstance({})
-  }
-
-  onStop() {
-    window.api.stopInstance({})
+  onPlayPause() {
+    if(this.state.vmstatus === "Stopped") {
+      window.api.startInstance({})
+    }
+    if(this.state.vmstatus === "Running") {
+      window.api.stopInstance({})
+    }
   }
 
   onDelete() {
@@ -38,8 +49,8 @@ export default class MiniStatusWindow extends React.Component {
     return (
         <ControlCard ref={this.control}
           preset={this.state.preset}
-          onStartClicked={this.onStart}
-          onStopClicked={this.onStop}
+          status={this.state.vmstatus}
+          onPlayPauseClicked={this.onPlayPause}
           onDeleteClicked={this.onDelete} />
     );
   }
