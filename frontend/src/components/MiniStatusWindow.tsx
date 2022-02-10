@@ -5,8 +5,16 @@ import {
 } from '@code-ready/crc-react-components';
 import '@code-ready/crc-react-components/dist/index.css';
 
+interface State {
+  preset: string;
+  vmstatus: string;
+}
 export default class MiniStatusWindow extends React.Component {
-  constructor(props) {
+  state: Readonly<State>;
+
+  private control: React.RefObject<ControlCard>;
+
+  constructor(props: {}) {
     super(props);
     this.state = {
       preset: "unknown",
@@ -28,7 +36,7 @@ export default class MiniStatusWindow extends React.Component {
         this.setState({vmstatus: status.CrcStatus})
       }
 
-      this.control.current.updateStatus(status);
+      this.control.current!.updateStatus(status);
     })
   }
 

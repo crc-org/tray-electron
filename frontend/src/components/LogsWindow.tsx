@@ -7,8 +7,14 @@ import {
 } from '@code-ready/crc-react-components';
 import '@code-ready/crc-react-components/dist/index.css';
 
+interface State {
+  readonly lastLineRead: number;
+}
 export default class LogsWindow extends React.Component {
-  constructor(props) {
+  private logWindow: React.RefObject<LogWindow>;
+
+  state: State;
+  constructor(props: {}) {
     super(props);
     this.state = {
       lastLineRead: 0
@@ -25,7 +31,7 @@ export default class LogsWindow extends React.Component {
         var lineIndex = 0;
         for(lineIndex = this.state.lastLineRead; lineIndex < logs.Messages.length; lineIndex++) {
           var log = logs.Messages[lineIndex];
-          this.logWindow.current.log(log);
+          this.logWindow.current!.log(log);
         }
         this.setState({lastLineRead: lineIndex});
       }
@@ -40,7 +46,7 @@ export default class LogsWindow extends React.Component {
       // would like:
       //   backgroundColor : "black"
       // but that means the textarea border needs to be removed
-      <Bullseye style={{ "padding-top": "5px", backgroundColor : "black"}}>
+      <Bullseye style={{ paddingTop: "5px", backgroundColor : "black"}}>
         <LogWindow ref={this.logWindow}
           cols={0} rows={0}
           width={"98vw"} height={"98vh"}

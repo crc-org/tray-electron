@@ -31,8 +31,21 @@ import {
     PullSecretInputCard
 } from '@code-ready/crc-react-components';
 
-class SetupSpinner extends React.Component {
-    constructor(props) {
+interface SetupSpinnerProps {
+    preset: string;
+    consentTelemetry: boolean;
+    pullsecret: string;
+}
+interface SetupSpinnerState {
+    notReadyForUse: boolean;
+}
+class SetupSpinner extends React.Component<SetupSpinnerProps> {
+
+    state: Readonly<SetupSpinnerState>;
+
+    private logWindow: React.RefObject<LogWindow>;
+
+    constructor(props: SetupSpinnerProps) {
         super(props)
 
         this.state = {
@@ -42,14 +55,13 @@ class SetupSpinner extends React.Component {
         this.handlePrimaryButtonAction = this.handlePrimaryButtonAction.bind(this);
 
         this.logWindow = React.createRef();
-        this.startUsingButton = React.createRef();
     }
 
     componentDidMount() {
         // start the crc setup process
         // different configs needed will be passed as args
         window.api.onSetupLogs(async (event, message) => {
-            this.logWindow.current.log(message);
+            this.logWindow.current!.log(message);
         })
         window.api.onSetupEnded(async (event, message) => {
             this.setState({ notReadyForUse: false });
@@ -70,7 +82,7 @@ class SetupSpinner extends React.Component {
         window.api.closeSetupWizard();
     }
 
-    handleDocsLinks(url) {
+    handleDocsLinks(url: string) {
         window.api.openLinkInDefaultBrowser(url)
     }
 
@@ -91,9 +103,15 @@ class SetupSpinner extends React.Component {
         );
     }
 }
-
+interface SetupWindowState {
+    stepIdReached: number,
+    preset: "openshift" | "podman",
+    consentTelemetry: boolean;
+    pullsecret: string;
+}
 export default class SetupWindow extends React.Component {
-    constructor(props) {
+    state: Readonly<SetupWindowState>;
+    constructor(props: {}) {
         super(props);
 
         this.onNext = this.onNext.bind(this);
@@ -111,17 +129,20 @@ export default class SetupWindow extends React.Component {
 
     }
 
-    onNext({ id }) {
+    onNext({ id }: {id?: number | string | undefined}): void {
+        if(!id){
+            return;
+        }
         this.setState({
             stepIdReached: this.state.stepIdReached < id ? id : this.state.stepIdReached
         });
     }
 
-    closeWizard() {
+    closeWizard(): void {
         window.api.closeActiveWindow();
     }
 
-    handlePresetSelection(value) {
+    handlePresetSelection(value: string): void {
         console.log(value)
 
         this.setState(() => {
@@ -130,7 +151,7 @@ export default class SetupWindow extends React.Component {
         );
     }
 
-    handlePullSecretChanged(value) {
+    handlePullSecretChanged(value: string) {
         this.setState(() => {
                 return {pullsecret: value};
             }
@@ -138,7 +159,7 @@ export default class SetupWindow extends React.Component {
     }
 
     handleTelemetryConsent() {
-        this.setState((prevState) => {
+        this.setState((prevState: SetupWindowState) => {
             return {consentTelemetry: !prevState.consentTelemetry};
         });
     }
@@ -270,15 +291,22 @@ const Welcome = () => {
     );
 }
 
-const ProvidePullSecret = (props) => {
+interface ProvidePullSecretProps {
+    pullsecret: string;
+    handleTextAreaChange: (value: string) => void;
+}
+const ProvidePullSecret = (props: ProvidePullSecretProps) => {
     return(
         <PullSecretInputCard height="220px"
             pullsecret={props.pullsecret}
             onChanged={props.handleTextAreaChange} />
     );
 }
-
-const ChoosePreset = (props) => {
+interface ChoosePresetProps {
+    preset: string;
+    handlePresetSelection: (value: string) => void;
+}
+const ChoosePreset = (props: ChoosePresetProps) => {
     return(
         <Card isLarge isPlain>
             <CardTitle>Please select the preset you want to use</CardTitle>
@@ -287,7 +315,7 @@ const ChoosePreset = (props) => {
                     value={props.preset}
                     podmanDescription="This option will allow you to use podman to run containers inside a VM environment."
                     openshiftDescription="This option will run a full cluster environment as a single node, providing a registry, monitoring and access to Operator Hub"
-                    onChange={props.handlePresetSelection} />
+                    onPresetChange={props.handlePresetSelection} />
             </CardBody>
             <CardFooter>
                 <Hint>
@@ -302,8 +330,12 @@ const ChoosePreset = (props) => {
         </Card>
     );
 }
-
-const Summary = (props) => {
+interface SummaryProps {
+    preset: string;
+    checked: boolean;
+    handleTelemetryConsent: (checked: boolean, event: React.SyntheticEvent) => void;
+}
+const Summary = (props: SummaryProps) => {
     const telemetryDesc = "CodeReady Containers is constantly improving and we would like to know more about usage. " +
         "For preview releases this information is very valuable to resolve issues and can therefore not be turned off at this time."
         //"Your preference can be changed manually if desired from the settings dialog.";
