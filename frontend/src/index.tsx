@@ -16,7 +16,7 @@ ReactDOM.render(
   <React.StrictMode>
     <HashRouter>
       <Routes>
-        <Route path="/" exact element={<p>No route given</p>} />
+        <Route path="/" element={<p>No route given</p>} />
         <Route path="/splash" element={<SplashWindow />} />
         <Route path="/setup" element={<SetupWindow />} />
         <Route path="/logs" element={<LogsWindow />} />

@@ -8,9 +8,13 @@ import {
 } from '@code-ready/crc-react-components';
 import '@code-ready/crc-react-components/dist/index.css';
 
-
+interface State {
+    pullsecret: string;
+}
 export default class PullSecretChangeWindow extends React.Component {
-    constructor(props) {
+    state: Readonly<State>;
+
+    constructor(props: {}) {
       super(props);
       this.state = {
           pullsecret: ""
@@ -21,7 +25,7 @@ export default class PullSecretChangeWindow extends React.Component {
       this.handleCancelClick = this.handleCancelClick.bind(this);
     }
   
-    handlePullSecretChanged = value => {
+    handlePullSecretChanged = (value: string)  => {
         this.setState(() => {
                 return {pullsecret: value};
             }

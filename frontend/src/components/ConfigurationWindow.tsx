@@ -3,12 +3,15 @@ import {
     Configuration
 } from '@code-ready/crc-react-components';
 import '@code-ready/crc-react-components/dist/index.css';
+import { State } from '@code-ready/crc-react-components/dist/components/Configuration';
 
 export default class ConfigurationWindow extends React.Component {
-    constructor(props) {
+
+    private config: React.RefObject<Configuration>;
+
+    constructor(props: {}) {
         super(props);
 
-        this.configurationValueChanged = this.configurationValueChanged.bind(this);
         this.configurationSave = this.configurationSave.bind(this);
         this.configurationReset = this.configurationReset.bind(this);
         this.openPullsecretChangeWindow = this.openPullsecretChangeWindow.bind(this);
@@ -18,21 +21,16 @@ export default class ConfigurationWindow extends React.Component {
 
     componentDidMount() {
         window.api.onConfigurationLoaded(async (event, data) => {
-            this.config.current.updateValues(data.Configs);
-        })
+            this.config.current!.updateValues(data.Configs);
+        });
         window.api.onConfigurationSaved(async (event, message) => {
 
-        })
+        });
 
-        window.api.configurationLoad({})
+        window.api.configurationLoad({});
     }
 
-    configurationValueChanged(caller, key, value) {
-        // perform validation ?
-        caller.updateValue(key, value);
-    }
-
-    configurationSave(data) {
+    configurationSave(data: State) {
         window.api.configurationSave(data)
 
         window.close();
@@ -53,7 +51,6 @@ export default class ConfigurationWindow extends React.Component {
     render() {
         return (
             <Configuration ref={this.config}
-                onValueChanged={this.configurationValueChanged}
                 onSaveClicked={this.configurationSave}
                 onResetClicked={this.configurationReset}
                 onPullsecretChangeClicked={this.openPullsecretChangeWindow}
