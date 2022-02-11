@@ -33,6 +33,12 @@ export interface SetupParams {
   consentTelemetry: boolean;
   pullsecret: string;
 }
+export interface DialogOptions {
+  message: string;
+  title: string;
+  buttons: string[];
+}
+
 export declare global {
   interface Window {
     api: {
@@ -76,6 +82,11 @@ export declare global {
        */
       closeSetupWizard: () => void;
 
+      showModalDialog: (title: string, message: string, ...items: string[]) => Promise<string>;
+    },
+    dialogApi: {
+      getDialogOptions: () => Promise<DialogOptions>;
+      buttonClicked: (value: string) => void;
     }
   }
 }

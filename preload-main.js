@@ -73,5 +73,10 @@ contextBridge.exposeInMainWorld('api', {
 
   about: () => {
     return ipcRenderer.invoke('get-about');
-  }
+  },
+
+  showModalDialog: (title, message, ...items) => {
+    return ipcRenderer.invoke('open-dialog', title, message, ...items);
+  },
+
 });

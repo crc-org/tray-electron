@@ -2,3 +2,5 @@
 package-lock.json
 /release/
 segmentIdentityHash
+/build/
+.DS_Store
