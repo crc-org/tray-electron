@@ -54,6 +54,7 @@ export default class ConfigurationWindow extends React.Component {
                 onSaveClicked={this.configurationSave}
                 onResetClicked={this.configurationReset}
                 onPullsecretChangeClicked={this.openPullsecretChangeWindow}
+                onPresetChange={e => {}}
                 height="320px" />
         );
     }
