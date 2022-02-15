@@ -21,7 +21,8 @@ export class AboutWindow extends React.Component {
   }
 
   private openDocumentationLink(): void {
-    window.api.openLinkInDefaultBrowser(`https://access.redhat.com/documentation/en-us/red_hat_codeready_containers/${this.state.crcVersion}`);
+    const version = this.state.crcVersion?.substring(0, this.state.crcVersion?.lastIndexOf('.'));
+    window.api.openLinkInDefaultBrowser(`https://access.redhat.com/documentation/en-us/red_hat_codeready_containers/${version}`);
   }
 
 
