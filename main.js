@@ -19,7 +19,7 @@ const Telemetry = require('./telemetry');
 const showNotification = require('./notification');
 const which = require('which');
 
-const { showModalDialog } = require('./build/dialog');
+const { showDialog } = require('./build/dialog');
 
 const config = new Config()
 // create the telemetry object
@@ -920,5 +920,5 @@ ipcMain.handle('get-about', async () => {
 
 ipcMain.handle('open-dialog', async (event, title, message, ...items) => {
   const window = BrowserWindow.fromWebContents(event.sender);
-  return showModalDialog(window, {title, message, type: "question"}, ...items);
+  return showDialog(window, {title, message, type: "question"}, ...items);
 });

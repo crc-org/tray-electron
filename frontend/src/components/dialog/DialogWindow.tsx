@@ -28,7 +28,7 @@ export class DialogWindow extends React.Component {
   render(): React.ReactNode {
     let counter = 0;
     return (
-      <div style={{ margin: "20px" }}>
+      <div style={{ paddingTop: "30px", paddingLeft: "30px", paddingRight: "30px" }}>
         <div style={{ height: "80px" }}>
           {this.state.message}
         </div>
