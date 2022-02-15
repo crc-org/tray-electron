@@ -82,6 +82,12 @@ export declare global {
       closeSetupWizard: () => void;
 
       showModalDialog: (title: string, message: string, ...items: string[]) => Promise<string>;
+
+      autoStart: {
+        isEnabled: () => boolean;
+        enable: () => void;
+        disable: () => void;
+      }
     },
     dialogApi: {
       getDialogOptions: () => Promise<DialogOptions>;

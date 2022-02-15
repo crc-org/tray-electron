@@ -84,5 +84,19 @@ contextBridge.exposeInMainWorld('api', {
   openSetupWindow: () => {
     return ipcRenderer.invoke('open-setup-window');
   },
+  
+  autoStart: {
+    isEnabled: async () =>  {
+      return await ipcRenderer.invoke('is-autostart-enabled');
+    },
+
+    enable: () => {
+      ipcRenderer.send('enable-autostart');
+    },
+
+    disable: () => {
+      ipcRenderer.send('disable-autostart');
+    }
+  }
 
 });
