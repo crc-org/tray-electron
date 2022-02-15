@@ -49,8 +49,11 @@ export default class MiniStatusWindow extends React.Component {
     }
   }
 
-  onDelete() {
-    window.api.deleteInstance({})
+  async onDelete(): Promise<void> {
+    const result = await window.api.showModalDialog('Warning','Are you sure you want to delete the CodeReady Containers instance? This is a destructive operation and can not be undone.', 'Yes', 'No');
+    if(result === 'Yes') {
+      window.api.deleteInstance({})
+    }
   }
 
   render() {
