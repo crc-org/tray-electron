@@ -178,6 +178,9 @@ if (!gotTheLock) {
 
   app.whenReady().then(async () => {
     if (needOnboarding()) {
+      app.setLoginItemSettings({
+        openAtLogin: true
+      })
       showOnboarding()
     } else {
       daemonStart();
@@ -1125,3 +1128,22 @@ ipcMain.handle('open-setup-window', (event) => {
   });
 });
 
+/*----------------------------------------------------------------------------
+// Autostart
+// ------------------------------------------------------------------------- */
+
+ipcMain.on('enable-autostart', async () => {
+  app.setLoginItemSettings({
+    openAtLogin: true
+  })
+})
+
+ipcMain.on('disable-autostart', async () => {
+  app.setLoginItemSettings({
+    openAtLogin: false
+  })
+})
+
+ipcMain.handle('is-autostart-enabled', async () => {
+  return app.getLoginItemSettings().openAtLogin
+})
