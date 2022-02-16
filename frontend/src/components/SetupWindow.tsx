@@ -10,7 +10,6 @@ import {
     HintBody,
     HelperText,
     HelperTextItem,
-    HintTitle,
     DescriptionList,
     DescriptionListDescription,
     DescriptionListGroup,
@@ -317,16 +316,7 @@ const ChoosePreset = (props: ChoosePresetProps) => {
                     openshiftDescription="This option will run a full cluster environment as a single node, providing a registry, monitoring and access to Operator Hub"
                     onPresetChange={props.handlePresetSelection} />
             </CardBody>
-            <CardFooter>
-                <Hint>
-                    <HintTitle>
-                        <HelperText>
-                            <HelperTextItem icon={<InfoIcon />}>Currently selected preset is: <i>{props.preset}</i>
-                            <br />These settings can later be changed in the configuration dialog</HelperTextItem>
-                        </HelperText>
-                    </HintTitle>
-                </Hint>
-            </CardFooter>
+            <CardFooter />
         </Card>
     );
 }
