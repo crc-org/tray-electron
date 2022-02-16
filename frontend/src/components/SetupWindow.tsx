@@ -19,13 +19,13 @@ import {
     EmptyStateBody,
     EmptyStateSecondaryActions,
     EmptyStatePrimary,
+    Spinner,
     Wizard,
     WizardFooter,
     WizardContextConsumer
 } from '@patternfly/react-core';
 import InfoIcon from '@patternfly/react-icons/dist/esm/icons/info-icon';
 import {
-    LogWindow,
     PresetSelection,
     PullSecretInputCard
 } from '@code-ready/crc-react-components';
@@ -42,8 +42,6 @@ class SetupSpinner extends React.Component<SetupSpinnerProps> {
 
     state: Readonly<SetupSpinnerState>;
 
-    private logWindow: React.RefObject<LogWindow>;
-
     constructor(props: SetupSpinnerProps) {
         super(props)
 
@@ -52,15 +50,13 @@ class SetupSpinner extends React.Component<SetupSpinnerProps> {
         };
 
         this.handlePrimaryButtonAction = this.handlePrimaryButtonAction.bind(this);
-
-        this.logWindow = React.createRef();
     }
 
     componentDidMount() {
         // start the crc setup process
         // different configs needed will be passed as args
         window.api.onSetupLogs(async (event, message) => {
-            this.logWindow.current!.log(message);
+            // Do nothing
         })
         window.api.onSetupEnded(async (event, message) => {
             this.setState({ notReadyForUse: false });
@@ -89,7 +85,11 @@ class SetupSpinner extends React.Component<SetupSpinnerProps> {
         return (
             <EmptyState>
                 <EmptyStateBody>
-                    <LogWindow ref={this.logWindow} rows={14} cols={110} />
+                    <div style={{height:"140px",width:"400px",marginTop:"160px"}}>
+
+                        { this.state.notReadyForUse ? <>Running setup ...<br/><br/><Spinner diameter="80px" isSVG /></> : "Setup done."}
+                        
+                    </div>
                 </EmptyStateBody>
                 <EmptyStatePrimary>
                     <Button isDisabled={this.state.notReadyForUse} variant={ButtonVariant.primary} onClick={this.handlePrimaryButtonAction}>Start using CRC</Button>
