@@ -20,7 +20,6 @@ import {showNotification} from './notification';
 import * as which from 'which';
 
 import { showDialog } from './dialog';
-import { StatusState } from '../frontend/src/global';
 
 const config = new Config()
 // create the telemetry object
@@ -539,7 +538,17 @@ const quitApp = () => {
   app.quit()
 }
 
-const createTrayMenu = function(status: StatusState) {
+// copied from frontend/src/types.d.ts
+interface State {
+  readonly CrcStatus: string;
+  readonly Preset?: string;
+  readonly OpenshiftStatus?: string;
+  readonly OpenshiftVersion?: string;
+  readonly PodmanVersion?: string;
+  readonly DiskUse?: number;
+  readonly DiskSize?: number;
+}
+const createTrayMenu = function(status: State) {
   var state = status.CrcStatus;
   var preset = status.Preset;
 
