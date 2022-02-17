@@ -1,7 +1,9 @@
 const got = require('got');
 const os = require('os');
 
-module.exports = class DaemonCommander {
+export class DaemonCommander {
+
+   private apiPath: string;
 
    constructor() {
       this.apiPath = `http://unix:${process.env.HOME}/.crc/crc-http.sock:/api`;
@@ -80,7 +82,7 @@ module.exports = class DaemonCommander {
       return JSON.parse(body);
    }
 
-   async configSet(values) {
+   async configSet(values: unknown): Promise<string> {
       const options = {
          url: this.apiPath + `/config`
       };
@@ -103,7 +105,7 @@ module.exports = class DaemonCommander {
       return JSON.parse(body);
    }
 
-   async telemetryPost(values) {
+   async telemetryPost(values: unknown): Promise<string> {
       const options = {
          url: this.apiPath + `/telemetry`
       };
@@ -116,7 +118,7 @@ module.exports = class DaemonCommander {
       return "OK";
    }
 
-   async pullSecretStore(value) {
+   async pullSecretStore(value: unknown): Promise<string> {
       const options = {
          url: this.apiPath + `/pull-secret`,
       };
@@ -135,15 +137,5 @@ module.exports = class DaemonCommander {
 
       const {body} = await got(options);
       return body;
-   }
-
-   async logs() {
-      const options = {
-         url: this.apiPath + `/logs`,
-         method: 'GET'
-      };
-
-      const {body} = await got(options);
-      return JSON.parse(body);
    }
 }

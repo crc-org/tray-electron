@@ -25,7 +25,7 @@ export interface LogMessage {
 }
 
 export interface StatusState extends CrcState {
-  Preset: string;
+  Preset?: string;
 }
 
 export interface SetupParams {
@@ -56,6 +56,7 @@ export declare global {
       stopInstance: (param: {}) => void;
       deleteInstance: (param: {}) => void;
       pullsecretChange: (pullSecret: {pullsecret: string} ) => void;
+      onPullsecretChanged: (handler: IpcEventHandler<unknown>) => void;
 
       /**
        * Exist only on "preload-setup.js"

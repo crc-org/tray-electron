@@ -1,4 +1,4 @@
-const Analytics = require('analytics-node');
+import Analytics = require('analytics-node');
 const { app } = require('electron');
 const path = require('path');
 const os = require('os');
@@ -9,24 +9,29 @@ const hash = require('object-hash');
 let userIdHashPath = path.join(os.homedir(), '.crc', "segmentIdentityHash");
 let userIdPath = path.join(os.homedir(), '.redhat', 'anonymousId');
 
-if (app.isPackaged) {
-    writeKey = 'cvpHsNcmGCJqVzf6YxrSnVlwFSAZaYtp';
+interface Properties {
+    source: string;
+    tray_version: string;
+    crc_version: string;
+    message: string;
 }
 
-module.exports = class Telemetry {
-    #traits = {
+export class Telemetry {
+    private traits = {
         tray_os_version: os.version(), // Windows 10 Pro
         tray_os_release: os.release(), // 10.0.19043
         tray_os: os.platform(), // win32
-    }
+    };
     
-    #context = {
+    private context = {
         ip: "0.0.0.0"
-    }
+    };
 
-    constructor(telemetryEnabled, writeKey) {
-        this.telemetryEnabled = telemetryEnabled
-        
+    private analytics: Analytics | undefined;
+    private userId: string | undefined;
+    private userIdHash: string | undefined;
+
+    constructor(private readonly telemetryEnabled: boolean, writeKey: string) {
         if (!telemetryEnabled) {
             return
         }
@@ -38,7 +43,7 @@ module.exports = class Telemetry {
         
         let identity = {
             userId: this.userId, 
-            traits: this.#traits
+            traits: this.traits
         }
 
         // get the hash of the user identity
@@ -53,38 +58,38 @@ module.exports = class Telemetry {
             // send identify event to segment
             this.analytics.identify({
                 userId: this.userId,
-                traits: this.#traits,
-                context: this.#context
+                traits: this.traits,
+                context: this.context
             })
         }
     }
 
-    trackError(errorMsg) {
+    trackError(errorMsg: string): void {
         if (!this.telemetryEnabled) {
             return
         }
 
         let properties = genProperties(errorMsg)
 
-        this.analytics.track({
+        this.analytics?.track({
             userId: this.userId,
             event: 'tray error occured',
-            context: this.#context,
+            context: this.context,
             properties: properties
         })
     }
 
-    trackSuccess(successMsg) {
+    trackSuccess(successMsg: string): void {
         if (!this.telemetryEnabled) {
             return
         }
 
         let properties = genProperties(successMsg)
 
-        this.analytics.track({
+        this.analytics?.track({
             userId: this.userId,
             event: 'tray operation successful',
-            context: this.#context,
+            context: this.context,
             properties: properties
         })
     }
@@ -102,7 +107,7 @@ function getUserId() {
         return uuid
     }
 }
- 
+
 function writeNewUuid() {
     let dir = path.join(app.getPath('home'), '.redhat')
     if (!fs.existsSync(dir)) {
@@ -119,7 +124,7 @@ function writeNewUuid() {
     }
 }
 
-function writeUserIdHash(userIdHash) {
+function writeUserIdHash(userIdHash: string): void {
     try {
         fs.writeFileSync(userIdHashPath, userIdHash)
         console.log(`wrote new identity hash to: ${userIdHashPath}`)
@@ -128,8 +133,8 @@ function writeUserIdHash(userIdHash) {
         return
     }
 }
- 
-function getUserIdHash() {
+
+function getUserIdHash(): string {
     try {
         let data = fs.readFileSync(userIdHashPath)
         return data.toString()
@@ -139,7 +144,7 @@ function getUserIdHash() {
     }
 }
 
-function genProperties(message) {
+function genProperties(message: string): Properties {
     const properties = {
         source: "tray-electron",
         tray_version: app.getVersion(),
