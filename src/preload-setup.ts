@@ -1,7 +1,8 @@
 const { contextBridge, ipcRenderer } = require('electron');
+import {IpcEventHandler, SetupParams} from '../frontend/src/global';
 
 contextBridge.exposeInMainWorld('api', {
-  openLinkInDefaultBrowser: (url) => {
+  openLinkInDefaultBrowser: (url: string) => {
     ipcRenderer.send('open-link', url)
   },
   
@@ -9,15 +10,15 @@ contextBridge.exposeInMainWorld('api', {
       ipcRenderer.send('close-active-window');
   },
 
-  startSetup: (args) => {
+  startSetup: (args: SetupParams) => {
       ipcRenderer.send('start-setup', args);
   },
 
-  onSetupLogs: (cb) => {
+  onSetupLogs: (cb:  IpcEventHandler<string>) => {
     ipcRenderer.on('setup-logs-async', cb)
   },
 
-  onSetupEnded: (cb) => {
+  onSetupEnded: (cb: IpcEventHandler<unknown>) => {
     ipcRenderer.on('setup-ended', cb)
   },
 

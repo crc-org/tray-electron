@@ -1,4 +1,4 @@
-const {
+import {
   app,
   clipboard,
   Menu,
@@ -6,26 +6,27 @@ const {
   BrowserWindow,
   shell,
   ipcMain,
-  session
-} = require('electron');
-const path = require('path');
-const fs = require('fs');
-const childProcess = require('child_process');
-const { dialog } = require('electron')
-const os = require('os');
-const DaemonCommander = require('./commander');
-const Config = require('./config');
-const Telemetry = require('./telemetry');
-const showNotification = require('./notification');
-const which = require('which');
+  session,
+  dialog
+} from 'electron';
+import * as path from 'path';
+import * as fs from 'fs';
+import * as childProcess from 'child_process';
+import * as os from 'os';
+import { DaemonCommander } from './commander';
+import { Config } from './config';
+import { Telemetry} from './telemetry';
+import {showNotification} from './notification';
+import * as which from 'which';
 
-const { showDialog } = require('./build/dialog');
+import { showDialog } from './dialog';
+import { StatusState } from '../frontend/src/global';
 
 const config = new Config()
 // create the telemetry object
 const telemetry = new Telemetry(config.get('enableTelemetry'), getSegmentWriteKey())
 
-const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
 const commander = new DaemonCommander()
 
@@ -34,14 +35,14 @@ const commander = new DaemonCommander()
 // Platform specific
 // ------------------------------------------------------------------------- */
 
-var isMac = (os.platform() === "darwin")
-var isWin = (os.platform() === "win32")
-var occommand = "oc";
+let isMac = (os.platform() === "darwin")
+let isWin = (os.platform() === "win32")
+let occommand = "oc";
 if (isWin) {
   occommand = "oc.exe";
 }
 
-function crcBinary() {
+function crcBinary(): string {
   if (app.isPackaged) {
     if (isWin) {
       // This returns `crc` as located in c:\Program Files\CodeReady Containers\
@@ -72,16 +73,16 @@ function getSegmentWriteKey() {
 // Basic initilization
 // ------------------------------------------------------------------------- */
 
-let miniStatusWindow = undefined;
-let logsWindow = undefined;
-let configurationWindow = undefined;
-let podmanWindow = undefined;
-let setupWindow = undefined;
-let pullsecretChangeWindow = undefined;
-let aboutWindow = undefined;
-let trayMenu = undefined;
+let miniStatusWindow: BrowserWindow | undefined = undefined;
+let logsWindow: BrowserWindow | undefined = undefined;
+let configurationWindow: BrowserWindow | undefined = undefined;
+let podmanWindow: BrowserWindow | undefined = undefined;
+let setupWindow: BrowserWindow | undefined = undefined;
+let pullsecretChangeWindow: BrowserWindow | undefined = undefined;
+let aboutWindow: BrowserWindow | undefined = undefined;
+let trayMenu: Menu | undefined = undefined;
 
-function getFrontEndUrl(route) {
+function getFrontEndUrl(route: string): string {
   let frontEndUrl = 'http://localhost:3000'
   if (app.isPackaged) {
     frontEndUrl = `file://${path.join(app.getAppPath(), 'frontend', 'build', 'index.html')}`
@@ -130,7 +131,7 @@ function showOnboarding() {
 
     // onboarding is active
     e.preventDefault()
-    const choice = dialog.showMessageBoxSync(setupWindow, {
+    const choice = dialog.showMessageBoxSync(setupWindow!, {
       message: "Are you sure you want to close the on-boarding wizard?",
       title: "CodeReady Containers",
       type: "warning",
@@ -140,7 +141,7 @@ function showOnboarding() {
     })
 
     if (choice == 0) {
-      setupWindow.destroy()
+      setupWindow?.destroy()
       app.quit()
     }
   })
@@ -242,7 +243,7 @@ const appStart = async function() {
 
   miniStatusWindow.on('close', async e => {
     e.preventDefault()
-    miniStatusWindow.hide();
+    miniStatusWindow?.hide();
   })
   miniStatusWindow.loadURL(getFrontEndUrl("ministatus"));
   
@@ -260,7 +261,7 @@ const appStart = async function() {
 
   logsWindow.on('close', async e => {
     e.preventDefault()
-    logsWindow.hide();
+    logsWindow?.hide();
   })
   logsWindow.loadURL(getFrontEndUrl("logs"));
 
@@ -278,7 +279,7 @@ const appStart = async function() {
 
   configurationWindow.on('close', async e => {
     e.preventDefault()
-    configurationWindow.hide();
+    configurationWindow?.hide();
   })
   configurationWindow.loadURL(getFrontEndUrl("configuration"));
 
@@ -296,7 +297,7 @@ const appStart = async function() {
 
   pullsecretChangeWindow.on('close', async e => {
     e.preventDefault()
-    pullsecretChangeWindow.hide();
+    pullsecretChangeWindow?.hide();
   })
   pullsecretChangeWindow.loadURL(getFrontEndUrl("pullsecret"));
 
@@ -311,7 +312,7 @@ const appStart = async function() {
 
   podmanWindow.on('close', async e => {
     e.preventDefault()
-    podmanWindow.hide();
+    podmanWindow?.hide();
   })
 
   aboutWindow = new BrowserWindow({
@@ -330,30 +331,30 @@ const appStart = async function() {
 
   aboutWindow.on('close', async e => {
     e.preventDefault()
-    aboutWindow.hide();
+    aboutWindow?.hide();
   });
 
   // Setup tray
-  tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
+  const tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
   tray.setToolTip('CodeReady Containers');
   createTrayMenu({CrcStatus: "Unknown", Preset: "Unknown"});
 
-  showMiniStatusWindow = function(e, location) {
+  const showMiniStatusWindow = function(e: Electron.KeyboardEvent | Electron.Event, location: {x: number, y: number}) {
     const { x, y } = location;
-    const { height, width } = miniStatusWindow.getBounds();
-    const { trayh, trayw } = tray.getBounds();
+    const { height, width } = miniStatusWindow!.getBounds();
+    // const { trayh, trayw } = tray.getBounds();
 
-    if(miniStatusWindow.isVisible()) {
+    if(miniStatusWindow?.isVisible()) {
       miniStatusWindow.hide();
     } else {
       const yPosition = 20;
-      miniStatusWindow.setBounds({
+      miniStatusWindow?.setBounds({
         x: Math.round(x - width / 2), // all values should be an integer
         y: yPosition,
         height,
         width
       });
-      miniStatusWindow.show();
+      miniStatusWindow?.show();
     }
   }
 
@@ -378,7 +379,7 @@ const appStart = async function() {
 
   showNotification({
     body: "Tray is running",
-    onClick: (e) => { showMiniStatusWindow(e, {x: x, y: y}) }
+    onClick: (e: Electron.Event) => { showMiniStatusWindow(e, {x: x, y: y}) }
   })
 
   // polling status
@@ -401,46 +402,47 @@ const appStart = async function() {
 // Tray menu functions
 // ------------------------------------------------------------------------- */
 
-openConfigurationWindow = function() {
-  configurationWindow.show();
+const openConfigurationWindow = function() {
+  configurationWindow?.show();
 }
 
-openLogsWindow = function() {
-  logsWindow.show();
+const openLogsWindow = function() {
+  logsWindow?.show();
 }
 
-openAboutWindow = () => {
-  aboutWindow.show();
+const openAboutWindow = () => {
+  aboutWindow?.show();
 }
 
-openOpenShiftConsole = async function() {
+const openOpenShiftConsole = async function() {
   var result = await commander.consoleUrl();
   var url = result.ClusterConfig.WebConsoleURL;
   shell.openExternal(url);
 }
 
-clipOpenShiftLoginAdminCommand = async function() {
+const clipOpenShiftLoginAdminCommand = async function() {
   var result = await commander.consoleUrl();
   var command = `${occommand} login -u kubeadmin -p ` + result.ClusterConfig.KubeAdminPass + " " + result.ClusterConfig.ClusterAPI;
   clipboard.writeText(command);
 }
 
-clipOpenShiftLoginDeveloperCommand = async function() {
+const clipOpenShiftLoginDeveloperCommand = async function() {
   var result = await commander.consoleUrl();
   var command = `${occommand} login -u developer -p developer ` + result.ClusterConfig.ClusterAPI;
   clipboard.writeText(command);
 }
 
-openOpenshiftDevTerminal = async function() {
-  prepareDevTerminaleForPreset("openshift")
+const openOpenshiftDevTerminal = async function() {
+  prepareDevTerminalForPreset("openshift")
 }
 
-openPodmanDevTerminal = async function() {
+const openPodmanDevTerminal = async function() {
   prepareDevTerminalForPreset("podman")
 }
 
+type DevTerminalType = "openshift" | "podman";
 // preset is either openshift or podman
-prepareDevTerminalForPreset = async function(preset) {
+const prepareDevTerminalForPreset = async function(preset: DevTerminalType) {
   var command = "";
 
   switch(preset) {
@@ -505,7 +507,7 @@ end`
 // Tray menu
 // ------------------------------------------------------------------------- */
 
-mapStateForImage = function(state) {
+const mapStateForImage = function(state: string): string {
   state = state.toLowerCase();
 
   switch(state) {
@@ -521,23 +523,23 @@ mapStateForImage = function(state) {
   }
 }
 
-isRunning = function(state) {
+const isRunning = function(state: string): boolean {
   state = state.toLowerCase();
   return state === "running";
 }
 
-quitApp = () => {
-  miniStatusWindow.destroy()
-  logsWindow.destroy();
-  configurationWindow.destroy();
-  podmanWindow.destroy();
-  pullsecretChangeWindow.destroy();
-  aboutWindow.destroy();
+const quitApp = () => {
+  miniStatusWindow?.destroy()
+  logsWindow?.destroy();
+  configurationWindow?.destroy();
+  podmanWindow?.destroy();
+  pullsecretChangeWindow?.destroy();
+  aboutWindow?.destroy();
   app.releaseSingleInstanceLock();
   app.quit()
 }
 
-createTrayMenu = function(status) {
+const createTrayMenu = function(status: StatusState) {
   var state = status.CrcStatus;
   var preset = status.Preset;
 
@@ -576,12 +578,12 @@ createTrayMenu = function(status) {
     enabled: enabledWhenRunning
   }];
 
-  let presetOptions = [];
+  let presetOptions: Electron.MenuItemConstructorOptions[] = [];
   if (preset !== undefined && preset !== "Unknown") {
     presetOptions = (preset === "openshift") ? openShiftOptions : podmanOptions;
   }
 
-  let menuTemplate = [
+  let menuTemplate: Electron.MenuItemConstructorOptions[] = [
     {
       label: state,
       click() { openLogsWindow(); },
@@ -617,11 +619,11 @@ createTrayMenu = function(status) {
 // ------------------------------------------------------------------------- */
 
 ipcMain.on('close-active-window', () => {
-  BrowserWindow.getFocusedWindow().close();
+  BrowserWindow.getFocusedWindow()?.close();
 });
 
 ipcMain.on('hide-active-window', () => {
-  BrowserWindow.getFocusedWindow().hide();
+  BrowserWindow.getFocusedWindow()?.hide();
 });
 
 ipcMain.on('start-tray', (event, arg) => {
@@ -643,22 +645,34 @@ ipcMain.on('start-setup', async (event, args) => {
   try {
     childProcess.execFileSync(crcBinary(), ["config", "set", "consent-telemetry", allowTelemetry],
       { windowsHide: true })
-  } catch (e) {
-    event.reply('setup-logs-async', e.message)
+  } catch (e: unknown) {
+    let message;
+    if(e instanceof Error) {
+      message = e.message;
+    } else {
+      message = "" + e;
+    }
+    event.reply('setup-logs-async', message)
   }
 
   // configure preset
   try {
     childProcess.execFileSync(crcBinary(), ["config", "set", "preset", args.preset],
       { windowsHide: true })
-  } catch (e) {
-    event.reply('setup-logs-async', e.message)
+  } catch (e: unknown) {
+    let message;
+    if(e instanceof Error) {
+      message = e.message;
+    } else {
+      message = "" + e;
+    }
+    event.reply('setup-logs-async', message)
   }
 
   // run `crc setup`
   let child = childProcess.execFile(crcBinary(), ["setup"])
-  child.stdout.setEncoding('utf8')
-  child.stderr.setEncoding('utf8')
+  child.stdout?.setEncoding('utf8')
+  child.stderr?.setEncoding('utf8')
   child.on('exit', function() {
 
     // make sure we start the daemon and store the pull secret
@@ -685,11 +699,11 @@ ipcMain.on('start-setup', async (event, args) => {
   })
   
   // send back stdout async on channel 'setup-logs-async'
-  child.stdout.on('data', (data) => {
+  child.stdout?.on('data', (data) => {
     event.reply('setup-logs-async', data)
   });
 
-  child.stderr.on('data', (data) => {
+  child.stderr?.on('data', (data) => {
     event.reply('setup-logs-async', data)
   });
 })
@@ -698,9 +712,9 @@ ipcMain.once('close-setup-wizard', () => {
   // onboarding finished
   isOnboarding = false;
 
-  setupWindow.hide();
+  setupWindow?.hide();
   appStart();
-  setupWindow.destroy();
+  setupWindow?.destroy();
 })
 
 
@@ -714,7 +728,7 @@ ipcMain.on('start-instance', async (event, args) => {
       body: "Unable to start as pull secret is not given."
     })
 
-    pullsecretChangeWindow.show();
+    pullsecretChangeWindow?.show();
 
     return; 
   }
@@ -797,7 +811,7 @@ ipcMain.on('config-load', async (event, args) => {
 // Pull secret specific
 // ------------------------------------------------------------------------- */
 
-isPullsecretMissing = async function() {
+const isPullsecretMissing = async function() {
   let isPullsecretMissing = true;
   await commander.pullSecretAvailable()
   .then(reply => {
@@ -811,7 +825,7 @@ isPullsecretMissing = async function() {
 }
 
 ipcMain.on('open-pullsecret-window', async (event, args) => {
-  pullsecretChangeWindow.show();
+  pullsecretChangeWindow?.show();
 });
 
 ipcMain.on('pullsecret-change', async (event, args) => {
@@ -858,14 +872,14 @@ const podmanSetup = async function() {
   });
 }
 
-openPodmanConsole = function() {
+const openPodmanConsole = function() {
   podmanSetup();
 
   var url = `http://${podmanHost}:9090/cockpit/@localhost/podman/index.html`;
-  podmanWindow.loadURL(url)
+  podmanWindow?.loadURL(url)
 
-  podmanWindow.webContents.on('did-finish-load', function() {
-    podmanWindow.show();
+  podmanWindow?.webContents.on('did-finish-load', function() {
+    podmanWindow?.show();
   });
 }
 
@@ -879,7 +893,7 @@ ipcMain.on('logs-retrieve', async (event, args) => {
   while(true) {
     try {
       var logs = await commander.logs();
-      logsWindow.webContents.send('logs-retrieved', logs);
+      logsWindow?.webContents.send('logs-retrieved', logs);
     } catch(e) {
         console.log("Logs tick: " + e)
     }
@@ -920,5 +934,5 @@ ipcMain.handle('get-about', async () => {
 
 ipcMain.handle('open-dialog', async (event, title, message, ...items) => {
   const window = BrowserWindow.fromWebContents(event.sender);
-  return showDialog(window, {title, message, type: "question"}, ...items);
+  return showDialog(window!, {title, message, type: "question"}, ...items);
 });
