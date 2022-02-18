@@ -6,7 +6,7 @@ const fs = require('fs');
 const {v4: uuidv4 } = require('uuid');
 const hash = require('object-hash');
 
-let userIdHashPath = path.join(os.homedir(), '.crc', "segmentIdentityHash");
+let userIdHashPath = path.join(os.homedir(), '.crc', "segmentIdentifyHashForTray");
 let userIdPath = path.join(os.homedir(), '.redhat', 'anonymousId');
 
 interface Properties {
