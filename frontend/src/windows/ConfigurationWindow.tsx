@@ -1,9 +1,7 @@
 import React from 'react';
 import {
-    Configuration
-} from '@code-ready/crc-react-components';
-import '@code-ready/crc-react-components/dist/index.css';
-import { State } from '@code-ready/crc-react-components/dist/components/Configuration';
+    Configuration, State
+} from '../components/Configuration';
 
 export default class ConfigurationWindow extends React.Component {
 

@@ -4,8 +4,8 @@ import {
 } from '@patternfly/react-core';
 import {
   LogWindow
-} from '@code-ready/crc-react-components';
-import '@code-ready/crc-react-components/dist/index.css';
+} from '../components/LogWindow';
+
 
 interface State {
   readonly lastLineRead: number;

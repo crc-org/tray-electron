@@ -26,9 +26,9 @@ import {
 } from '@patternfly/react-core';
 import InfoIcon from '@patternfly/react-icons/dist/esm/icons/info-icon';
 import {
-    PresetSelection,
     PullSecretInputCard
-} from '@code-ready/crc-react-components';
+} from '../components/PullSecretInputCard';
+import { PresetSelection } from '../components/PresetSelection';
 
 interface SetupSpinnerProps {
     preset: string;

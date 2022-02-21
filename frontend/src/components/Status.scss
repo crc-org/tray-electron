@@ -1,0 +1,23 @@
+.crc-status {
+  .pf-c-card {
+    &__title {
+      font-size: var(--pf-global--FontSize--xl);
+      font-weight: var(--pf-global--FontWeight--normal);
+    }
+
+    &__body {
+      &:last-child .pf-c-table:last-child tr:last-child {
+        /* Remove the border of tables when it's the last item in a card and there isn't a card footer */
+        border-bottom: none;
+      }
+
+      td {
+        vertical-align: middle;
+      }
+
+      th {
+        font-weight: normal;
+      }
+    }
+  }
+}

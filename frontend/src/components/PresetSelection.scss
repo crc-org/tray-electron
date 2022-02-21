@@ -1,0 +1,30 @@
+.pf-m-selected
+{
+    background-color: #06c;
+    color:         white;
+}
+
+.preset-selection-button-compact
+{
+    border-radius:  0;
+    width:          120px;
+}
+
+.preset-selection-button-compact::after
+{
+    border-radius:  0;
+}
+
+.preset-selection-button
+{
+    width:          150px;
+}
+
+
+.preset-description {
+    font-size:      var(--pf-global--FontSize--sm);
+    color:          var(--pf-global--Color--200);
+    display:        block;
+    padding-top:    5px;
+    padding-bottom: 5px;
+}
