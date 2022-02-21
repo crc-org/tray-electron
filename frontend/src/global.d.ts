@@ -1,7 +1,7 @@
 // types for preload-main.js shared contextBridge API
 
-import { State } from "@code-ready/crc-react-components/dist/components/Configuration";
-import { CrcState } from "@code-ready/crc-react-components/dist/components/types";
+import { State } from "./components/Configuration";
+import { CrcState } from "./components/types";
 import { IpcRendererEvent } from 'electron';
 
 export interface Versions {

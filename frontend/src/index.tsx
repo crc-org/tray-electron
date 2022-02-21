@@ -4,14 +4,14 @@ import './index.scss';
 import { HashRouter,
   Route,
   Routes } from "react-router-dom";
-import SplashWindow from './components/SplashWindow';
-import SetupWindow from './components/SetupWindow';
-import LogsWindow from './components/LogsWindow';
-import ConfigurationWindow from './components/ConfigurationWindow';
-import MiniStatusWindow from './components/MiniStatusWindow';
-import PullSecretChangeWindow from './components/PullSecretChangeWindow';
-import { AboutWindow } from './components/about/AboutWindow';
-import { DialogWindow } from './components/dialog/DialogWindow';
+import SplashWindow from './windows/SplashWindow';
+import SetupWindow from './windows/SetupWindow';
+import LogsWindow from './windows/LogsWindow';
+import ConfigurationWindow from './windows/ConfigurationWindow';
+import MiniStatusWindow from './windows/MiniStatusWindow';
+import PullSecretChangeWindow from './windows/PullSecretChangeWindow';
+import { AboutWindow } from './windows/about/AboutWindow';
+import { DialogWindow } from './windows/dialog/DialogWindow';
 
 ReactDOM.render(
   <React.StrictMode>

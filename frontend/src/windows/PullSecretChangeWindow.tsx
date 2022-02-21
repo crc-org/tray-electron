@@ -5,8 +5,7 @@ import {
 } from '@patternfly/react-core';
 import {
     PullSecretInputCard
-} from '@code-ready/crc-react-components';
-import '@code-ready/crc-react-components/dist/index.css';
+} from '../components/PullSecretInputCard';
 
 interface State {
     pullsecret: string;

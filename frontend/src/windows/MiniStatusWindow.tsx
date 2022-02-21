@@ -2,8 +2,7 @@ import React from 'react';
 
 import {
   ControlCard
-} from '@code-ready/crc-react-components';
-import '@code-ready/crc-react-components/dist/index.css';
+} from '../components/ControlCard';
 
 interface State {
   preset: string;
