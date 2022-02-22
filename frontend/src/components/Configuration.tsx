@@ -172,7 +172,7 @@ export class Configuration extends React.Component<ConfigurationProps> {
                                         unit=""
                                         min={1}
                                         value={this.state.cpus}
-                                        widthChars={5}
+                                        widthChars={6}
                                         onPlus={event => this.updateValue('cpus', this.state.cpus + 1)}
                                         onMinus={event => this.updateClampedValue('cpus', this.state.cpus - 1)}
                                         onChange={value => this.state['cpus'] } 
@@ -187,7 +187,7 @@ export class Configuration extends React.Component<ConfigurationProps> {
                                         unit="MiB"
                                         min={8192}
                                         value={this.state.memory}
-                                        widthChars={5}
+                                        widthChars={6}
                                         onPlus={event => this.updateValue('memory', this.state.memory + 512)}
                                         onMinus={event => this.updateClampedValue('memory', this.state.memory - 512)}
                                         onChange={value => this.state['memory'] } 
@@ -202,7 +202,7 @@ export class Configuration extends React.Component<ConfigurationProps> {
                                         unit="GB"
                                         min={20}
                                         value={this.state["disk-size"]}
-                                        widthChars={5}
+                                        widthChars={6}
                                         onPlus={event => this.updateValue('disk-size', this.state["disk-size"] + 1)}
                                         onMinus={event => this.updateClampedValue('disk-size', this.state["disk-size"] - 1)}
                                         onChange={value => this.state['disk-size'] }
@@ -226,8 +226,8 @@ export class Configuration extends React.Component<ConfigurationProps> {
                                         className="consentTelemetry"
                                         isChecked={this.state["consent-telemetry"] === "yes" ? true : false }
                                         onChange={value => this.updateValue('consent-telemetry', value === true ? "yes" : "no")}
-                                        label="Report telemetry to Red Hat"
-                                        description="Consent to allow basic information about the system and cluster to be collected for development and debugging purposes" />
+                                        label="Allow telemetry data to be sent to Red Hat"
+                                        description="Allow basic information about the system and cluster to be collected for development and debugging purposes" />
                                 </FormGroup>
                             </Form>
                         </TabContentBody>

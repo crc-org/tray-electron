@@ -25,13 +25,13 @@ export default class SplashWindow extends React.Component {
         <PageSection variant={PageSectionVariants.dark} isWidthLimited hasShadowBottom={false} hasShadowTop={false}>
             <Bullseye>
               <Text component={TextVariants.h3}>
-                  Welcome to CodeReady Containers. Before you can start using CRC, we need to ask you some questions, Please click below to get started.
+              Welcome to CodeReady Containers. Let’s get started.
               </Text>
             </Bullseye>
         </PageSection>
         <PageSection sticky="bottom" variant={PageSectionVariants.light} isFilled hasShadowBottom={false} hasShadowTop={false}>
           <Bullseye style={{ paddingTop: "70px" }}>
-            <ActionButton />
+            <GetStartedButton />
           </Bullseye>
         </PageSection>
       </Page>
@@ -45,13 +45,13 @@ const LogoBanner = () => {
     );
 }
 
-const ActionButton = () => {
+const GetStartedButton = () => {
     let navigate = useNavigate();
     let showSetupWizard = () => {
         navigate('/setup');
     }
 
     return (
-        <Button variant={ButtonVariant.primary} isLarge onClick={showSetupWizard}> Get Started </Button>
+        <Button variant={ButtonVariant.primary} isLarge onClick={showSetupWizard}> Get started </Button>
     );
 }

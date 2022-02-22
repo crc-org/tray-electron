@@ -95,8 +95,11 @@ class SetupSpinner extends React.Component<SetupSpinnerProps> {
                     <Button isDisabled={this.state.notReadyForUse} variant={ButtonVariant.primary} onClick={this.handlePrimaryButtonAction}>Start using CRC</Button>
                 </EmptyStatePrimary>
                 <EmptyStateSecondaryActions>
-                    <Button variant={ButtonVariant.link} onClick={ () => { this.handleDocsLinks("https://crc.dev") }}>Visit Getting started Guide</Button>
-                    <Button variant={ButtonVariant.link} onClick={ () => { this.handleDocsLinks("https://crc.dev") }}>Example Deployments</Button>
+                    {
+                        // TOD: For now, no buttons until content is ready
+                        //<Button variant={ButtonVariant.link} onClick={ () => { this.handleDocsLinks("https://crc.dev") }}>Visit Getting started Guide</Button>
+                        //<Button variant={ButtonVariant.link} onClick={ () => { this.handleDocsLinks("https://crc.dev") }}>Example Deployments</Button>
+                    }
                 </EmptyStateSecondaryActions>
             </EmptyState>
         );
@@ -283,9 +286,8 @@ export default class SetupWindow extends React.Component {
 const Welcome = () => {
     return (
         <Card isLarge isPlain>
-            <CardTitle>Welcome to CodeReady Containers</CardTitle>
-            <CardBody>In the next few steps we'll ask you a few questions to setup your environment</CardBody>
-            <CardFooter>Please click 'Next' to proceed</CardFooter>
+            <CardTitle>Welcome to CodeReady Containers setup wizard</CardTitle>
+            <CardBody>In the next few steps, we’ll ask you a few questions to set up your environment</CardBody>
       </Card>
     );
 }
@@ -312,8 +314,8 @@ const ChoosePreset = (props: ChoosePresetProps) => {
             <CardBody>
                 <PresetSelection
                     value={props.preset}
-                    podmanDescription="This option will allow you to use podman to run containers inside a VM environment."
-                    openshiftDescription="This option will run a full cluster environment as a single node, providing a registry, monitoring and access to Operator Hub"
+                    podmanDescription="Use Podman to run containers inside a VM environment. It will expose the podman command."
+                    openshiftDescription="Run a full OpenShift cluster environment as a single node, providing a registry and access to Operator Hub"
                     onPresetChange={props.handlePresetSelection} />
             </CardBody>
             <CardFooter />
@@ -326,13 +328,13 @@ interface SummaryProps {
     handleTelemetryConsent: (checked: boolean, event: React.SyntheticEvent) => void;
 }
 const Summary = (props: SummaryProps) => {
-    const telemetryDesc = "CodeReady Containers is constantly improving and we would like to know more about usage. " +
+    const telemetryDesc = "CodeReady Containers uses usage data to constantly improve. " +
         "For preview releases this information is very valuable to resolve issues and can therefore not be turned off at this time."
-        //"Your preference can be changed manually if desired from the settings dialog.";
+        //"Your preference can be changed manually if desired from the configuration";
 
     return (
         <Card isLarge isPlain>
-            <CardTitle>Thank you. You have made the following selection</CardTitle>
+            <CardTitle>You have made the following selection</CardTitle>
             <CardBody isFilled>
                 <DescriptionList isHorizontal>
                     <DescriptionListGroup>
@@ -342,8 +344,8 @@ const Summary = (props: SummaryProps) => {
                     <DescriptionListTerm>
                         <Checkbox 
                             id="check-consent-telemetry" 
-                            label="Allow to send telemetry data to Red Hat" 
-                            aria-label="Allow to send telemetry data to Red Hat" 
+                            label="Allow telemetry data to be sent to Red Hat" 
+                            aria-label="Allow telemetry data to be sent to Red Hat" 
                             description={telemetryDesc || props.checked}
                             onChange={props.handleTelemetryConsent}
                             isChecked={props.checked}
