@@ -376,10 +376,12 @@ const appStart = async function() {
 
   const {x, y} = tray.getBounds();
 
+  /*
   showNotification({
     body: "Tray is running",
     onClick: (e: Electron.Event) => { showMiniStatusWindow(e, {x: x, y: y}) }
   })
+  */
 
   // polling status
   while(true) {
@@ -733,9 +735,11 @@ ipcMain.once('close-setup-wizard', () => {
 
 ipcMain.on('start-instance', async (event, args) => {
   if(await isPullsecretMissing()) {
+    /*
     showNotification({
       body: "Unable to start as pull secret is not given."
     })
+    */
 
     pullsecretChangeWindow?.show();
 
@@ -744,9 +748,11 @@ ipcMain.on('start-instance', async (event, args) => {
 
   try {
     commander.start();
+    /*
     showNotification({
       body: "CodeReady Containers instance is starting"
     })
+    */
   }
   catch(e) {
     console.log("Action error: " + e)
@@ -756,9 +762,11 @@ ipcMain.on('start-instance', async (event, args) => {
 ipcMain.on('stop-instance', async (event, args) => {
   try {
     commander.stop();
+    /*
     showNotification({
       body: "CodeReady Containers instance is stopping"
     })
+    */
   }
   catch(e) {
     console.log("Action error: " + e)
@@ -768,9 +776,11 @@ ipcMain.on('stop-instance', async (event, args) => {
 ipcMain.on('delete-instance', async (event, args) => {
   try {
     commander.delete();
+    /*
     showNotification({
       body: "CodeReady Containers instance is being deleted"
     })
+    */
   }
   catch(e) {
     console.log("Action error: " + e)
@@ -787,14 +797,18 @@ ipcMain.on('config-save', async (event, args) => {
     commander.configSet({ properties: Object.fromEntries(values) })
           .then(reply => {
             event.reply('config-saved', {});
+            /*
             showNotification({
               body: "Configuration saved"
             })
+            */
           })
           .catch(ex => {
+            /*
             showNotification({
               body: "Configuation not saved"
             })
+            */
             console.log("Failed to set config");
           });
 });
@@ -803,14 +817,18 @@ ipcMain.on('config-load', async (event, args) => {
     commander.configGet()
           .then(reply => {
             event.reply('config-loaded', reply);
+            /*
             showNotification({
               body: "Configuration loaded"
             })
+            */
           })
           .catch(ex => {
+            /*
             showNotification({
               body: "Configuation not loaded"
             })
+            */
             console.log("Failed to get config");
           });
 });
@@ -841,14 +859,20 @@ ipcMain.on('pullsecret-change', async (event, args) => {
     commander.pullSecretStore(args.pullsecret)
           .then(value => {
             event.reply('pullsecret-changed', {});
+            /*
             showNotification({
               body: "Pull secret stored"
             })
+            */
+            console.log("Pull-secret stored");
           }).catch(err => {
             // error
+            /*
             showNotification({
               body: "Pull secret not stored"
             })
+            */
+            console.log("Pull-secret not stored");
           });
 });
 
