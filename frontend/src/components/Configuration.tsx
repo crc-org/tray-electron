@@ -13,6 +13,8 @@ import "./Configuration.scss";
 
 import { PresetSelection } from './PresetSelection';
 
+import '@patternfly/react-styles/css/components/InputGroup/input-group.css';
+
 export interface ConfigurationProps {
     readonly height: string;
     readonly textInputWidth: number;
