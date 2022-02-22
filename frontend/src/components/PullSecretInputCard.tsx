@@ -39,7 +39,7 @@ export class PullSecretInputCard extends React.Component<PullSecretInputCardProp
 
         return (
             <Card isLarge isPlain>
-                <CardTitle>Please provide a pull secret</CardTitle>
+                <CardTitle>Provide a pull secret</CardTitle>
                 <CardBody>
                     <TextArea id="pullsecretEntry"
                         style={style} autoResize={false}
@@ -49,10 +49,10 @@ export class PullSecretInputCard extends React.Component<PullSecretInputCardProp
                     <Hint>
                         <HintTitle>
                             <HelperText>
-                            <HelperTextItem icon={<InfoIcon />}>The pull secret is necessary to allow you to pull container images from the registry.
-                                A personal pull secret can be obtained from the <a target="_blank"
-                                rel="noreferrer" href="https://cloud.redhat.com/openshift/create/local">CRC download page</a>.
-                                Please use the "Copy pull secret" option and paste the content into the field above.</HelperTextItem>
+                            <HelperTextItem icon={<InfoIcon />}>To pull container images from the registry, a pull secret is necessary.
+                                You can get a pull secret from the <a target="_blank"
+                                rel="noreferrer" href="https://cloud.redhat.com/openshift/create/local">CodeReady Containers download page</a>.
+                                Use the "Copy pull secret" option and paste the content into the field above.</HelperTextItem>
                             </HelperText>
                         </HintTitle>
                     </Hint>

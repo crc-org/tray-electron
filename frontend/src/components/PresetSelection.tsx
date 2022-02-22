@@ -27,8 +27,8 @@ export class PresetSelection extends React.Component<PresetSelectionProps> {
     
     static defaultProps = {
         value: "unknown",
-        podmanDescription: "This option will allow you to use podman to run containers inside a VM environment.",
-        openshiftDescription: "This option will run a full cluster environment as a single node, providing a registry, monitoring and access to Operator Hub"
+        podmanDescription: "Use Podman to run containers inside a VM environment. It will expose the podman command.",
+        openshiftDescription: "Run a full OpenShift cluster environment as a single node, providing a registry and access to Operator Hub"
     }; 
 
     private description: string;
