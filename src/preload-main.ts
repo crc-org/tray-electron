@@ -86,16 +86,16 @@ contextBridge.exposeInMainWorld('api', {
   },
   
   autoStart: {
-    isEnabled: async () =>  {
-      return await ipcRenderer.invoke('is-autostart-enabled');
+    isEnabled: () =>  {
+      return ipcRenderer.invoke('is-autostart-enabled');
     },
 
     enable: () => {
-      ipcRenderer.send('enable-autostart');
+      return ipcRenderer.send('enable-autostart');
     },
 
     disable: () => {
-      ipcRenderer.send('disable-autostart');
+      return ipcRenderer.send('disable-autostart');
     }
   }
 

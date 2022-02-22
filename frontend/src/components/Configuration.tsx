@@ -25,6 +25,8 @@ export interface ConfigurationProps {
     onResetClicked: () => void;
     onPresetChange: (preset: string) => void;
     onCancelClicked: () => void;
+    isAutostartEnabled: () => Promise<boolean>;
+    saveAutostartConfig: (checked: boolean) => void;
 }
 
 export interface State {
@@ -46,7 +48,9 @@ export class Configuration extends React.Component<ConfigurationProps> {
         onPullsecretChangeClicked: PropTypes.func,
         onPresetChange: PropTypes.func,
         height: PropTypes.string,
-        textInputWidth: PropTypes.string
+        textInputWidth: PropTypes.string,
+        isAutostartEnabled: PropTypes.func,
+        saveAutostartConfig: PropTypes.func
     };
 
     static defaultProps = {
@@ -82,6 +86,12 @@ export class Configuration extends React.Component<ConfigurationProps> {
             "proxy-ca-file": ""
         };
 
+        props.isAutostartEnabled().then(enabled => {
+            this.setState({
+                autostartTrayEnabled: enabled ? 1 :0 
+            })
+        })
+
         this.configurationSaveClicked = this.configurationSaveClicked.bind(this);
         this.configurationResetClicked = this.configurationResetClicked.bind(this);
         this.handleTabClick = this.handleTabClick.bind(this);
@@ -90,6 +100,7 @@ export class Configuration extends React.Component<ConfigurationProps> {
         this.getMimimum = this.getMimimum.bind(this);
         this.updateValue = this.updateValue.bind(this);
         this.presetChanged = this.presetChanged.bind(this)
+        this.handleTrayAutostart = this.handleTrayAutostart.bind(this);
     }
 
     // Toggle currently active tab
@@ -144,15 +155,30 @@ export class Configuration extends React.Component<ConfigurationProps> {
 
     configurationSaveClicked() {
         this.props.onSaveClicked(this.state);
+
+        // save autostart tray config
+        this.props.saveAutostartConfig(this.state.autostartTrayEnabled === 1 ? true : false)
     }
 
     configurationResetClicked() {
         this.props.onResetClicked();
+
+        // refresh autostartTrayEnabled state
+        this.props.isAutostartEnabled().then(enabled => {
+            this.setState({
+                autostartTrayEnabled: enabled ? 1 : 0
+            })
+        })
+    }
+
+    handleTrayAutostart(value: boolean) {
+        this.setState({
+            autostartTrayEnabled: value ? 1 : 0
+        })
     }
 
     render() {
         const {activeTabKey } = this.state;
-
         const tabStyle = {
             height: this.props.height,
         }
@@ -233,6 +259,15 @@ export class Configuration extends React.Component<ConfigurationProps> {
                                         onChange={value => this.updateValue('consent-telemetry', value === true ? "yes" : "no")}
                                         label="Allow telemetry data to be sent to Red Hat"
                                         description="Allow basic information about the system and cluster to be collected for development and debugging purposes" />
+                                </FormGroup>
+                                <FormGroup fieldId='config-tray-autostart' label="Autostart">
+                                    <Checkbox id='config-trayAutostart'
+                                        className="trayAutostart"
+                                        isChecked={ this.state.autostartTrayEnabled === 1 ? true : false }
+                                        onChange={ this.handleTrayAutostart }
+                                        label="Autostart tray at login"
+                                        description="Automatically start the tray application after the user logs in"
+                                        />
                                 </FormGroup>
                             </Form>
                         </TabContentBody>

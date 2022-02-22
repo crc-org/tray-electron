@@ -24,6 +24,8 @@ export default class ConfigurationWindow extends React.Component {
         this.openPullsecretChangeWindow = this.openPullsecretChangeWindow.bind(this);
         this.onCancelClicked = this.onCancelClicked.bind(this);
         this.onPresetChangeClicked = this.onPresetChangeClicked.bind(this);
+        this.saveAutostartConfig = this.saveAutostartConfig.bind(this);
+        this.isAutostartEnabled = this.isAutostartEnabled.bind(this);
 
         this.config = React.createRef();
     }
@@ -78,6 +80,18 @@ export default class ConfigurationWindow extends React.Component {
     openPullsecretChangeWindow() {
         window.api.openPullsecretChangeWindow({})
     }
+    
+    async isAutostartEnabled(): Promise<boolean> {
+        return window.api.autoStart.isEnabled()
+    }
+
+    saveAutostartConfig(checked: boolean) {
+        if (checked) {
+            window.api.autoStart.enable()
+        } else {
+            window.api.autoStart.disable()
+        }
+    }
 
     private onCancelClicked(): void {
         window.close();
@@ -91,6 +105,8 @@ export default class ConfigurationWindow extends React.Component {
                 onPullsecretChangeClicked={this.openPullsecretChangeWindow}
                 onCancelClicked={this.onCancelClicked}
                 onPresetChange={this.onPresetChangeClicked}
+                isAutostartEnabled={this.isAutostartEnabled}
+                saveAutostartConfig={this.saveAutostartConfig}
                 height="320px" />
         );
     }
