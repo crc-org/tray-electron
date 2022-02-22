@@ -84,7 +84,7 @@ export declare global {
       showModalDialog: (title: string, message: string, ...items: string[]) => Promise<string>;
 
       autoStart: {
-        isEnabled: () => boolean;
+        isEnabled: () => Promise<boolean>;
         enable: () => void;
         disable: () => void;
       }

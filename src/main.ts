@@ -1128,18 +1128,18 @@ ipcMain.handle('open-setup-window', (event) => {
 // Autostart
 // ------------------------------------------------------------------------- */
 
-ipcMain.on('enable-autostart', async () => {
-  app.setLoginItemSettings({
+ipcMain.on('enable-autostart', () => {
+  return app.setLoginItemSettings({
     openAtLogin: true
   })
 })
 
-ipcMain.on('disable-autostart', async () => {
-  app.setLoginItemSettings({
+ipcMain.on('disable-autostart', () => {
+  return app.setLoginItemSettings({
     openAtLogin: false
   })
 })
 
-ipcMain.handle('is-autostart-enabled', async () => {
+ipcMain.handle('is-autostart-enabled', () => {
   return app.getLoginItemSettings().openAtLogin
 })
