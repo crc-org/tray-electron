@@ -1,4 +1,4 @@
-import { Configuration, IpcEventHandler, LogMessage, StatusState } from "../frontend/src/global";
+import { Configuration, IpcEventHandler, StatusState } from "../frontend/src/global";
 
 const { contextBridge, ipcRenderer } = require('electron');
 
@@ -59,7 +59,7 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.send('logs-retrieve', args);
   },
 
-  onLogsRetrieved: (cb: IpcEventHandler<LogMessage>) => {
+  onLogsRetrieved: (cb: IpcEventHandler<string[]>) => {
     ipcRenderer.on('logs-retrieved', cb);
   },
 

@@ -19,11 +19,6 @@ export interface IpcEventHandler<T> {
   (event: IpcRendererEvent, data: T) : void;
 }
 
-export interface LogMessage {
-  Messages: string[];
-  // Add more?
-}
-
 export interface StatusState extends CrcState {
   Preset?: string;
 }
@@ -49,7 +44,7 @@ export declare global {
       configurationLoad: (param: {}) => void;
       configurationSave: (state: State) => void;
       openPullsecretChangeWindow: (param: {}) => void;
-      onLogsRetrieved: (handler: IpcEventHandler<LogMessage>) => void;
+      onLogsRetrieved: (handler: IpcEventHandler<string[]>) => void;
       retrieveLogs: () => void;
       onStatusChanged: (handler: IpcEventHandler<StatusState>) => void;
       startInstance: (param: {}) => void;
