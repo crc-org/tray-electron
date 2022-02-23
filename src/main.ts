@@ -80,6 +80,7 @@ let setupWindow: BrowserWindow | undefined = undefined;
 let pullsecretChangeWindow: BrowserWindow | undefined = undefined;
 let aboutWindow: BrowserWindow | undefined = undefined;
 let trayMenu: Menu | undefined = undefined;
+let logTimer: NodeJS.Timeout | undefined = undefined;
 
 function getFrontEndUrl(route: string): string {
   let frontEndUrl = 'http://localhost:3000'
@@ -262,6 +263,11 @@ const appStart = async function() {
   logsWindow.on('close', async e => {
     e.preventDefault()
     logsWindow?.hide();
+    // clear log interval timer 
+    if(logTimer) {
+      clearInterval(logTimer);
+      logTimer = undefined;
+    }
   })
   logsWindow.loadURL(getFrontEndUrl("logs"));
 
@@ -923,16 +929,20 @@ const openPodmanConsole = function() {
 
 // TODO: perhaps move this to renderer process
 ipcMain.on('logs-retrieve', async (event, args) => {
-  // ouch
-  while(true) {
+  if(logTimer){
+    clearInterval(logTimer);
+  }
+  let lastLogLine = 0;
+  logTimer = setInterval(async () => {
     try {
-      var logs = await commander.logs();
-      logsWindow?.webContents.send('logs-retrieved', logs);
+      let logs = await commander.logs();
+      const logsDiff = logs.Messages.slice(lastLogLine, logs.Messages.length - 1);
+      lastLogLine = logs.Messages.length;
+      logsWindow?.webContents.send('logs-retrieved', logsDiff);
     } catch(e) {
         console.log("Logs tick: " + e)
     }
-    await delay(3000);
-  }
+  }, 3000);
 });
 
 /* ----------------------------------------------------------------------------
