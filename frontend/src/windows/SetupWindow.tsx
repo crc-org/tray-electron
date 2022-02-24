@@ -85,9 +85,9 @@ class SetupSpinner extends React.Component<SetupSpinnerProps> {
         return (
             <EmptyState>
                 <EmptyStateBody>
-                    <div style={{height:"140px",width:"400px",marginTop:"160px"}}>
+                    <div style={{height:"180px",width:"400px",marginTop:"160px"}}>
 
-                        { this.state.notReadyForUse ? <>Running setup ...<br/><br/><Spinner diameter="80px" isSVG /></> : "Setup done."}
+                        { this.state.notReadyForUse ? <>Running setup ...<br/><br/><Spinner diameter="80px" isSVG /><br/><br/>This may take several minutes.</> : "Setup done."}
                         
                     </div>
                 </EmptyStateBody>
