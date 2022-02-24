@@ -185,7 +185,8 @@ if (!gotTheLock) {
       showOnboarding()
     } else {
       daemonStart();
-      delay(4000);
+      // TODO: Startup delay, only show when daemon active
+      delay(8000);
       appStart();
     }
   });
