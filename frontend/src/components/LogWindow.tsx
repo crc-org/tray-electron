@@ -63,18 +63,13 @@ export class LogWindow extends React.Component<LogWindowProps> {
             backgroundColor: "black",
             color: "white",
             resize: "none",
-            border: "0px"
+            border: "0px",
+            padding: "5px",
+            flexGrow: "1"
         };
 
-        if (this.props.width !== "") {
-            style.width = this.props.width
-        }
-        if (this.props.height !== "") {
-            style.height = this.props.height
-        }
-
         return (
-            <div>
+            <div style={{width:"100vw", height:"100vh", display: "flex", flexDirection: "column"}}>
                 <textarea ref={this.textAreaLog} 
                     style={style} readOnly 
                     rows={this.props.rows} cols={this.props.cols} name="crc-log"
