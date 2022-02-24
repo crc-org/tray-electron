@@ -46,10 +46,9 @@ export default class LogsWindow extends React.Component {
       // would like:
       //   backgroundColor : "black"
       // but that means the textarea border needs to be removed
-      <Bullseye style={{ paddingTop: "5px", backgroundColor : "black"}}>
+      <Bullseye style={{ backgroundColor : "black"}}>
         <LogWindow ref={this.logWindow}
           cols={0} rows={0}
-          width={"98vw"} height={"98vh"}
         />
       </Bullseye>
     );
