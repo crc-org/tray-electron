@@ -81,6 +81,7 @@ let pullsecretChangeWindow: BrowserWindow | undefined = undefined;
 let aboutWindow: BrowserWindow | undefined = undefined;
 let trayMenu: Menu | undefined = undefined;
 let logTimer: NodeJS.Timeout | undefined = undefined;
+let tray: Tray | undefined = undefined;
 
 function getFrontEndUrl(route: string): string {
   let frontEndUrl = 'http://localhost:3000'
@@ -228,6 +229,26 @@ const daemonStart = function() {
   })
 }
 
+
+const showMiniStatusWindow = function(e: Electron.KeyboardEvent | Electron.Event, location: {x: number, y: number}) {
+  const { x, y } = location;
+  const { height, width } = miniStatusWindow!.getBounds();
+  // const { trayh, trayw } = tray.getBounds();
+
+  if(miniStatusWindow?.isVisible()) {
+    miniStatusWindow.hide();
+  } else {
+    const yPosition = 20;
+    miniStatusWindow?.setBounds({
+      x: Math.round(x - width / 2), // all values should be an integer
+      y: yPosition,
+      height,
+      width
+    });
+    miniStatusWindow?.show();
+  }
+}
+
 const appStart = async function() {
   miniStatusWindow = new BrowserWindow({
     width: 360,
@@ -237,7 +258,8 @@ const appStart = async function() {
     frame: false,
     titleBarStyle: 'hidden',
     webPreferences: {
-      preload: path.join(__dirname, "preload-main.js")
+      preload: path.join(__dirname, "preload-main.js"),
+      enablePreferredSizeMode: true
     }
   })
   miniStatusWindow.setMenuBarVisibility(false)
@@ -341,54 +363,18 @@ const appStart = async function() {
   });
 
   // Setup tray
-  const tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
+  tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
   tray.setToolTip('CodeReady Containers');
   createTrayMenu({CrcStatus: "Unknown", Preset: "Unknown"});
 
-  const showMiniStatusWindow = function(e: Electron.KeyboardEvent | Electron.Event, location: {x: number, y: number}) {
-    const { x, y } = location;
-    const { height, width } = miniStatusWindow!.getBounds();
-    // const { trayh, trayw } = tray.getBounds();
-
-    if(miniStatusWindow?.isVisible()) {
-      miniStatusWindow.hide();
-    } else {
-      const yPosition = 20;
-      miniStatusWindow?.setBounds({
-        x: Math.round(x - width / 2), // all values should be an integer
-        y: yPosition,
-        height,
-        width
-      });
-      miniStatusWindow?.show();
-    }
-  }
-
-  //open tray menu differently on mac and win
+  //open tray menu
   tray.on('click', (e, bounds) => {
-    if(isMac) {
-        tray.popUpContextMenu(trayMenu);
-    } else {
-      showMiniStatusWindow(e, bounds);
-    }
+    tray?.popUpContextMenu(trayMenu);
   });
 
   tray.on('right-click', (e, bounds) => {
-    if(isMac) {
-      showMiniStatusWindow(e, bounds);
-    } else {
-      tray.popUpContextMenu(trayMenu);
-    }
+    tray?.popUpContextMenu(trayMenu);
   });
-
-  const {x, y} = tray.getBounds();
-
-  /*
-  showNotification({
-    body: "Tray is running",
-    onClick: (e: Electron.Event) => { showMiniStatusWindow(e, {x: x, y: y}) }
-  })
-  */
 
   // polling status
   while(true) {
@@ -601,11 +587,18 @@ const createTrayMenu = function(status: State) {
     presetOptions = (preset === "openshift") ? openShiftOptions : podmanOptions;
   }
 
+  // TODO: tray should exist
+  const {x, y} = (tray as any).getBounds();
+
   let menuTemplate: Electron.MenuItemConstructorOptions[] = [
     {
       label: state,
-      click() { openLogsWindow(); },
+      click(mi, bw, event) { showMiniStatusWindow(event, {x: x, y: y}); },
       icon: path.join(app.getAppPath(), 'assets', `status-${mapStateForImage(state)}.png`),
+    },
+    {
+      label: '  Open logs',
+      click() { openLogsWindow(); },
     },
     ...presetOptions,
     {
