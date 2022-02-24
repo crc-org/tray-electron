@@ -471,7 +471,7 @@ const prepareDevTerminalForPreset = async function(preset: DevTerminalType) {
     }
   } else if (isMac) {
     var script = `tell application "Terminal"
-    do script "eval $(${crcBinary()} ${command})"
+    do script "eval $('${crcBinary()}' ${command})"
 end tell
 
 tell application "System events"
