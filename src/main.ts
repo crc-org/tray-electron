@@ -565,8 +565,17 @@ const onToggleInstanceState = function(state: string) {
   }
 }
 
-const onInstanceDelete = function() {
-  deleteInstance();
+const onInstanceDelete = async function() {
+  const result = await dialog.showMessageBox({
+    title: 'Delete', 
+    message: 'Are you sure you want to delete the CodeReady Containers instance? This is a destructive operation and can not be undone.',
+    type: 'warning',
+    buttons: ["Yes", "No"],
+    cancelId: 1
+  });
+  if(result.response === 0) {
+    deleteInstance();
+  }
 }
 
 const createTrayMenu = function(status: State) {
