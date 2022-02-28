@@ -556,12 +556,11 @@ interface State {
 
 
 const onToggleInstanceState = function(state: string) {
-  if (isRunning(state)) {
-    console.log("stop")
-    stopInstance();
-  } 
   if (isStopped(state)) {
     startInstance();
+  } else {
+    // allow to break the startup
+    stopInstance();
   }
 }
 
@@ -577,33 +576,33 @@ const createTrayMenu = function(status: State) {
   var enabledWhenRunning = isRunning(state);
 
   const podmanOptions = [{
-    label: '  Open Console',
+    label: 'Open Console',
     click() { openPodmanConsole(); },
     enabled: enabledWhenRunning
   },
   {
-    label: '  Open developer terminal',
+    label: 'Open developer terminal',
     click() { openPodmanDevTerminal() },
     enabled: enabledWhenRunning
   }];
 
   const openShiftOptions = [{
-    label: '  Open Console',
+    label: 'Open Console',
     click() { openOpenShiftConsole(); },
     enabled: enabledWhenRunning
   },
   {
-    label: '  Copy OC login command (admin)',
+    label: 'Copy OC login command (admin)',
     click() { clipOpenShiftLoginAdminCommand(); },
     enabled: enabledWhenRunning
   },
   {
-    label: '  Copy OC login command (developer)',
+    label: 'Copy OC login command (developer)',
     click() { clipOpenShiftLoginDeveloperCommand(); },
     enabled: enabledWhenRunning
   },
   {
-    label: '  Open developer terminal',
+    label: 'Open developer terminal',
     click() { openOpenshiftDevTerminal(); },
     enabled: enabledWhenRunning
   }];
@@ -618,13 +617,13 @@ const createTrayMenu = function(status: State) {
 
   var labelAction = ""
   if (isRunning(state)) {
-    labelAction = "  Stop"
+    labelAction = "Stop"
   }
   if (isStopped(state)) {
-    labelAction = "  Start"
+    labelAction = "Start"
   }
   if (isBusy(state)) {
-    labelAction = "  Stop"
+    labelAction = "Stop"
   } 
 
   let menuTemplate: Electron.MenuItemConstructorOptions[] = [
@@ -638,16 +637,16 @@ const createTrayMenu = function(status: State) {
       click() { onToggleInstanceState(state); },
     },
     {
-      label: "  Delete",
+      label: "Delete",
       click() { onInstanceDelete(); },
     },
     {
-      label: '  Open logs',
+      label: 'Open logs',
       click() { openLogsWindow(); },
     },
     ...presetOptions,
     {
-      label: '  Configuration',
+      label: 'Configuration',
       click() { openConfigurationWindow(); }
     },
     {
