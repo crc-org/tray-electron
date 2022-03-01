@@ -3,6 +3,7 @@ import {
     Button,
     Bullseye,
 } from '@patternfly/react-core';
+import SaveIcon from '@patternfly/react-icons/dist/esm/icons/save-icon';
 import {
     PullSecretInputCard
 } from '../components/PullSecretInputCard';
@@ -61,8 +62,8 @@ export default class PullSecretChangeWindow extends React.Component {
                     Cancel
                 </Button>{' '}
                 <Button style={{width: 120}} variant="primary" type="submit"
-                    onClick={this.handleChangeClick}>
-                    Change
+                    onClick={this.handleChangeClick} icon={<SaveIcon />}>
+                    Save
                 </Button>
             </div>
         </>
