@@ -312,22 +312,7 @@ const appStart = async function() {
   configurationWindow.loadURL(getFrontEndUrl("configuration"));
 
   // TODO: deal with duplication
-  pullsecretChangeWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
-    resizable: false,
-    show: false,
-    webPreferences: {
-      preload: path.join(__dirname, "preload-main.js")
-    }
-  })
-  pullsecretChangeWindow.setMenuBarVisibility(false)
-
-  pullsecretChangeWindow.on('close', async e => {
-    e.preventDefault()
-    pullsecretChangeWindow?.hide();
-  })
-  pullsecretChangeWindow.loadURL(getFrontEndUrl("pullsecret"));
+  pullsecretChangeWindow = createPullSecretWindow(configurationWindow);
 
   // TODO: deal with duplication
   podmanWindow = new BrowserWindow({
@@ -390,6 +375,28 @@ const appStart = async function() {
     }
     await delay(1000);
   }
+}
+
+function createPullSecretWindow(parent?: BrowserWindow): BrowserWindow {
+  const pullWindow = new BrowserWindow({
+    parent: parent,
+    width: 800,
+    height: 600,
+    resizable: false,
+    modal: !!parent,
+    show: false,
+    webPreferences: {
+      preload: path.join(__dirname, "preload-main.js")
+    }
+  })
+  pullWindow.setMenuBarVisibility(false);
+
+  pullWindow.on('close', async e => {
+    e.preventDefault()
+    pullWindow?.hide();
+  });
+  pullWindow.loadURL(getFrontEndUrl("pullsecret"));
+  return pullWindow;
 }
 
 /* ----------------------------------------------------------------------------
@@ -793,7 +800,10 @@ const startInstance = async function() {
       body: "Unable to start as pull secret is not given."
     })
     */
-
+    if(pullsecretChangeWindow?.isModal()){
+      pullsecretChangeWindow.destroy();
+      pullsecretChangeWindow = createPullSecretWindow();
+    }
     pullsecretChangeWindow?.show();
 
     return; 
@@ -917,6 +927,10 @@ const isPullsecretMissing = async function() {
 }
 
 ipcMain.on('open-pullsecret-window', async (event, args) => {
+  if(!pullsecretChangeWindow?.isModal()){
+    pullsecretChangeWindow?.destroy();
+    pullsecretChangeWindow = createPullSecretWindow(configurationWindow);
+  }
   pullsecretChangeWindow?.show();
 });
 
