@@ -13,6 +13,7 @@ export default class ConfigurationWindow extends React.Component {
         this.configurationSave = this.configurationSave.bind(this);
         this.configurationReset = this.configurationReset.bind(this);
         this.openPullsecretChangeWindow = this.openPullsecretChangeWindow.bind(this);
+        this.onCancelClicked = this.onCancelClicked.bind(this);
 
         this.config = React.createRef();
     }
@@ -46,12 +47,17 @@ export default class ConfigurationWindow extends React.Component {
         window.api.openPullsecretChangeWindow({})
     }
 
+    private onCancelClicked(): void {
+        window.close();
+    }
+
     render() {
         return (
             <Configuration ref={this.config}
                 onSaveClicked={this.configurationSave}
                 onResetClicked={this.configurationReset}
                 onPullsecretChangeClicked={this.openPullsecretChangeWindow}
+                onCancelClicked={this.onCancelClicked}
                 onPresetChange={e => {}}
                 height="320px" />
         );
