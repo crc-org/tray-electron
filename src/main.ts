@@ -347,8 +347,13 @@ const appStart = async function() {
     aboutWindow?.hide();
   });
 
+  // setup tray icon
+  let icon = 'ocp-logo.png';
+  if(isMac){
+    icon = 'crc-logo-mac.png'
+  }
   // Setup tray
-  tray = new Tray(path.join(app.getAppPath(), 'assets', 'ocp-logo.png'))
+  tray = new Tray(path.join(app.getAppPath(), 'assets', icon));
   tray.setToolTip('CodeReady Containers');
   createTrayMenu({CrcStatus: "Unknown", Preset: "Unknown"});
 
