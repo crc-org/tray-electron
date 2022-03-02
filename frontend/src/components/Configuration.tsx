@@ -9,6 +9,8 @@ import {
     TabContentBody
 } from '@patternfly/react-core';
 
+import SaveIcon from '@patternfly/react-icons/dist/esm/icons/save-icon';
+
 import "./Configuration.scss";
 
 import { PresetSelection } from './PresetSelection';
@@ -22,6 +24,7 @@ export interface ConfigurationProps {
     onSaveClicked: (state: State) => void;
     onResetClicked: () => void;
     onPresetChange: (preset: string) => void;
+    onCancelClicked: () => void;
 }
 
 export interface State {
@@ -278,9 +281,12 @@ export class Configuration extends React.Component<ConfigurationProps> {
 
                 </Tabs>
 
-                <div style={{textAlign:"right"}}>
-                    <Button variant="primary" onClick={this.configurationSaveClicked}>Save</Button>
-                    <Button variant="link" onClick={this.configurationResetClicked}>Reset</Button>
+                <div style={{textAlign:"right", paddingRight: 15}}>
+                    <Button variant="secondary" onClick={this.configurationResetClicked}>Reset</Button>
+                    {' '}
+                    <Button variant='secondary' onClick={this.props.onCancelClicked}>Cancel</Button>
+                    {' '}
+                    <Button variant="primary" onClick={this.configurationSaveClicked} icon={<SaveIcon />}>Save</Button>
                 </div>
             </div>
         );
