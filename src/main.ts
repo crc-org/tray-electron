@@ -453,7 +453,7 @@ const prepareDevTerminalForPreset = async function(preset: DevTerminalType) {
   if (isWin) {
     var poshPath = which.sync("powershell.exe", { nothrow: true })
     if (poshPath !== null) {
-      const posh = childProcess.spawn(poshPath, [`-NoExit -command "& {${crcBinary()} ${command} | Invoke-Expression}"`], {
+      const posh = childProcess.spawn(poshPath, [`-NoExit -command "&'${crcBinary()} ${command} | Invoke-Expression'"`], {
         detached: true,
         shell: true,
         cwd: os.homedir(),
