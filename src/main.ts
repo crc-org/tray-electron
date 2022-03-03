@@ -956,6 +956,7 @@ const podmanSetup = async function() {
   const tokenPath = path.join(os.homedir(), '.crc', 'machines', 'crc', 'cockpit-bearer-token')
   const token = fs.readFileSync(tokenPath, { encoding: 'utf-8' })
 
+  session.defaultSession.cookies.remove(`http://${podmanHost}`, "cockpit")
   session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
     details.requestHeaders['Authorization'] = `Bearer ${token.trim()}`
     callback({ requestHeaders: details.requestHeaders })
