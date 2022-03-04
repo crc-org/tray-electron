@@ -1043,14 +1043,18 @@ ipcMain.on('track-success', async (event, arg) => {
 // ------------------------------------------------------------------------- */
 
 ipcMain.handle('get-about', async () => {
-  const version = await commander.version();
-  return {
-    appVersion: app.getVersion(),
-    crcVersion: version.CrcVersion,
-    crcCommit: version.CommitSha,
-    ocpBundleVersion: version.OpenshiftVersion,
-    podmanVersion: version.PodmanVersion
-  };
+  try {
+    const version = await commander.version();
+    return {
+      appVersion: app.getVersion(),
+      crcVersion: version.CrcVersion,
+      crcCommit: version.CommitSha,
+      ocpBundleVersion: version.OpenshiftVersion,
+      podmanVersion: version.PodmanVersion
+    };
+  } catch (e) {
+    console.log(e)
+  }
 });
 
 /* ----------------------------------------------------------------------------
