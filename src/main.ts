@@ -182,13 +182,13 @@ if (!gotTheLock) {
     })
   })
 
-  app.whenReady().then(() => {
+  app.whenReady().then(async () => {
     if (needOnboarding()) {
       showOnboarding()
     } else {
       daemonStart();
       // TODO: Startup delay, only show when daemon active
-      delay(8000);
+      await delay(8000);
       appStart();
     }
   });
