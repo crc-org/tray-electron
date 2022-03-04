@@ -176,12 +176,6 @@ if (!gotTheLock) {
     }
   })
 
-  app.on('browser-window-focus', (e, w) => {
-    w.webContents.on('did-fail-load', () => {
-      w.webContents.reload()
-    })
-  })
-
   app.whenReady().then(async () => {
     if (needOnboarding()) {
       showOnboarding()
@@ -464,11 +458,14 @@ const prepareDevTerminalForPreset = async function(preset: DevTerminalType) {
     default:
       return false
   }
-  //TODO: use iterm or iterm2 for macOS
+  
   if (isWin) {
     var poshPath = which.sync("powershell.exe", { nothrow: true })
+    
+    //TODO: use absolute path for crc binary
+    var cmd = `-NoExit -Command "&{crc ${command} | Invoke-Expression}"`
     if (poshPath !== null) {
-      const posh = childProcess.spawn(poshPath, [`-NoExit -command "&'${crcBinary()} ${command} | Invoke-Expression'"`], {
+      const posh = childProcess.spawn(poshPath, [cmd], {
         detached: true,
         shell: true,
         cwd: os.homedir(),
