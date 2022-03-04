@@ -189,6 +189,7 @@ if (!gotTheLock) {
       daemonStart();
       // TODO: Startup delay, only show when daemon active
       await delay(8000);
+      pollStatus();
       appStart();
     }
   });
@@ -375,18 +376,20 @@ const appStart = async function() {
   tray.on('right-click', (e, bounds) => {
     tray?.popUpContextMenu(trayMenu);
   });
+}
 
+const pollStatus = async () => {
   // polling status
   while(true) {
     try {
       var status = await commander.status();
       createTrayMenu(status);
-      miniStatusWindow.webContents.send('status-changed', status);
+      miniStatusWindow?.webContents.send('status-changed', status);
     } catch(e) {
       console.log("Status tick: " + e);
       const unknownStatus = { CrcStatus: "Stopped" };
       createTrayMenu(unknownStatus);
-      miniStatusWindow.webContents.send('status-changed', unknownStatus);
+      miniStatusWindow?.webContents.send('status-changed', unknownStatus);
     }
     await delay(1000);
   }
