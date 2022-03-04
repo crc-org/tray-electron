@@ -59,7 +59,7 @@ export class DaemonCommander {
       };
 
       const {body} = await got(options);
-      return JSON.parse(body);
+      return body;
    }
 
    async delete() {
