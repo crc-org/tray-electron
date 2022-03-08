@@ -76,7 +76,7 @@ let miniStatusWindow: BrowserWindow | undefined = undefined;
 let logsWindow: BrowserWindow | undefined = undefined;
 let configurationWindow: BrowserWindow | undefined = undefined;
 let podmanWindow: BrowserWindow | undefined = undefined;
-let setupWindow: BrowserWindow | undefined = undefined;
+let onboardingWindow: BrowserWindow | undefined = undefined;
 let pullsecretChangeWindow: BrowserWindow | undefined = undefined;
 let aboutWindow: BrowserWindow | undefined = undefined;
 let trayMenu: Menu | undefined = undefined;
@@ -113,7 +113,7 @@ function showOnboarding() {
   isOnboarding = true;
 
   // parent window to prevent app closing
-  setupWindow = new BrowserWindow({
+  onboardingWindow = new BrowserWindow({
     width: 1024,
     height: 738,
     resizable: false,
@@ -122,9 +122,9 @@ function showOnboarding() {
       preload: path.join(__dirname, "preload-setup.js")
     }
   })
-  setupWindow.setMenuBarVisibility(false)
+  onboardingWindow.setMenuBarVisibility(false)
 
-  setupWindow.on('close', async e => {
+  onboardingWindow.on('close', async e => {
     if(!isOnboarding) {
       // onboarding finished
       return
@@ -132,7 +132,7 @@ function showOnboarding() {
 
     // onboarding is active
     e.preventDefault()
-    const choice = dialog.showMessageBoxSync(setupWindow!, {
+    const choice = dialog.showMessageBoxSync(onboardingWindow!, {
       message: "Are you sure you want to close the on-boarding wizard?",
       title: "CodeReady Containers",
       type: "warning",
@@ -142,13 +142,13 @@ function showOnboarding() {
     })
 
     if (choice == 0) {
-      setupWindow?.destroy()
+      onboardingWindow?.destroy()
       app.quit()
     }
   })
 
-  setupWindow.loadURL(getFrontEndUrl("splash"));
-  setupWindow.show()
+  onboardingWindow.loadURL(getFrontEndUrl("splash"));
+  onboardingWindow.show()
 
   telemetry.trackSuccess("Successfully started the onboarding screen")
 }
@@ -163,9 +163,9 @@ if (!gotTheLock) {
   app.quit()
 } else {
   app.on('second-instance', () => {
-    if (setupWindow && isOnboarding) {
-      if (setupWindow.isMinimized()) setupWindow.restore()
-      setupWindow.focus()
+    if (onboardingWindow && isOnboarding) {
+      if (onboardingWindow.isMinimized()) onboardingWindow.restore()
+      onboardingWindow.focus()
     } else {
       dialog.showMessageBox({
         title: "CodeReady Containers",
@@ -790,9 +790,9 @@ ipcMain.once('close-setup-wizard', () => {
   // onboarding finished
   isOnboarding = false;
 
-  setupWindow?.hide();
+  onboardingWindow?.hide();
   appStart();
-  setupWindow?.destroy();
+  onboardingWindow?.destroy();
 })
 
 
