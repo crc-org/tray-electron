@@ -19,7 +19,7 @@ export default class SetupWindow extends React.Component {
       return (
         <>
             <Bullseye>
-                <SetupSpinner consentTelemetry={false} preset={'some'} pullsecret={""} />
+                <SetupSpinner consentTelemetry={false} preset={''} pullsecret={""} />
             </Bullseye>
         </>
       );
