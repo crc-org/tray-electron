@@ -5,7 +5,7 @@ import { HashRouter,
   Route,
   Routes } from "react-router-dom";
 import SplashWindow from './windows/SplashWindow';
-import SetupWindow from './windows/SetupWindow';
+import OnboardingWindow from './windows/OnboardingWindow';
 import LogsWindow from './windows/LogsWindow';
 import ConfigurationWindow from './windows/ConfigurationWindow';
 import MiniStatusWindow from './windows/MiniStatusWindow';
@@ -19,7 +19,7 @@ ReactDOM.render(
       <Routes>
         <Route path="/" element={<p>No route given</p>} />
         <Route path="/splash" element={<SplashWindow />} />
-        <Route path="/setup" element={<SetupWindow />} />
+        <Route path="/setup" element={<OnboardingWindow />} />
         <Route path="/logs" element={<LogsWindow />} />
         <Route path="/configuration" element={<ConfigurationWindow />} />
         <Route path="/ministatus" element={<MiniStatusWindow />} />
