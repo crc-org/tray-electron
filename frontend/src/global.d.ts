@@ -53,6 +53,8 @@ export declare global {
       pullsecretChange: (pullSecret: {pullsecret: string} ) => void;
       onPullsecretChanged: (handler: IpcEventHandler<unknown>) => void;
 
+      openSetupWindow: () => Promise<void>;
+
       /**
        * Exist only on "preload-setup.js"
        */

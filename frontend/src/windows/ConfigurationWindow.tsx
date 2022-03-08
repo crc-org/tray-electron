@@ -39,12 +39,12 @@ export default class ConfigurationWindow extends React.Component {
         window.api.configurationLoad({});
     }
 
-    configurationSave(data: State) {
+    async configurationSave(data: State) {
         window.api.configurationSave(data)
 
         if (this.state.presetChanged) {
             // this should open a modal window to run setup as done with `SetupSpinner` in SetupWindow
-            alert ("need to run setup again");
+            await window.api.openSetupWindow();
         }
         this.setState({"presetChanged": false })
 
