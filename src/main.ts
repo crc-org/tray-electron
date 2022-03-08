@@ -1062,3 +1062,36 @@ ipcMain.handle('open-dialog', async (event, title, message, ...items) => {
   const window = BrowserWindow.fromWebContents(event.sender);
   return showDialog(window!, {title, message, type: "question"}, ...items);
 });
+
+/* ----------------------------------------------------------------------------
+// Setup window
+// ------------------------------------------------------------------------- */
+
+ipcMain.handle('open-setup-window', (event) => {
+  return new Promise((resolve) => {
+    const window = BrowserWindow.fromWebContents(event.sender);
+    const setUpWindow = new BrowserWindow({
+      parent: window!,
+      width: 780,
+      height: 600,
+      resizable: false,
+      modal: true,
+      show: true,
+      webPreferences: {
+        preload: path.join(__dirname, "preload-setup.js")
+      }
+    })
+    setUpWindow.setMenuBarVisibility(false)
+  
+    setUpWindow.on('close', async e => {
+      e.preventDefault()
+      setUpWindow?.hide();
+    })
+    setUpWindow.loadURL(getFrontEndUrl("setup-window"));
+    setUpWindow.webContents.openDevTools();
+    setUpWindow.on('closed', () => {
+      resolve(void 0);
+    });
+  });
+});
+

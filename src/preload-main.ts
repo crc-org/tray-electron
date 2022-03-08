@@ -81,4 +81,8 @@ contextBridge.exposeInMainWorld('api', {
     return ipcRenderer.invoke('open-dialog', title, message, ...items);
   },
 
+  openSetupWindow: () => {
+    return ipcRenderer.invoke('open-setup-window');
+  }
+
 });

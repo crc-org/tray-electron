@@ -12,6 +12,7 @@ import MiniStatusWindow from './windows/MiniStatusWindow';
 import PullSecretChangeWindow from './windows/PullSecretChangeWindow';
 import { AboutWindow } from './windows/about/AboutWindow';
 import { DialogWindow } from './windows/dialog/DialogWindow';
+import SetupWindow from './windows/SetupWindow';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -26,6 +27,7 @@ ReactDOM.render(
         <Route path="/pullsecret" element={<PullSecretChangeWindow />} />
         <Route path="/about" element={<AboutWindow />} />
         <Route path="/dialog" element={<DialogWindow />} />
+        <Route path='/setup-window' element={<SetupWindow />} />
       </Routes>
     </HashRouter>
   </React.StrictMode>,
