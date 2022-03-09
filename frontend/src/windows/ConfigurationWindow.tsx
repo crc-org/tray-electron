@@ -43,9 +43,20 @@ export default class ConfigurationWindow extends React.Component {
         window.api.configurationSave(data)
 
         if (this.state.presetChanged) {
+            console.log("begin");
+
             // this should open a modal window to run setup as done with `SetupSpinner` in SetupWindow
             await window.api.openSetupWindow();
+
+            console.log("continue");
+
+            const result = await window.api.showModalDialog('Warning','Before you can use the new preset you have to remove the current CodeReady Containers instance. Are you sure you want to delete the instance? This is a destructive operation and can not be undone.', 'Yes', 'No');
+            if(result === 'Yes') {
+              window.api.deleteInstance({})
+            }
+    
         }
+
         this.setState({"presetChanged": false })
 
         window.close();

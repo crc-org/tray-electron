@@ -25,8 +25,9 @@ export interface StatusState extends CrcState {
 
 export interface SetupParams {
   preset: string;
-  consentTelemetry: boolean;
+  consentTelemetry: boolean | string;
   pullsecret: string;
+  skipDaemonStart: boolean
 }
 export interface DialogOptions {
   message: string;

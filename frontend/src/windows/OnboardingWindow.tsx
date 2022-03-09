@@ -86,6 +86,11 @@ export default class OnboardingWindow extends React.Component {
         });
     }
 
+    handleFinishedAction() {
+        // issue tray start command then close window
+        window.api.closeSetupWizard();
+    }
+
     render() {
         const { stepIdReached } = this.state;
 
@@ -181,6 +186,8 @@ export default class OnboardingWindow extends React.Component {
                                 preset={this.state.preset}
                                 consentTelemetry={this.state.consentTelemetry}
                                 pullsecret={this.state.pullsecret}
+                                skipDaemonStart={false}
+                                onFinishClicked={this.handleFinishedAction}
                             />,
             }
         ];
