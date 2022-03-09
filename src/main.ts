@@ -183,7 +183,6 @@ if (!gotTheLock) {
       daemonStart();
       // TODO: Startup delay, only show when daemon active
       await delay(8000);
-      pollStatus();
       appStart();
     }
   });
@@ -360,6 +359,9 @@ const appStart = async function() {
   tray.on('right-click', (e, bounds) => {
     tray?.popUpContextMenu(trayMenu);
   });
+
+  // start polling for status
+  pollStatus()
 }
 
 const pollStatus = async () => {
