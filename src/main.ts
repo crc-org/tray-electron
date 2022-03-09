@@ -826,6 +826,9 @@ const startInstance = async function() {
   }
   catch(e) {
     console.log("Action error: " + e)
+    showNotification({
+      body: "There was an error in starting CodeReady Containers instance: " + e
+    })
   }
 }
 
@@ -844,6 +847,9 @@ const stopInstance = function() {
   }
   catch(e) {
     console.log("Action error: " + e)
+    showNotification({
+      body: "There was an error in stopping CodeReady Containers instance: " + e
+    })
   }
 }
 
@@ -862,6 +868,9 @@ const deleteInstance = function() {
   }
   catch(e) {
     console.log("Action error: " + e)
+    showNotification({
+      body: "There was an error in deleting CodeReady Containers instance: " + e
+    })
   }
 }
 
