@@ -29,4 +29,5 @@ contextBridge.exposeInMainWorld('api', {
   closeSetupWizard: () => {
     ipcRenderer.send('close-setup-wizard')
   },
+
 });

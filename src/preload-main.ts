@@ -83,6 +83,6 @@ contextBridge.exposeInMainWorld('api', {
 
   openSetupWindow: () => {
     return ipcRenderer.invoke('open-setup-window');
-  }
+  },
 
 });

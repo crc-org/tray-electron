@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-    Bullseye, Button,
+    Bullseye,
 } from '@patternfly/react-core';
 import { SetupSpinner } from '../components/SetupSpinner';
 
@@ -11,7 +11,7 @@ export default class SetupWindow extends React.Component {
       this.onCloseBtn = this.onCloseBtn.bind(this);
     }
 
-    private onCloseBtn() {
+    private async onCloseBtn() {
       window.close();
     }
 
@@ -19,7 +19,13 @@ export default class SetupWindow extends React.Component {
       return (
         <>
             <Bullseye>
-                <SetupSpinner consentTelemetry={false} preset={''} pullsecret={""} />
+                <SetupSpinner
+                    consentTelemetry={""}
+                    preset={""}
+                    pullsecret={""}
+                    skipDaemonStart={true}
+                    onFinishClicked={this.onCloseBtn}
+                />
             </Bullseye>
         </>
       );

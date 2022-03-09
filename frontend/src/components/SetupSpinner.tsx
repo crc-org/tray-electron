@@ -8,13 +8,16 @@ import {
     EmptyStatePrimary,
     Spinner,
 } from '@patternfly/react-core';
-import styles from "./SetupSpinner.module.scss";
+
+import "./SetupSpinner.scss";
 
 
 interface SetupSpinnerProps {
     preset: string;
-    consentTelemetry: boolean;
+    consentTelemetry: boolean | string;
     pullsecret: string;
+    skipDaemonStart: boolean;
+    onFinishClicked: () => void;
 }
 
 interface SetupSpinnerState {
@@ -31,8 +34,6 @@ export class SetupSpinner extends React.Component<SetupSpinnerProps> {
         this.state = {
             notReadyForUse: true,
         };
-
-        this.handlePrimaryButtonAction = this.handlePrimaryButtonAction.bind(this);
     }
 
     componentDidMount() {
@@ -47,17 +48,13 @@ export class SetupSpinner extends React.Component<SetupSpinnerProps> {
         window.api.startSetup({
             preset: this.props.preset,
             consentTelemetry: this.props.consentTelemetry,
-            pullsecret: this.props.pullsecret
+            pullsecret: this.props.pullsecret,
+            skipDaemonStart: this.props.skipDaemonStart
         })
     }
 
     componentWillUnmount() {
         window.api.removeSetupLogListeners();
-    }
-
-    handlePrimaryButtonAction() {
-        // issue tray start command then close window
-        window.api.closeSetupWizard();
     }
 
     handleDocsLinks(url: string) {
@@ -75,7 +72,7 @@ export class SetupSpinner extends React.Component<SetupSpinnerProps> {
                     </div>
                 </EmptyStateBody>
                 <EmptyStatePrimary>
-                    <Button isDisabled={this.state.notReadyForUse} variant={ButtonVariant.primary} onClick={this.handlePrimaryButtonAction}>Start using CRC</Button>
+                    <Button isDisabled={this.state.notReadyForUse} variant={ButtonVariant.primary} onClick={this.props.onFinishClicked}>Start using CRC</Button>
                 </EmptyStatePrimary>
                 <EmptyStateSecondaryActions>
                     {

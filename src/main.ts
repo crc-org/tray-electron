@@ -717,32 +717,36 @@ ipcMain.on('open-link', (event, arg) => {
 
 ipcMain.on('start-setup', async (event, args) => {
   // configure telemetry
-  let allowTelemetry = args.consentTelemetry ? "yes" : "no";
-  try {
-    childProcess.execFileSync(crcBinary(), ["config", "set", "consent-telemetry", allowTelemetry],
-      { windowsHide: true })
-  } catch (e: unknown) {
-    let message;
-    if(e instanceof Error) {
-      message = e.message;
-    } else {
-      message = "" + e;
+  if(args.consentTelemetry !== "") {
+    let allowTelemetry = args.consentTelemetry ? "yes" : "no";
+    try {
+      childProcess.execFileSync(crcBinary(), ["config", "set", "consent-telemetry", allowTelemetry],
+        { windowsHide: true })
+    } catch (e: unknown) {
+      let message;
+      if(e instanceof Error) {
+        message = e.message;
+      } else {
+        message = "" + e;
+      }
+      event.reply('setup-logs-async', message)
     }
-    event.reply('setup-logs-async', message)
   }
 
   // configure preset
-  try {
-    childProcess.execFileSync(crcBinary(), ["config", "set", "preset", args.preset],
-      { windowsHide: true })
-  } catch (e: unknown) {
-    let message;
-    if(e instanceof Error) {
-      message = e.message;
-    } else {
-      message = "" + e;
+  if(args.preset !== "") {
+    try {
+      childProcess.execFileSync(crcBinary(), ["config", "set", "preset", args.preset],
+        { windowsHide: true })
+    } catch (e: unknown) {
+      let message;
+      if(e instanceof Error) {
+        message = e.message;
+      } else {
+        message = "" + e;
+      }
+      event.reply('setup-logs-async', message)
     }
-    event.reply('setup-logs-async', message)
   }
 
   // run `crc setup`
@@ -753,8 +757,11 @@ ipcMain.on('start-setup', async (event, args) => {
 
     // make sure we start the daemon and store the pull secret
     // if(daemonAvailable()) {
-    event.reply('setup-logs-async', "Starting daemon process ...");
-    daemonStart();
+    if(args.skipDaemonStart != true) {
+      event.reply('setup-logs-async', "Starting daemon process ...");
+      daemonStart();
+    }
+
     if(args.pullsecret !== "") {  // when no pull-secret given let's continue
       setTimeout(() => {
         commander.pullSecretStore(args.pullsecret).then(value => {
@@ -767,10 +774,16 @@ ipcMain.on('start-setup', async (event, args) => {
         });
       }, 8000);
     } else {
-      setTimeout(() => {
-        event.reply('setup-logs-async', "Ready.");  // Press Play On Tape ;-P
+      if(args.skipDaemonStart != true) {
+        // Wait for daemon to become available
+        setTimeout(() => {
+          event.reply('setup-logs-async', "Ready.");  // Press Play On Tape ;-P
+          event.reply('setup-ended');
+        }, 8000);
+      } else {
+        // No wait
         event.reply('setup-ended');
-      }, 8000);
+      }
     }
   })
   
@@ -1086,12 +1099,10 @@ ipcMain.handle('open-setup-window', (event) => {
     setUpWindow.on('close', async e => {
       e.preventDefault()
       setUpWindow?.hide();
+
+      resolve(void 0);
     })
     setUpWindow.loadURL(getFrontEndUrl("setup-window"));
-    setUpWindow.webContents.openDevTools();
-    setUpWindow.on('closed', () => {
-      resolve(void 0);
-    });
   });
 });
 
