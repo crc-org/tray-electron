@@ -256,8 +256,7 @@ interface SummaryProps {
 }
 const Summary = (props: SummaryProps) => {
     const telemetryDesc = "CodeReady Containers uses usage data to constantly improve. " +
-        "For preview releases this information is very valuable to resolve issues and can therefore not be turned off at this time."
-        //"Your preference can be changed manually if desired from the configuration";
+        "This can also be changed from the configuration.";
 
     return (
         <Card isLarge isPlain>
@@ -276,7 +275,6 @@ const Summary = (props: SummaryProps) => {
                             description={telemetryDesc || props.checked}
                             onChange={props.handleTelemetryConsent}
                             isChecked={props.checked}
-                            isDisabled={true}  // can't be changed for dev-preview
                         />
                     </DescriptionListTerm> 
                 </DescriptionList>
