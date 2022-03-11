@@ -553,6 +553,8 @@ const quitApp = () => {
   podmanWindow?.destroy();
   pullsecretChangeWindow?.destroy();
   aboutWindow?.destroy();
+  onboardingWindow?.destroy();
+
   app.releaseSingleInstanceLock();
   app.quit()
 }
@@ -1116,6 +1118,8 @@ ipcMain.handle('open-setup-window', (event) => {
       setUpWindow?.hide();
 
       resolve(void 0);
+
+      setUpWindow?.destroy();
     })
     setUpWindow.loadURL(getFrontEndUrl("setup-window"));
   });
