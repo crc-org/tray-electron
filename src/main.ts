@@ -169,7 +169,7 @@ if (!gotTheLock) {
     } else {
       dialog.showMessageBox({
         title: "CodeReady Containers",
-        message: "CodeReady Containers is already running. Please use the tray icon to intereact",
+        message: "CodeReady Containers is already running. Please use the tray icon to interact",
         type: "info"
       }).then(() => {})
       .catch(() => {})
@@ -806,6 +806,10 @@ ipcMain.once('close-setup-wizard', () => {
   onboardingWindow?.hide();
   appStart();
   onboardingWindow?.destroy();
+
+  showNotification({
+    body: "CodeReady Containers is running. Please use the tray icon to start an instance."
+  });
 })
 
 
