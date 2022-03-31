@@ -179,7 +179,7 @@ if (!gotTheLock) {
   app.whenReady().then(async () => {
     daemonStart();
     // TODO: Startup delay, only show when daemon active
-    await delay(8000);
+    await delay(2000);
     if (needOnboarding()) {
       app.setLoginItemSettings({
         openAtLogin: true
