@@ -1,5 +1,5 @@
-Desktop/tray app for CodeReady Containers
-=========================================
+Desktop/tray app for Red Hat OpenShift Local (formerly CodeReady Containers)
+============================================================================
 
 ![](./docs/demo.png)
 

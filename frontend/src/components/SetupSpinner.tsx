@@ -72,7 +72,7 @@ export class SetupSpinner extends React.Component<SetupSpinnerProps> {
                     </div>
                 </EmptyStateBody>
                 <EmptyStatePrimary>
-                    <Button isDisabled={this.state.notReadyForUse} variant={ButtonVariant.primary} onClick={this.props.onFinishClicked}>Start using CRC</Button>
+                    <Button isDisabled={this.state.notReadyForUse} variant={ButtonVariant.primary} onClick={this.props.onFinishClicked}>Start using</Button>
                 </EmptyStatePrimary>
                 <EmptyStateSecondaryActions>
                     {

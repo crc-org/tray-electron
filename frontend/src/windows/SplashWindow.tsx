@@ -10,7 +10,7 @@ import {
     PageSectionVariants,
     TextVariants,
 } from '@patternfly/react-core';
-import logo from '../assets/crc-logo-white.png';
+import logo from '../assets/openshift-local.png';
 import { useNavigate } from 'react-router-dom';
 
 export default class SplashWindow extends React.Component {
@@ -25,7 +25,7 @@ export default class SplashWindow extends React.Component {
         <PageSection variant={PageSectionVariants.dark} isWidthLimited hasShadowBottom={false} hasShadowTop={false}>
             <Bullseye>
               <Text component={TextVariants.h3}>
-              Welcome to CodeReady Containers. Let’s get started.
+              Welcome to Red Hat OpenShift Local. Let’s get started.
               </Text>
             </Bullseye>
         </PageSection>
@@ -41,7 +41,7 @@ export default class SplashWindow extends React.Component {
 
 const LogoBanner = () => {
     return (
-        <Brand src={logo} alt="CRC Logo" className="pf-u-w-25"/>
+        <Brand src={logo} alt="Red Hat OpenShift Local" />
     );
 }
 

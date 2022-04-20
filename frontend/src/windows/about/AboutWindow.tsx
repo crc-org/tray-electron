@@ -41,7 +41,7 @@ export class AboutWindow extends React.Component {
           <div className={styles.logo} />
         </Bullseye>
         <div className={styles.marginBox}>
-          <Version title='Red Hat CodeReady Containers version' version={`${this.state.crcVersion}+${this.state.crcCommit}`} />
+          <Version title='CRC version' version={`${this.state.crcVersion}+${this.state.crcCommit}`} />
           {bundleVersion}
           <Version title='Tray version' version={this.state.appVersion} />
 

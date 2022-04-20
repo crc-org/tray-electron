@@ -51,7 +51,7 @@ export class PullSecretInputCard extends React.Component<PullSecretInputCardProp
                             <HelperText>
                             <HelperTextItem icon={<InfoIcon />}>To pull container images from the registry, a pull secret is necessary.
                                 You can get a pull secret from the <a target="_blank"
-                                rel="noreferrer" href="https://cloud.redhat.com/openshift/create/local">CodeReady Containers download page</a>.
+                                rel="noreferrer" href="https://cloud.redhat.com/openshift/create/local">Red Hat OpenShift Local download page</a>.
                                 Use the "Copy pull secret" option and paste the content into the field above.</HelperTextItem>
                             </HelperText>
                         </HintTitle>
