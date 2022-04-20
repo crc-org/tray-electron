@@ -191,8 +191,8 @@ export default class OnboardingWindow extends React.Component {
                             />,
             }
         ];
-        const title = 'CodeReady Containers setup wizard';
-        const description = 'Guided setup wizard for configuring your operating system and host to run CodeReady Containers';
+        const title = 'Red Hat OpenShift Local setup wizard';
+        const description = 'Guided setup wizard for configuring your operating system and host to run Red Hat OpenShift Local (formerly CodeReady Containers)';
         return (
             <Wizard
                 title={title}
@@ -213,7 +213,7 @@ export default class OnboardingWindow extends React.Component {
 const Welcome = () => {
     return (
         <Card isLarge isPlain>
-            <CardTitle>Welcome to CodeReady Containers setup wizard</CardTitle>
+            <CardTitle>Welcome to Red Hat OpenShift Local setup wizard</CardTitle>
             <CardBody>In the next few steps, we’ll ask you a few questions to set up your environment</CardBody>
       </Card>
     );
@@ -255,7 +255,7 @@ interface SummaryProps {
     handleTelemetryConsent: (checked: boolean, event: React.SyntheticEvent) => void;
 }
 const Summary = (props: SummaryProps) => {
-    const telemetryDesc = "CodeReady Containers uses usage data to constantly improve. " +
+    const telemetryDesc = "Red Hat OpenShift Local uses usage data to constantly improve. " +
         "This can also be changed from the configuration.";
 
     return (

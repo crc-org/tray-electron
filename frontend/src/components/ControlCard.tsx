@@ -52,7 +52,7 @@ export class ControlCard extends React.Component<ControlCardProps> {
     render() {
         return (
             <Card className="crc-controlcard">
-                <CardTitle>CodeReady Containers</CardTitle>
+                <CardTitle>Red Hat OpenShift Local</CardTitle>
                 <CardBody>
                     <Status ref={this.status}
                         preset={this.props.preset}/>

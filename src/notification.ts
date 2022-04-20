@@ -7,7 +7,7 @@ export interface NotificationOption{
 
 export function showNotification(options: NotificationOption) {
     const n = new Notification({
-        title: "CodeReady Containers",
+        title: "Red Hat OpenShift Local",
         body: options.body
     })
     if (options.onClick) {

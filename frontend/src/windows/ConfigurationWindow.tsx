@@ -52,7 +52,7 @@ export default class ConfigurationWindow extends React.Component {
 
             console.log("continue");
 
-            const result = await window.api.showModalDialog('Warning','Before you can use the new preset you have to remove the current CodeReady Containers instance. Are you sure you want to delete the instance? This is a destructive operation and can not be undone.', 'Yes', 'No');
+            const result = await window.api.showModalDialog('Warning','Before you can use the new preset you have to remove the current Red Hat OpenShift Local instance. Are you sure you want to delete the instance? This is a destructive operation and can not be undone.', 'Yes', 'No');
             if(result === 'Yes') {
               window.api.deleteInstance({})
             }

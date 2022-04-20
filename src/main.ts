@@ -44,12 +44,12 @@ if (isWin) {
 function crcBinary(): string {
   if (app.isPackaged) {
     if (isWin) {
-      // This returns `crc` as located in c:\Program Files\CodeReady Containers\
+      // This returns `crc` as located in c:\Program Files\OpenShift Local\
       return path.join(app.getAppPath(), '..', '..', 'crc');
     }
 
     if (isMac) {
-      // This returns `crc` as located in /Applications/CodeReady Containers.app/Contents/Resources
+      // This returns `crc` as located in /Applications/OpenShift Local.app/Contents/Resources
       return path.join(app.getAppPath(), '..', 'crc');
     }
 
@@ -134,7 +134,7 @@ function showOnboarding() {
     e.preventDefault()
     const choice = dialog.showMessageBoxSync(onboardingWindow!, {
       message: "Are you sure you want to close the on-boarding wizard?",
-      title: "CodeReady Containers",
+      title: "Red Hat OpenShift Local",
       type: "warning",
       buttons: ["Yes", "No"],
       defaultId: 1,
@@ -168,8 +168,8 @@ if (!gotTheLock) {
       onboardingWindow.focus()
     } else {
       dialog.showMessageBox({
-        title: "CodeReady Containers",
-        message: "CodeReady Containers is already running. Please use the tray icon to interact",
+        title: "Red Hat OpenShift Local",
+        message: "Red Hat OpenShift Local is already running. Please use the tray icon to interact",
         type: "info"
       }).then(() => {})
       .catch(() => {})
@@ -345,13 +345,13 @@ const appStart = async function() {
   });
 
   // setup tray icon
-  let icon = 'ocp-logo.png';
+  let icon = 'trayicon.png';
   if(isMac){
-    icon = 'crc-logo-mac.png'
+    icon = 'trayicon-mac.png'
   }
   // Setup tray
   tray = new Tray(path.join(app.getAppPath(), 'assets', icon));
-  tray.setToolTip('CodeReady Containers');
+  tray.setToolTip('Red Hat OpenShift Local');
   createTrayMenu({CrcStatus: "Unknown", Preset: "Unknown"});
 
   //open tray menu
@@ -586,7 +586,7 @@ const onToggleInstanceState = function(state: string) {
 const onInstanceDelete = async function() {
   const result = await dialog.showMessageBox({
     title: 'Delete', 
-    message: 'Are you sure you want to delete the CodeReady Containers instance? This is a destructive operation and can not be undone.',
+    message: 'Are you sure you want to delete the Red Hat OpenShift Local instance? This is a destructive operation and can not be undone.',
     type: 'warning',
     buttons: ["Yes", "No"],
     cancelId: 1
@@ -813,7 +813,7 @@ ipcMain.once('close-setup-wizard', () => {
   onboardingWindow?.destroy();
 
   showNotification({
-    body: "CodeReady Containers is running. Please use the tray icon to start an instance."
+    body: "Red Hat OpenShift Local is running. Please use the tray icon to start an instance."
   });
 })
 
@@ -842,14 +842,14 @@ const startInstance = async function() {
     commander.start();
     /*
     showNotification({
-      body: "CodeReady Containers instance is starting"
+      body: "Red Hat OpenShift Local instance is starting"
     })
     */
   }
   catch(e) {
     console.log("Action error: " + e)
     showNotification({
-      body: "There was an error in starting CodeReady Containers instance: " + e
+      body: "There was an error in starting Red Hat OpenShift Local instance: " + e
     })
   }
 }
@@ -863,14 +863,14 @@ const stopInstance = function() {
     commander.stop();
     /*
     showNotification({
-      body: "CodeReady Containers instance is stopping"
+      body: "Red Hat OpenShift Local instance is stopping"
     })
     */
   }
   catch(e) {
     console.log("Action error: " + e)
     showNotification({
-      body: "There was an error in stopping CodeReady Containers instance: " + e
+      body: "There was an error in stopping Red Hat OpenShift Local instance: " + e
     })
   }
 }
@@ -884,14 +884,14 @@ const deleteInstance = function() {
     commander.delete();
     /*
     showNotification({
-      body: "CodeReady Containers instance is being deleted"
+      body: "Red Hat OpenShift Local instance is being deleted"
     })
     */
   }
   catch(e) {
     console.log("Action error: " + e)
     showNotification({
-      body: "There was an error in deleting CodeReady Containers instance: " + e
+      body: "There was an error in deleting Red Hat OpenShift Local instance: " + e
     })
   }
 }
