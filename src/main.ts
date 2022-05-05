@@ -177,9 +177,6 @@ if (!gotTheLock) {
   })
 
   app.whenReady().then(async () => {
-    daemonStart();
-    // TODO: Startup delay, only show when daemon active
-    await delay(2000);
     if (needOnboarding()) {
       app.setLoginItemSettings({
         openAtLogin: true
@@ -203,29 +200,6 @@ if (!gotTheLock) {
 /* ----------------------------------------------------------------------------
 // General application start
 // ------------------------------------------------------------------------- */
-
-const daemonStart = function() {
-  // launching the daemon
-  const daemonProcess = childProcess.spawn(crcBinary(), ["daemon", "--watchdog"], {
-    detached: true,
-    windowsHide: true
-  })
-
-  daemonProcess.on('error', err => {
-    const msg = `Backend failure, Backend failed to start: ${err}`;
-    dialog.showErrorBox(`Backend failure`, msg)
-    telemetry.trackError(`Error at main.start(): ${msg}`)
-  })
-
-  daemonProcess.stdout.on('date', (data) => {
-    // noop
-  })
-
-  daemonProcess.stderr.on('data', (data) => {
-    // noop
-  })
-}
-
 
 const showMiniStatusWindow = function(e: Electron.KeyboardEvent | Electron.Event, location: {x: number, y: number}) {
   const { x, y } = location;
@@ -761,14 +735,6 @@ ipcMain.on('start-setup', async (event, args) => {
   child.stdout?.setEncoding('utf8')
   child.stderr?.setEncoding('utf8')
   child.on('exit', function() {
-
-    // make sure we start the daemon and store the pull secret
-    // if(daemonAvailable()) {
-    if(args.skipDaemonStart != true) {
-      event.reply('setup-logs-async', "Starting daemon process ...");
-      daemonStart();
-    }
-
     if(args.pullsecret !== "") {  // when no pull-secret given let's continue
       setTimeout(() => {
         commander.pullSecretStore(args.pullsecret).then(value => {
@@ -781,16 +747,8 @@ ipcMain.on('start-setup', async (event, args) => {
         });
       }, 8000);
     } else {
-      if(args.skipDaemonStart != true) {
-        // Wait for daemon to become available
-        setTimeout(() => {
-          event.reply('setup-logs-async', "Ready.");  // Press Play On Tape ;-P
-          event.reply('setup-ended');
-        }, 8000);
-      } else {
         // No wait
         event.reply('setup-ended');
-      }
     }
   })
   
