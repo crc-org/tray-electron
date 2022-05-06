@@ -735,22 +735,19 @@ ipcMain.on('start-setup', async (event, args) => {
   child.stdout?.setEncoding('utf8')
   child.stderr?.setEncoding('utf8')
   child.on('exit', function() {
-    if(args.pullsecret !== "") {  // when no pull-secret given let's continue
-      setTimeout(() => {
-        commander.pullSecretStore(args.pullsecret).then(value => {
-          if(value === "OK") {
-            event.reply('setup-logs-async', "Pull secret stored in keyring");
-          }
-          event.reply('setup-ended');
-        }).catch(err => {
-          event.reply('setup-logs-async', "Pull secret not stored; Please restart");
-        });
-      }, 8000);
-    } else {
-        // No wait
+    if(args.pullsecret !== "") {
+      commander.pullSecretStore(args.pullsecret).then(value => {
+        if(value === "OK") {
+          event.reply('setup-logs-async', "Pull secret stored in keyring");
+        }
         event.reply('setup-ended');
+      }).catch(err => {
+        event.reply('setup-logs-async', "Pull secret not stored; Please restart");
+      });
+    } else { // when no pull-secret given let's continue
+      event.reply('setup-ended');
     }
-  })
+  });
   
   // send back stdout async on channel 'setup-logs-async'
   child.stdout?.on('data', (data) => {
