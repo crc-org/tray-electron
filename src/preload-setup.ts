@@ -18,16 +18,29 @@ contextBridge.exposeInMainWorld('api', {
     ipcRenderer.on('setup-logs-async', cb)
   },
 
+  onSetupError: (cb:  IpcEventHandler<string>) => {
+    ipcRenderer.on('setup-logs-error', cb)
+  },
+
   onSetupEnded: (cb: IpcEventHandler<unknown>) => {
     ipcRenderer.on('setup-ended', cb)
   },
 
+  forceEndErrorDuringSetup: () => {
+    ipcRenderer.send('force-end-setup-error');
+},
+
   removeSetupLogListeners: () => {
     ipcRenderer.removeAllListeners('setup-logs-async')
+    ipcRenderer.removeAllListeners('setup-logs-error')
   },
 
   closeSetupWizard: () => {
     ipcRenderer.send('close-setup-wizard')
+  },
+
+  showModalDialog: (title: string, message: string, ...items: string[]) => {
+    return ipcRenderer.invoke('open-dialog', title, message, ...items);
   },
 
 });

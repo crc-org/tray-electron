@@ -734,19 +734,25 @@ ipcMain.on('start-setup', async (event, args) => {
   let child = childProcess.execFile(crcBinary(), ["setup"])
   child.stdout?.setEncoding('utf8')
   child.stderr?.setEncoding('utf8')
-  child.on('exit', function() {
-    if(args.pullsecret !== "") {
-      commander.pullSecretStore(args.pullsecret).then(value => {
-        if(value === "OK") {
-          event.reply('setup-logs-async', "Pull secret stored in keyring");
-        }
+  child.on('exit', function(exitcode) {
+
+    if(exitcode != 0) {
+      event.reply('setup-logs-error', "Setup failed.");
+    } else {
+      if(args.pullsecret !== "") {
+        commander.pullSecretStore(args.pullsecret).then(value => {
+          if(value === "OK") {
+            event.reply('setup-logs-async', "Pull secret stored in keyring");
+          }
+          event.reply('setup-ended');
+        }).catch(err => {
+          event.reply('setup-logs-error', "Pull secret not stored.");
+        });
+      } else { // when no pull-secret given let's continue
         event.reply('setup-ended');
-      }).catch(err => {
-        event.reply('setup-logs-async', "Pull secret not stored; Please restart");
-      });
-    } else { // when no pull-secret given let's continue
-      event.reply('setup-ended');
+      }
     }
+    // exited
   });
   
   // send back stdout async on channel 'setup-logs-async'
@@ -771,6 +777,17 @@ ipcMain.once('close-setup-wizard', () => {
     body: "Red Hat OpenShift Local is running. Please use the tray icon to start an instance."
   });
 })
+
+ipcMain.on('force-end-setup-error', () => {
+  // onboarding aborted
+  isOnboarding = false;
+
+  onboardingWindow?.hide();
+  onboardingWindow?.destroy();
+
+  app.quit();
+})
+
 
 
 /* ----------------------------------------------------------------------------

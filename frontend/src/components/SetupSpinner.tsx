@@ -22,6 +22,7 @@ interface SetupSpinnerProps {
 
 interface SetupSpinnerState {
     notReadyForUse: boolean;
+    logs: string[];
 }
 
 export class SetupSpinner extends React.Component<SetupSpinnerProps> {
@@ -32,6 +33,7 @@ export class SetupSpinner extends React.Component<SetupSpinnerProps> {
         super(props)
 
         this.state = {
+            logs: [],
             notReadyForUse: true,
         };
     }
@@ -40,7 +42,8 @@ export class SetupSpinner extends React.Component<SetupSpinnerProps> {
         // start the crc setup process
         // different configs needed will be passed as args
         window.api.onSetupLogs(async (event, message) => {
-            // Do nothing
+            console.log(message);
+            this.state.logs.push(message);
         })
         window.api.onSetupEnded(async (event, message) => {
             this.setState({ notReadyForUse: false });
@@ -51,6 +54,14 @@ export class SetupSpinner extends React.Component<SetupSpinnerProps> {
             pullsecret: this.props.pullsecret,
             skipDaemonStart: this.props.skipDaemonStart
         })
+        window.api.onSetupError(async (event, message) => {
+            const result = await window.api.showModalDialog('Error', message + "\r\n Error: '" + this.state.logs.pop() + "'. Please restart.", 'Close');
+            if(result === 'Close') {
+                window.api.forceEndErrorDuringSetup();
+                window.close();
+                //window.api.appQuit();
+            }
+        });
     }
 
     componentWillUnmount() {
