@@ -63,6 +63,10 @@ export declare global {
       /**
        * Exist only on "preload-setup.js"
        */
+      onSetupError: (handler: IpcEventHandler<string>) => void;
+      /**
+       * Exist only on "preload-setup.js"
+       */
       onSetupEnded: (handler: IpcEventHandler<unknown>) => void;
       /**
        * Exist only on "preload-setup.js"
@@ -81,6 +85,7 @@ export declare global {
        */
       closeSetupWizard: () => void;
 
+      forceEndErrorDuringSetup: () => void;
       showModalDialog: (title: string, message: string, ...items: string[]) => Promise<string>;
 
       autoStart: {

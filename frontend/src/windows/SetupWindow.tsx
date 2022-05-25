@@ -17,17 +17,15 @@ export default class SetupWindow extends React.Component {
 
     render() {
       return (
-        <>
-            <Bullseye>
-                <SetupSpinner
-                    consentTelemetry={""}
-                    preset={""}
-                    pullsecret={""}
-                    skipDaemonStart={true}
-                    onFinishClicked={this.onCloseBtn}
-                />
-            </Bullseye>
-        </>
+          <Bullseye>
+              <SetupSpinner
+                  consentTelemetry={""}
+                  preset={""}
+                  pullsecret={""}
+                  skipDaemonStart={true}
+                  onFinishClicked={this.onCloseBtn}
+              />
+          </Bullseye>
       );
     }
 }

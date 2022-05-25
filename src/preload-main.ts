@@ -97,6 +97,6 @@ contextBridge.exposeInMainWorld('api', {
     disable: () => {
       return ipcRenderer.send('disable-autostart');
     }
-  }
+  },
 
 });
