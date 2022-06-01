@@ -36,6 +36,8 @@ const commander = new DaemonCommander()
 
 let isMac = (os.platform() === "darwin")
 let isWin = (os.platform() === "win32")
+let isArm = (os.arch() === "arm64")
+let isM1 = (isMac && isArm)
 let occommand = "oc";
 if (isWin) {
   occommand = "oc.exe";
@@ -716,17 +718,23 @@ ipcMain.on('start-setup', async (event, args) => {
 
   // configure preset
   if(args.preset !== "") {
-    try {
-      childProcess.execFileSync(crcBinary(), ["config", "set", "preset", args.preset],
-        { windowsHide: true })
-    } catch (e: unknown) {
-      let message;
-      if(e instanceof Error) {
-        message = e.message;
-      } else {
-        message = "" + e;
+    if (isM1) {
+      // ignore setting preset if running on apple M1 chips
+      // for now we only support podman preset on M1
+      // changing this will result in an error
+    } else {
+      try {
+        childProcess.execFileSync(crcBinary(), ["config", "set", "preset", args.preset],
+          { windowsHide: true })
+      } catch (e: unknown) {
+        let message;
+        if(e instanceof Error) {
+          message = e.message;
+        } else {
+          message = "" + e;
+        }
+        event.reply('setup-logs-async', message)
       }
-      event.reply('setup-logs-async', message)
     }
   }
 
