@@ -8,7 +8,7 @@ jobs:
       - checkout
       - run:
           name: Install Wine64 (Needed for windows build)
-          command: | 
+          command: |
             sudo apt-get update
             sudo apt install wine64 zip
       - run:
@@ -26,10 +26,37 @@ jobs:
       - run:
           name: Archive macOS release directory
           command: cd release && tar -cvzf crc-tray-macos.tar.gz crc-tray-darwin-x64/
-
       - store_artifacts:
           path: ~/repo/release/crc-tray-windows.zip
           destination: crc-tray-windows.zip
       - store_artifacts:
           path: ~/repo/release/crc-tray-macos.tar.gz
           destination: crc-tray-macos.tar.gz
+
+  build-universal:
+    working_directory: ~/repo
+    macos:
+      xcode: 13.4.0
+    steps:
+      - checkout
+      - run:
+          name: Install Dependencies (electron)
+          command: npm install
+      - run:
+          name: Install Dependencies (react)
+          command: cd frontend && npm install
+      - run:
+          name: Generate mac universal build
+          command: npm run release:mac-universal
+      - run:
+          name: Archive macOS universal release directory
+          command: cd release && tar -cvzf crc-tray-macos-universal.tar.gz crc-tray-darwin-universal/
+      - store_artifacts:
+          path: ~/repo/release/crc-tray-macos-universal.tar.gz
+          destination: crc-tray-macos-universal.tar.gz
+workflows:
+  version: 2
+  build:
+    jobs:
+      - build
+      - build-universal
