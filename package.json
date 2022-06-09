@@ -12,7 +12,8 @@
     "start": "npm run build && npm run build:react && electron .",
     "release": "npm run build && npm run build:react && electron-packager . --ignore='frontend/package.json' --ignore='/frontend/node_modules' --ignore='/frontend/src' --overwrite --asar --out=release --prune=true --icon=assets/appicon",
     "release:cross": "npm run build && npm run build:react && electron-packager . --ignore='/frontend/package.json' --ignore='/frontend/node_modules' --ignore='/frontend/src' --overwrite --asar --out=release --platform=darwin,win32 --prune=true --icon=assets/appicon --app-bundle-id='com.redhat.codeready.containers'",
-    "start:dev": "concurrently \"npm run watch\" \"electron .\" \"cd frontend && npm start\""
+    "start:dev": "concurrently \"npm run watch\" \"electron .\" \"cd frontend && npm start\"",
+    "release:mac-universal": "npm run build && npm run build:react && electron-packager . --ignore='/frontend/package.json' --ignore='/frontend/node_modules' --ignore='/frontend/src' --overwrite --asar --out=release --platform=darwin --arch=universal --prune=true --icon=assets/appicon --app-bundle-id='com.redhat.codeready.containers'"
   },
   "devDependencies": {
     "@types/analytics-node": "^3.1.7",
