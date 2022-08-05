@@ -28,7 +28,7 @@ contextBridge.exposeInMainWorld('api', {
 
   forceEndErrorDuringSetup: () => {
     ipcRenderer.send('force-end-setup-error');
-  },
+},
 
   removeSetupLogListeners: () => {
     ipcRenderer.removeAllListeners('setup-logs-async')
