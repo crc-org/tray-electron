@@ -3,7 +3,7 @@
   "license": "Apache-2.0",
   "version": "1.2.7",
   "description": "",
-  "author": "",
+  "author": "Red Hat, Inc.",
   "main": "build/src/main.js",
   "scripts": {
     "build:react": "cd frontend && npm run build",
