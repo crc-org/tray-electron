@@ -16,21 +16,21 @@
     "release:mac-universal": "npm run build && npm run build:react && electron-packager . --ignore='/frontend/package.json' --ignore='/frontend/node_modules' --ignore='/frontend/src' --overwrite --asar --out=release --platform=darwin --arch=universal --prune=true --icon=assets/appicon --app-bundle-id='com.redhat.codeready.containers'"
   },
   "devDependencies": {
-    "@types/analytics-node": "^3.1.7",
+    "@types/analytics-node": "^3.1.9",
     "@types/which": "^2.0.1",
-    "concurrently": "^6.4.0",
-    "electron": "^16.0.4",
-    "electron-packager": "^16.0.0",
-    "typescript": "^4.5.5"
+    "concurrently": "^7.5.0",
+    "electron": "^21.2.0",
+    "electron-packager": "^17.0.0",
+    "typescript": "^4.8.4"
   },
   "dependencies": {
     "@types/segment-analytics": "^0.0.34",
-    "analytics-node": "^6.0.0",
+    "analytics-node": "^6.2.0",
     "electron-is-dev": "^2.0.0",
-    "electron-store": "^8.0.1",
-    "got": "^9.6.0",
-    "object-hash": "^2.2.0",
-    "uuid": "^8.3.2",
+    "electron-store": "^8.1.0",
+    "got": "^12.5.2",
+    "object-hash": "^3.0.0",
+    "uuid": "^9.0.0",
     "which": "^2.0.2"
   }
 }
