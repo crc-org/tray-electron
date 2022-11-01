@@ -28,7 +28,7 @@
     "analytics-node": "^6.2.0",
     "electron-is-dev": "^2.0.0",
     "electron-store": "^8.1.0",
-    "got": "^12.5.2",
+    "got": "11.8.3",
     "object-hash": "^3.0.0",
     "uuid": "^9.0.0",
     "which": "^2.0.2"
