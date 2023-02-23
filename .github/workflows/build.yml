@@ -1,0 +1,60 @@
+name: Build tray-electron
+on:
+  push:
+    branches:
+      - "master"
+  pull_request: {}
+
+jobs:
+  build-win:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - windows-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Setup nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.13.0
+      - name: Install dependencies tray-electron
+        run: npm install
+      - name: Install dependecies react
+        run: cd frontend && npm install
+      - name: Generate Builds
+        run: npm run release:cross
+      - name: Upload electron-tray artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: windows-tray-electron
+          path: release/crc-tray-win32-x64
+
+  build-mac:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macos-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v3
+      - name: Setup nodejs
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16.13.0
+      - name: Install dependencies tray-electron
+        run: npm install
+      - name: Install dependecies react
+        run: cd frontend && npm install
+      - name: Generate Builds
+        run: npm run release:mac-universal
+      - name: Upload electron-tray artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: macos-tray-electron
+          path: release/crc-tray-darwin-universal
+
