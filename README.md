@@ -1,8 +1,9 @@
 Desktop/tray app for Red Hat OpenShift Local (formerly CodeReady Containers)
 ============================================================================
 
-![](./docs/demo.png)
+#### **Note**! This project is not under active development. Please use the [OpenShift Local extension](https://github.com/crc-org/crc-extension) for [Podman Desktop](https://podman-desktop.io) instead.
 
+![](./docs/demo.png)
 
 [![CircleCI](https://circleci.com/gh/code-ready/tray-electron/tree/master.svg?style=svg)](https://circleci.com/gh/code-ready/tray-electron/tree/master)
 
